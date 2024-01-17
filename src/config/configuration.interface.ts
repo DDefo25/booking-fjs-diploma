@@ -7,6 +7,5 @@ interface IDBConfiguration {
     port: number,
     user: string,
     pass: string,
-    dbName: string,
-    uri: string
+    dbName: string
 }
