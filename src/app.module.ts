@@ -8,6 +8,7 @@ import { MongooseConfigService } from './mongoose-config/mongoose-config.service
 import { UserModule } from './user/user.module';
 import { RouterModule } from '@nestjs/core';
 import { HotelModule } from './hotel/hotel.module';
+import { ReservationModule } from './reservation/reservation.module';
 
 @Module({
   imports: [
@@ -15,10 +16,15 @@ import { HotelModule } from './hotel/hotel.module';
       isGlobal: true,
       load: [configuration]
     }),
+
     MongooseModule.forRootAsync({
       useClass: MongooseConfigService
     }),
+
     UserModule,
+    HotelModule,
+    ReservationModule,
+    
     RouterModule.register([
       {
         path: 'api',
@@ -30,7 +36,6 @@ import { HotelModule } from './hotel/hotel.module';
         ],
       },
     ]),
-    HotelModule,
   ],
   controllers: [AppController],
   providers: [AppService],
