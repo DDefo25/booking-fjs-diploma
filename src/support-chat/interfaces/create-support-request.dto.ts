@@ -8,5 +8,5 @@ export class CreateSupportRequestDto  {
 
     @IsString()
     @IsDefined()
-    test: string
+    text: string
 }

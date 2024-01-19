@@ -12,5 +12,5 @@ export class SendMessageDto  {
 
     @IsString()
     @IsDefined()
-    test: string
+    text: string
 }

@@ -10,6 +10,7 @@ import { RouterModule } from '@nestjs/core';
 import { HotelModule } from './hotel/hotel.module';
 import { ReservationModule } from './reservation/reservation.module';
 import { SupportChatModule } from './support-chat/support-chat.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -21,6 +22,8 @@ import { SupportChatModule } from './support-chat/support-chat.module';
     MongooseModule.forRootAsync({
       useClass: MongooseConfigService
     }),
+
+    EventEmitterModule.forRoot(),
 
     UserModule,
     HotelModule,
