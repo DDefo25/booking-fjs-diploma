@@ -24,6 +24,6 @@ export class HotelRoomService implements IHotelRoomService {
    };
 
    update(id: ObjectId, data: Partial<HotelRoom>): Promise<HotelRoom> {
-        return this.model.findByIdAndUpdate(id, {$set: data})
+        return this.model.findByIdAndUpdate(id, {$set: data}, {returnDocument: 'after'})
    }
 }

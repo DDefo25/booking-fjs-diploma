@@ -6,5 +6,8 @@ export default () => ({
       user: process.env.MONGO_USER || '',
       pass: process.env.MONGO_PASS || '',
       dbName: process.env.MONGO_DB_NAME || '',
+    },
+    upload: {
+      destination: process.env.UPLOAD_DEST || './upload'
     }
   });

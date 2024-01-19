@@ -8,21 +8,19 @@ import { ObjectId } from 'mongoose';
 import { UpdateHotelParams } from './interfaces/update-hotel.dto';
 
 
-@Controller('hotels')
+@Controller('api/:role/hotels')
 export class HotelController {
     constructor(
         private readonly hotelService: HotelService
     ) {}
     
     //необходима аутентификация
-    //необходима пагинация/offset
     @Post()
     async create( @Body(new HttpValidationPipe()) data: Partial<Hotel>) {
         return await this.hotelService.create(data)
     }
 
-
-    //необходима пагинация/offset
+    //необходима аутентификация
     @Get()
     async find( @Query() query: SearchHotelParams) {
         return await this.hotelService.search(query)
@@ -30,7 +28,7 @@ export class HotelController {
 
     //необходима аутентификация
     @Put(':id')
-    async update( @Param() id: ObjectId, @Body(new HttpValidationPipe()) data: UpdateHotelParams) {
-        return this.hotelService.update( id, data );
+    async update( @Param('id') id: ObjectId, @Body(new HttpValidationPipe()) data: UpdateHotelParams) {
+        return await this.hotelService.update( id, data );
     }
 }

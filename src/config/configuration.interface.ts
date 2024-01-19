@@ -1,11 +1,15 @@
-interface INestConfiguration {
+export interface INestConfiguration {
     port: number
 }
 
-interface IDBConfiguration {
+export interface IDBConfiguration {
     host: string,    
     port: number,
     user: string,
     pass: string,
     dbName: string
+}
+
+export interface IUploadConfiguration {
+    destination: string
 }

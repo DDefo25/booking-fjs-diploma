@@ -21,10 +21,12 @@ export class HotelService implements IHotelService {
    };
 
    search(params: SearchHotelParams): Promise<Hotel[]> {
-       return this.model.findOne(params)
+        const {limit, offset, title} = params
+        const filter = title ? { title } : {};
+       return this.model.find(filter).limit(limit).skip(offset)
    };
 
    update(id: ObjectId, data: UpdateHotelParams): Promise<Hotel> {
-        return this.model.findByIdAndUpdate(id, {$set: data})
+        return this.model.findByIdAndUpdate(id, {$set: data}, {returnDocument: 'after'})
    }
 }

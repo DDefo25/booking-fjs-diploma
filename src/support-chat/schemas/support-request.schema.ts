@@ -5,7 +5,11 @@ export type SupportRequestDocument = SupportRequest & Document;
 
 @Schema({ timestamps: true })
 export class SupportRequest {
-    @Prop( {required: true})
+    @Prop( {
+        required: true,
+        type: MongooseSchema.Types.ObjectId,
+        ref: 'User'
+    })
     user: ObjectId;
 
     @Prop({required: true})
