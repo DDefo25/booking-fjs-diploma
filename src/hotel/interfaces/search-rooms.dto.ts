@@ -2,7 +2,7 @@ import { IsBoolean, IsDefined, IsMongoId, IsNumber, IsOptional, IsString} from "
 import { ObjectId } from "mongoose";
 
 export class SearchRoomsParams {
-    @IsString()
+    @IsNumber()
     @IsOptional()
     limit: number;
 

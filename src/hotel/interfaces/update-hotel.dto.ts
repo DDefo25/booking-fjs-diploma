@@ -2,10 +2,10 @@ import { IsDefined, IsNumber, IsOptional, IsString} from "class-validator";
 
 export class UpdateHotelParams  {
     @IsString()
-    @IsOptional()
+    @IsDefined()
     title: string;
 
     @IsString()
-    @IsOptional()
+    @IsDefined()
     description: string;
 }
