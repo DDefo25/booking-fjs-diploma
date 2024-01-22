@@ -27,7 +27,7 @@ export class AuthController {
     @Post('logout')
     async logout(@Res({ passthrough: true }) res: Response) {
     // Some internal checks
-    res.cookie('token', '', { expires: new Date() });
+        res.cookie('token', '', { expires: new Date() });
     }
 
     //Доступно только не аутентифицированным пользователям.

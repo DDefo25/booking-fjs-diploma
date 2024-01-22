@@ -25,6 +25,7 @@ export class UserService implements IUserService {
 
     async findAll(params: SearchUserParams): Promise<User[]> {
         const regExFields = new Set(['email', 'name', 'contactPhone'])
+        const {limit, offset} = params
         const filter = {...params}
 
         for (let [key, value] of Object.entries(params)) {
@@ -33,6 +34,6 @@ export class UserService implements IUserService {
             }
         }
         
-        return await this.model.find(filter);
+        return await this.model.find(filter).limit(limit).skip(offset);
     };
 }
