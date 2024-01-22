@@ -10,6 +10,7 @@ import { ReservationModule } from './reservation/reservation.module';
 import { SupportChatModule } from './support-chat/support-chat.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MongooseConfigService } from './config/mongoose-config/mongoose-config.service';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { MongooseConfigService } from './config/mongoose-config/mongoose-config.
     HotelModule,
     ReservationModule,
     SupportChatModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

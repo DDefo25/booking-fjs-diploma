@@ -9,5 +9,9 @@ export default () => ({
     },
     upload: {
       destination: process.env.UPLOAD_DEST || './upload'
+    },
+    jwt: {
+      secret: process.env.JWT_SECRET_KEY,
+      expiresIn: process.env.JWT_EXPIRATION_TIME || '60s'
     }
   });

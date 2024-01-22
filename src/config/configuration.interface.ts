@@ -13,3 +13,8 @@ export interface IDBConfiguration {
 export interface IUploadConfiguration {
     destination: string
 }
+
+export interface IJwtConfiguration {
+    secret: string,
+    expiresIn: string | number,
+}

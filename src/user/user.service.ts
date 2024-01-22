@@ -15,15 +15,15 @@ export class UserService implements IUserService {
         return await this.model.create(data)
     };
 
-    findById(id: ObjectId): Promise<User> {
-        return this.model.findById(id)
+    async findById(id: ObjectId): Promise<User> {
+        return await this.model.findById(id)
     };
 
-    findByEmail(email: string): Promise<User> {
-        return this.model.findOne({email})
+    async findByEmail(email: string): Promise<User> {
+        return await this.model.findOne({email})
     };
 
-    findAll(params: SearchUserParams): Promise<User[]> {
+    async findAll(params: SearchUserParams): Promise<User[]> {
         const regExFields = new Set(['email', 'name', 'contactPhone'])
         const filter = {...params}
 
@@ -33,6 +33,6 @@ export class UserService implements IUserService {
             }
         }
         
-        return this.model.find(filter);
+        return await this.model.find(filter);
     };
 }
