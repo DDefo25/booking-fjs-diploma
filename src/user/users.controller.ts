@@ -20,7 +20,7 @@ export class UsersController {
     @Post()
     async create(@Body(new HttpValidationPipe()) data: CreateUserDto) {
         data['passwordHash'] = data.password
-        return await this.userService.create(data) 
+        return await this.userService.create(data)
     }
 
 

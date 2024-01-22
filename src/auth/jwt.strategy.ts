@@ -31,7 +31,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     if (
       req.cookies &&
       'token' in req.cookies &&
-      req.cookies.user_token.length > 0
+      req.cookies.token.length > 0
     ) {
       return req.cookies.token;
     }

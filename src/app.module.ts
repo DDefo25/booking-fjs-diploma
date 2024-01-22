@@ -29,7 +29,6 @@ import { AuthModule } from './auth/auth.module';
     HotelModule,
     ReservationModule,
     SupportChatModule,
-    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

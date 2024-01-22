@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Schema as MongooseSchema, ObjectId } from 'mongoose';
 import { compareHash, getHash } from 'src/utility/cryptPass';
 
 export type UserDocument = User & Document;
@@ -12,7 +12,10 @@ export class User {
     })
     email: string;
 
-    @Prop( {required: true})
+    @Prop( {
+      required: true,
+      // select: false
+    })
     passwordHash: string;
 
     @Prop({required: true})
@@ -43,6 +46,7 @@ UserSchema.pre('save', async function (next) {
 
 UserSchema.methods = {
     async validateHash(pass: string): Promise<boolean> {
+      // console.log(this.select('+passwordHash'))
       return await compareHash(pass, this.passwordHash)
     }
 }

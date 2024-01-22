@@ -1,11 +1,12 @@
-import { Body, Controller, Get, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
 import { HttpValidationPipe } from 'src/validation/http.validation.pipe';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from './interfaces/login-user.dto';
 import { Response } from 'express';
 import { RegisterClientDto } from './interfaces/register-user.dto';
+import { JwtAuthGuard } from './jwt-auth.guard';
 
-@Controller('auth')
+@Controller('/api/auth')
 export class AuthController {
     constructor(
         private readonly authService: AuthService
@@ -24,6 +25,7 @@ export class AuthController {
     }
 
     //Доступно только аутентифицированным пользователям.
+    @UseGuards(JwtAuthGuard)
     @Post('logout')
     async logout(@Res({ passthrough: true }) res: Response) {
     // Some internal checks
