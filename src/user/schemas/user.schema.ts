@@ -14,7 +14,8 @@ export class User {
 
     @Prop( {
       required: true,
-      // select: false
+      select: false,
+      transform: () => ''
     })
     passwordHash: string;
 
@@ -46,7 +47,6 @@ UserSchema.pre('save', async function (next) {
 
 UserSchema.methods = {
     async validateHash(pass: string): Promise<boolean> {
-      // console.log(this.select('+passwordHash'))
       return await compareHash(pass, this.passwordHash)
     }
 }

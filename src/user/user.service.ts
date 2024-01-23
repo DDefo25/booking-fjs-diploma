@@ -20,8 +20,8 @@ export class UserService implements IUserService {
         return await this.model.findById(id)
     };
 
-    async findByEmail(email: string): Promise<User> {
-        return await this.model.findOne({email})
+    async findByEmail(email: string, projection: Object|String|String[] = null): Promise<User> {
+        return this.model.findOne({email}, projection)
     };
 
     async findAll(params: SearchUserParams): Promise<User[]> {

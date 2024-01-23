@@ -12,6 +12,9 @@ export default () => ({
     },
     jwt: {
       secret: process.env.JWT_SECRET_KEY,
-      expiresIn: process.env.JWT_EXPIRATION_TIME || '60s'
+      expiresIn: process.env.JWT_EXPIRATION_TIME || '1h'
+    },
+    cookies: {
+      expires: process.env.COOKIES_EXPIRATION_TIME || 60 * 60 * 1000
     }
   });

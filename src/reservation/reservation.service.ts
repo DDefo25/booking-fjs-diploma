@@ -1,27 +1,41 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
 import { Model, ObjectId } from 'mongoose';
 import { ReservationCreateDto } from './interfaces/create-reservation.dto';
 import { IReservationService } from './interfaces/reservation.service.interface';
 import { ReservationSearchParams } from './interfaces/search-reservation.dto';
 import { Reservation, ReservationDocument } from './schemas/reservation.schema';
 import { InjectModel } from '@nestjs/mongoose';
+import { HotelRoom, HotelRoomDocument } from 'src/hotel/schemas/hotel-room.schema';
 
 @Injectable()
 export class ReservationService implements IReservationService {
     constructor (
-        @InjectModel(Reservation.name) private readonly model: Model<ReservationDocument>
+        @InjectModel(Reservation.name) private readonly model: Model<ReservationDocument>,
+        @InjectModel(HotelRoom.name) private readonly modelHotelRomm: Model<HotelRoomDocument>
     ) {}
 
-    addReservation(data: ReservationCreateDto): Promise<Reservation> {
-        if(!this.hasReservation(data)) {
-            throw new Error('Room is booked')
+    async addReservation(data: ReservationCreateDto): Promise<Reservation> {
+        const { roomId } = data
+
+        const hotelRoom = await this.modelHotelRomm.findById(roomId)
+        const isReserved = await this.hasReservation(data)
+
+        if(isReserved || !hotelRoom || !hotelRoom.isEnabled) {
+            throw new BadRequestException('Номер с указанным ID не существует или он отключён')
         }
 
-        return this.model.create(data)
+        return this.model.create({hotelId: hotelRoom?.hotel, ...data})
     };
 
-    removeReservation(id: ObjectId): Promise<void> {
-        return this.model.findByIdAndDelete(id)
+    async removeReservation(id: ObjectId, userId?: any): Promise<void> {
+        const reservation = await this.model.findById(id)
+
+        if (!reservation) {
+            throw new BadRequestException('Брони с указанным ID не существует')
+        } else if (reservation.userId.toString() !== userId?._id.toString()) {
+            throw new BadRequestException('ID текущего пользователя не совпадает с ID пользователя в брони')
+        }
+        await reservation.deleteOne()
     };
 
     getReservations(filter: ReservationSearchParams): Promise<Array<Reservation>> {
@@ -40,9 +54,6 @@ export class ReservationService implements IReservationService {
                 $lte: dateEnd}
         })
 
-        if (reservations.length > 0) {
-            return true
-        }
-        return false
+        return reservations.length > 0
     }
 }

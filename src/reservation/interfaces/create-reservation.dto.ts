@@ -6,7 +6,7 @@ export class ReservationCreateDto  {
     userId: ObjectId;
 
     @IsMongoId()
-    hotelId: ObjectId;
+    hotelId?: ObjectId;
 
     @IsMongoId()
     roomId: ObjectId;

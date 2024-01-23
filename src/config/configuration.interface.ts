@@ -18,3 +18,7 @@ export interface IJwtConfiguration {
     secret: string,
     expiresIn: string | number,
 }
+
+export interface ICookiesConfiguration {
+    expires: number
+}
