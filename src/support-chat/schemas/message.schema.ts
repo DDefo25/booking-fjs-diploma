@@ -3,7 +3,7 @@ import { Document, ObjectId, Schema as MongooseSchema } from 'mongoose';
 
 export type MessageDocument = Message & Document;
 
-@Schema()
+@Schema({ timestamps: { createdAt: 'sentAt'}})
 export class Message {
     @Prop( {
         required: true,
@@ -11,10 +11,7 @@ export class Message {
         ref: 'User'
     })
     author: ObjectId;
-
-    @Prop({required: true})
-    sentAt: Date;
-
+    
     @Prop( {required: true})
     text: string;
 

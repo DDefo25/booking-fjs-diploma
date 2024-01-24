@@ -11,13 +11,19 @@ import { SupportRequestService } from '../support-request/support-request.servic
 export class SupportRequestClientService {
     constructor(
         @InjectModel(Message.name) private readonly messageModel: Model<MessageDocument>,
-        @InjectModel(SupportRequest.name) private readonly supportRequestModel: Model<SupportRequestDocument>
+        @InjectModel(SupportRequest.name) private readonly supportRequestModel: Model<SupportRequestDocument>,
+        private readonly supportRequestService: SupportRequestService
     ) {}
 
     async createSupportRequest(data: CreateSupportRequestDto): Promise<SupportRequest> {
         const {user, text} = data;
-        const message = await this.messageModel.create({ author: user, text })
-        return await this.supportRequestModel.create({ user, $push: { messages: message._id }})
+        const supportRequest = await this.supportRequestModel.create({ user })
+        return await this.supportRequestService.sendMessage({
+            author: user, 
+            text, 
+            supportRequest: supportRequest._id}).then(() => supportRequest)
+
+
     };
 
     async markMessagesAsRead(params: MarkMessageAsReadDto) {

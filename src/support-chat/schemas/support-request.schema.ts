@@ -12,15 +12,12 @@ export class SupportRequest {
     })
     user: ObjectId;
 
-    @Prop({required: true})
-    createdAt: Date;
-
     @Prop()
     messages: [{
         type: MongooseSchema.Types.ObjectId,
         ref: 'Message'}];
 
-    @Prop()
+    @Prop({default: true})
     isActive: boolean;
 }
 

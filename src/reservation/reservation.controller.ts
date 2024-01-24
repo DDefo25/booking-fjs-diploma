@@ -60,11 +60,11 @@ export class ReservationController {
         403 - если роль пользователя не manager;
         400 - если брони с указанным ID не существует.
     */
-        @Roles(Role.Manager)
-        @Delete(':id')
-        async removeReservationByManager(@Param('id') id: ObjectId) {
-            return await this.reservationService.removeReservation(id)
-        }
+        // @Roles(Role.Manager)
+        // @Delete(':id')
+        // async removeReservationByManager(@Param('id') id: ObjectId) {
+        //     return await this.reservationService.removeReservation(id)
+        // }
 
     //Отмена бронирования клиентом
     /*
@@ -77,9 +77,10 @@ export class ReservationController {
             403 - если ID текущего пользователя не совпадает с ID пользователя в брони;
             400 - если брони с указанным ID не существует.
     */
+    @Roles(Role.Manager, Role.Client)
     @Delete(':id')
-    async removeReservationByClient(@Param('id') id: ObjectId, @Req() req) {
-        return await this.reservationService.removeReservation(id, req.user)
+    async removeReservation(@Param('id') id: ObjectId, @Param('role') role: string, @Req() req) {
+        return await this.reservationService.removeReservation(id, role === 'client' ? req.user : null)
     }
 
     /*

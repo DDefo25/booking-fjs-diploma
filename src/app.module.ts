@@ -11,6 +11,7 @@ import { SupportChatModule } from './support-chat/support-chat.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MongooseConfigService } from './config/mongoose-config/mongoose-config.service';
 import { AuthModule } from './auth/auth.module';
+import { SupportRequestController } from './support-chat/support-request.controller';
 
 @Module({
   imports: [

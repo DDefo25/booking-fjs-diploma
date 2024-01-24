@@ -32,7 +32,7 @@ export class ReservationService implements IReservationService {
 
         if (!reservation) {
             throw new BadRequestException('Брони с указанным ID не существует')
-        } else if (reservation.userId.toString() !== userId?._id.toString()) {
+        } else if (userId && reservation.userId.toString() !== userId._id?.toString()) {
             throw new BadRequestException('ID текущего пользователя не совпадает с ID пользователя в брони')
         }
         await reservation.deleteOne()
