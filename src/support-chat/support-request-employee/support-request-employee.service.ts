@@ -8,37 +8,51 @@ import { MarkMessageAsReadDto } from '../interfaces/mark-message-as-read.dto';
 @Injectable()
 export class SupportRequestEmployeeService {
     constructor (
-        @InjectModel( SupportRequest.name ) private readonly supportRequestModel: Model<SupportRequestDocument>
+        @InjectModel( SupportRequest.name ) private readonly supportRequestModel: Model<SupportRequestDocument>,
+        @InjectModel(Message.name) private readonly messageModel: Model<MessageDocument>,
     ) {}
 
     async markMessagesAsRead(params: MarkMessageAsReadDto) {
-        const {user, supportRequest: supportRequestID, createdBefore} = params
-        const query = { _id: supportRequestID }
-        const updateDocument = {
-            $mul: { "messages.$[i].readAt": new Date() }
-        };
-        const options = {
-            arrayFilters: [
-              {
-                "i.readAt": { $exists: false },
-                'i.author': user
-              }
-            ]
-        };
-
-        const result = await this.supportRequestModel.updateOne(query, updateDocument, options);
+        const {user, supportRequest, createdBefore} = params
+        const supportReq = await this.supportRequestModel.findById(supportRequest)
+        for (let message of supportReq.messages) {
+            await this.messageModel.updateOne(
+                { $and: [
+                    { _id: message },
+                    { readAt: { $exists: false}}, 
+                    { author: { $ne: user }}
+                ]},
+                { $set: { 'readAt': createdBefore} },
+            )
+        }
     }
     
     async getUnreadCount(supportRequest: ObjectId): Promise<Message[]> {
-        const query = { 
-            _id: supportRequest,
-            messages: { $elemMatch: { 
-                readAt: { $exists: false }, 
-                author: '$user' 
-            }}
-        }
-
-        return await this.supportRequestModel.find(query)
+        const supportReq = await this.supportRequestModel.aggregate([
+            { $match: { _id: supportRequest }},
+            { $lookup: {
+                from: 'messages',
+                localField: 'messages',
+                foreignField: '_id',
+                let: {
+                    user: '$user'
+                },
+                pipeline: [
+                { $match: {
+                    $expr:{ $and: [
+                        {$eq: [{ $toObjectId: '$$user'}, { $toObjectId: '$author'}]},
+                        {$cond: [
+                            {$ifNull: ['$readAt', true]},
+                                true,
+                                false
+                        ]}
+                    ]},
+                }},
+                ],
+                as: "messages"
+            }},
+        ])
+        return supportReq[0].messages
     }
 
     async closeRequest(supportRequest: ObjectId): Promise<void> {

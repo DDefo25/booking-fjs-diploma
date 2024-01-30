@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Message, MessageDocument } from '../schemas/message.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId } from 'mongoose';
+import mongoose, { Model, Mongoose, ObjectId, Types } from 'mongoose';
 import { SupportRequest, SupportRequestDocument } from '../schemas/support-request.schema';
 import { CreateSupportRequestDto } from '../interfaces/create-support-request.dto';
 import { MarkMessageAsReadDto } from '../interfaces/mark-message-as-read.dto';
@@ -18,51 +18,56 @@ export class SupportRequestClientService {
     async createSupportRequest(data: CreateSupportRequestDto): Promise<SupportRequest> {
         const {user, text} = data;
         const supportRequest = await this.supportRequestModel.create({ user })
-        return await this.supportRequestService.sendMessage({
+        await this.supportRequestService.sendMessage({
             author: user, 
             text, 
-            supportRequest: supportRequest._id}).then(() => supportRequest)
+            supportRequest: supportRequest._id})
 
-
+        return supportRequest
     };
 
     async markMessagesAsRead(params: MarkMessageAsReadDto) {
-        const {user, supportRequest: supportRequestID, createdBefore} = params
-        const query = { _id: supportRequestID }
-        const updateDocument = {
-            $mul: { "messages.$[i].readAt": new Date() }
-        };
-        const options = {
-            arrayFilters: [
-              {
-                "i.readAt": { $exists: false },
-                'i.author': { $not: user }
-              }
-            ]
-        };
-
-        const result = await this.supportRequestModel.updateOne(query, updateDocument, options);
-
-        // const supportRequest = await this.supportRequestModel.findOneAndUpdate(supportRequestID, {
-        //     $set: {
-        //         messages
-        //     }
-        // });
-        // const messages = supportRequest.populate('messages')
-        // await messages.forEach(element => {
-        //     update
-        // });
+        const {user, supportRequest, createdBefore} = params
+        const supportReq = await this.supportRequestModel.findById(supportRequest)
+        for (let message of supportReq.messages) {
+            await this.messageModel.updateOne(
+                { $and: [
+                    { _id: message },
+                    { readAt: { $exists: false}}, 
+                    { author: { $ne: user }}
+                ]},
+                { $set: { 'readAt': createdBefore} },
+            )
+        }
     };
 
     async getUnreadCount(supportRequest: ObjectId): Promise<Message[]> {
-        const query = { 
-            _id: supportRequest,
-            messages: { $elemMatch: { 
-                readAt: { $exists: false }, 
-                author: { $ne: '$user' }
-            }}
-        }
-
-        return await this.supportRequestModel.find(query)
+        const supportReq = await this.supportRequestModel.aggregate([
+            { $match: { _id: supportRequest }},
+            { $lookup: {
+                from: 'messages',
+                localField: 'messages',
+                foreignField: '_id',
+                let: {
+                    user: '$user'
+                },
+                pipeline: [
+                { $match: {
+                    $expr:{ $and: [
+                        {$ne: [{ $toObjectId: '$$user'}, { $toObjectId: '$author'}]},
+                        {$cond: [
+                            {$ifNull: ['$readAt', true]},
+                                true,
+                                false
+                        ]}
+                    ]},
+                }},
+                ],
+                as: "messages"
+            }},
+        ])
+    
+        return supportReq[0].messages
     };
 }
+
