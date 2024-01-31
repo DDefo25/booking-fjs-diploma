@@ -8,7 +8,7 @@ import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { Role } from 'src/auth/roles.enum';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { RolesGuard } from 'src/auth/guards/http.roles.guard';
 
 @Controller('api/:role/hotel-rooms')
 export class HotelRoomController {

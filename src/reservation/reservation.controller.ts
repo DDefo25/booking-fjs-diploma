@@ -4,7 +4,7 @@ import { HttpValidationPipe } from 'src/validation/http.validation.pipe';
 import { ObjectId } from 'mongoose';
 import { Role } from 'src/auth/roles.enum';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { RolesGuard } from 'src/auth/guards/http.roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { ReservationCreateRequestDto } from './interfaces/create-reservation.request.dto';
 

@@ -9,5 +9,5 @@ export interface ISupportRequestService {
     findSupportRequests(params: GetChatListParams): Promise<SupportRequest[]>;
     sendMessage(data: SendMessageDto): Promise<Message>;
     getMessages(_params: GetMessagesParams): Promise<Message[]>;
-    subscribe(handler: (supportRequest: SupportRequest, message: Message) => void): () => void;
+    subscribe(handler: (supportRequest: SupportRequest, message: Message) => void): void;
 }

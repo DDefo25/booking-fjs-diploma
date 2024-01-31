@@ -6,6 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { SupportRequest, SupportRequestSchema } from './schemas/support-request.schema';
 import { Message, MessageSchema } from './schemas/message.schema';
 import { SupportRequestController } from './support-request.controller';
+import { SupportChatGateway } from './support-chat.gateway';
 
 @Module({
     imports: [
@@ -15,6 +16,11 @@ import { SupportRequestController } from './support-request.controller';
         ])
     ],
     controllers: [SupportRequestController],
-    providers: [SupportRequestService, SupportRequestClientService, SupportRequestEmployeeService],
+    providers: [
+        SupportRequestService, 
+        SupportRequestClientService, 
+        SupportRequestEmployeeService, 
+        SupportChatGateway
+    ],
 })
 export class SupportChatModule {}

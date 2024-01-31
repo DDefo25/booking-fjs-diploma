@@ -18,47 +18,9 @@ export class SupportRequestService implements ISupportRequestService {
     ) {}
 
     async findSupportRequests(_params: GetChatListParams): Promise<SupportRequest[]> {
-        console.log(_params)
         return await this.supportRequestModel.find(_params)
         .populate({path: 'user', model: 'User'})
         .select('-user.passwordHash')
-
-        // const aggregate = this.supportRequestModel.aggregate([
-        //     { $match: _params }, 
-        //     { $lookup: {
-        //         from: "messages",
-        //         localField: "messages",
-        //         foreignField: "_id",
-        //         let: {
-        //             user: '$user'
-        //         },
-        //         pipeline: [
-        //             { $match: {
-        //                 $expr:{ $and: [
-        //                     {$ne: [{ $toObjectId: '$$user'}, { $toObjectId: '$author'}]},
-        //                     {$cond: [
-        //                         {$ifNull: ['$readAt', true]},
-        //                         true,
-        //                         false
-        //                     ]}
-        //                 ]},
-        //                 // { $expr: { $gt:["$readAt", null] }}
-        //                 // readAt: { $exists: false }
-        //             }},
-        //         ],
-        //         as: "newMessages"
-        //     }},
-        //     { $addFields: {
-        //         countNewMessages: { $size: '$newMessages'},
-        //         hasNewMessages: { $cond: [{ $gte: [{ $size: '$newMessages'}, 1]}, true, false]}
-        //     }},
-        // ])
-
-        // if (projection) {
-        //     return await aggregate.project(projection)
-        // } else {
-        //     return await aggregate
-        // }
     };
     
     async sendMessage(data: SendMessageDto): Promise<Message> {
@@ -70,7 +32,7 @@ export class SupportRequestService implements ISupportRequestService {
             $push: { messages: message._id }
         });
 
-        this.eventEmitter.emit('supportRequest.sendMessage', message);
+        this.eventEmitter.emit('supportRequest.sendMessage', supportReqID, message);
 
         return message
     };
@@ -88,7 +50,7 @@ export class SupportRequestService implements ISupportRequestService {
         return supportRequest[0].messages
     };
 
-    subscribe(handler: (supportRequest: SupportRequest, message: Message) => void): () => void {
-        return;
+    subscribe(handler: (supportRequest: SupportRequest, message: Message) => void) {
+        this.eventEmitter.addListener('supportRequest.sendMessage', handler)
     };
 }

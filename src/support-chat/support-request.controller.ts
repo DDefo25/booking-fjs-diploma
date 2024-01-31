@@ -3,7 +3,7 @@ import { SupportRequestClientService } from './support-request-client/support-re
 import { SupportRequestService } from './support-request/support-request.service';
 import { SupportRequestEmployeeService } from './support-request-employee/support-request-employee.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { RolesGuard } from 'src/auth/guards/http.roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/auth/roles.enum';
 import { HttpValidationPipe } from 'src/validation/http.validation.pipe';
