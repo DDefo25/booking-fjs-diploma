@@ -1,25 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { Col, Container, Row } from 'react-bootstrap';
+import SideBar from './components/SideBar';
+import Logo from './components/Logo';
+import Profile from './components/Profile';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container>
+      <Row>
+          <Col sm={4}>
+            <Logo />
+          </Col>
+          <Col sm={8}>
+            <Profile placement='bottom'/>
+          </Col>
+      </Row>
+      <Row>
+          <Col sm={4}>
+            <SideBar />
+          </Col>
+          <Col sm={8}>sm=8</Col>
+      </Row>
+
+    </Container>
   );
 }
 
