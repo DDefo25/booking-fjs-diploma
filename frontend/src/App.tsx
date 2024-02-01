@@ -3,6 +3,8 @@ import { Col, Container, Row } from 'react-bootstrap';
 import SideBar from './components/SideBar';
 import Logo from './components/Logo';
 import Profile from './components/Profile';
+import UsersModule from './components/UsersModule/UsersModule';
+
 
 function App() {
   return (
@@ -19,7 +21,9 @@ function App() {
           <Col sm={4}>
             <SideBar />
           </Col>
-          <Col sm={8}>sm=8</Col>
+          <Col sm={8}>
+            <UsersModule />
+          </Col>
       </Row>
 
     </Container>
