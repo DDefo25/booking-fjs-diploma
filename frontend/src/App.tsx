@@ -4,6 +4,7 @@ import SideBar from './components/SideBar';
 import Logo from './components/Logo';
 import Profile from './components/Profile';
 import UsersModule from './components/UsersModule/UsersModule';
+import { MainContainer } from './components/MainContainer';
 
 
 function App() {
@@ -22,7 +23,7 @@ function App() {
             <SideBar />
           </Col>
           <Col sm={8}>
-            <UsersModule />
+            <MainContainer />
           </Col>
       </Row>
 

@@ -15,3 +15,5 @@ export class Hotel {
 const HotelSchema = SchemaFactory.createForClass(Hotel);
 
 export { HotelSchema }
+
+//Добавить images гостиницы

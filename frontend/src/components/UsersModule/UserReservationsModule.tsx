@@ -1,7 +1,7 @@
 import { Container, Table } from "react-bootstrap";
 import { IReservationDto } from "./interfaces/Reservation.interface.dto";
 import { IUserDto } from "./interfaces/User.interface.dto";
-import moment from 'moment';
+import Moment from "react-moment";
 
 export default function UserReservations ({user, reservations}: {user: IUserDto, reservations: IReservationDto[]}) {
     const columns = [
@@ -11,15 +11,15 @@ export default function UserReservations ({user, reservations}: {user: IUserDto,
         "Даты выезда"
     ]
 
+    const dateFormat = "DD.MM.YYYY"
+
     const reservationThEls = reservations.map((reservation: IReservationDto)=> {
-        const m = moment()
-        console.log(moment([]))
         return (
             <tr>
                 <td>{ reservation._id }</td>
                 <td>{ reservation.hotel.title }</td>
-                <td>{ reservation.startDate }</td>
-                <td>{ reservation.endDate }</td>
+                <td><Moment format={dateFormat} date={reservation.startDate}/></td>
+                <td><Moment format={dateFormat} date={reservation.endDate}/></td>
             </tr>
         )
     })
