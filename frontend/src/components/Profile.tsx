@@ -19,7 +19,7 @@ export default function Profile ({placement}: any) {
         const [key, value] = entry
         return (
         <Nav.Item>
-            <Nav.Link eventKey={key}>{value}</Nav.Link>
+            <Nav.Link key={key} eventKey={key}>{value}</Nav.Link>
         </Nav.Item>
         )
     })

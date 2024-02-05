@@ -5,6 +5,8 @@ import Logo from './components/Logo';
 import Profile from './components/Profile';
 import UsersModule from './components/UsersModule/UsersModule';
 import { MainContainer } from './components/MainContainer';
+import { Outlet, RouterProvider } from 'react-router-dom';
+import router from './router';
 
 
 function App() {
@@ -23,10 +25,9 @@ function App() {
             <SideBar />
           </Col>
           <Col sm={8}>
-            <MainContainer />
+            <Outlet />
           </Col>
       </Row>
-
     </Container>
   );
 }

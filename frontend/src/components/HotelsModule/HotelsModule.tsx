@@ -4,6 +4,8 @@ import { HotelRoomsList } from "./HotelRoomsList";
 import { IHotelRoom } from "./interfaces/HotellRoom.interface.dto";
 import { HotelCardEditing } from "./HotelCardEditing";
 import { HotelCardCreating } from "./HotelCardCreating";
+import { HotelSearch } from "./HotelSearch";
+import { HotelSearchList } from "./HotelSearchList";
 
 
 export default function HotelsModule () {
@@ -19,6 +21,32 @@ export default function HotelsModule () {
         createdAt: "2024-01-19T12:03:06.241Z",
         updatedAt: "2024-01-23T13:16:09.779Z"
     }
+
+    const hotels = [{
+        _id: "65aa64faa60c7d89a254f008",
+        title: "Holiday Inn Kaliningrad",
+        description: "Современный четырехзвездочный отель с обширным номерным фондом, расположенный в центральном районе Калининграда",
+        images: [
+            "https://picsum.photos/250/200",
+            "https://picsum.photos/250/200",
+            "https://picsum.photos/250/200",
+        ],
+        createdAt: "2024-01-19T12:03:06.241Z",
+        updatedAt: "2024-01-23T13:16:09.779Z"
+    }, {
+        _id: "65afbbb76b09a90774f06dc2",
+        title: "Holiday Inn Kaliningrad",
+        description: "Современный четырехзвездочный отель с обширным номерным фондом, расположенный в центральном районе Калининграда",
+        images: [
+            "https://picsum.photos/250/200",
+            "https://picsum.photos/250/200",
+            "https://picsum.photos/250/200",
+        ],
+        createdAt: "2024-01-19T12:03:06.241Z",
+        updatedAt: "2024-01-23T13:16:09.779Z"
+    },
+    
+    ]
 
     const hotelRooms = [
         {
@@ -72,9 +100,11 @@ export default function HotelsModule () {
 
     return (
         <Container>
-            <HotelCardCreating />
+            {/* <HotelCardCreating /> */}
             {/* <HotelCard hotel={hotel}/> */}
-            <HotelRoomsList hotelRooms={hotelRooms}/>
+            <HotelSearch />
+            {/* <HotelRoomsList hotelRooms={hotelRooms}/> */}
+            <HotelSearchList hotels={hotels} />
         </Container>
     )
 }
