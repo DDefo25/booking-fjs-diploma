@@ -2,7 +2,7 @@ import { Button, Card, Container, Form, Image } from "react-bootstrap";
 import { IHotel } from "./interfaces/Hotel.interface.dto";
 import { CarouselImages } from "../utilites-components/CarouselImages";
 import { useReducer, useRef } from "react";
-import { cardEditReducer } from "./reducers/cardEdit.reducer";
+import { reducer } from "../../reducers/common.reducer";
 
 export function HotelCardCreating () {
     const initialFormState: IHotel = {
@@ -14,11 +14,11 @@ export function HotelCardCreating () {
         ]
     }
 
-    const [formState, dispatch] = useReducer(cardEditReducer, initialFormState )
+    const [formState, dispatch] = useReducer(reducer, initialFormState )
 
     const handleInputChange = (e: any) => {
         dispatch({
-            type: 'HANDLE INPUT TEXT',
+            type: 'HANDLE CUSTOM FIELD',
             field: e.target.name,
             payload: e.target.value,
         })

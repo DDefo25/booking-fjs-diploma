@@ -11,7 +11,7 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/http.roles.guard';
 
-@Roles(Role.Admin)
+@Roles(Role.Admin, Role.Client)
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('api/:role/hotels')
 export class HotelController {

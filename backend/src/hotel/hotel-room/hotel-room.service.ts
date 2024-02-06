@@ -4,6 +4,7 @@ import { HotelRoom, HotelRoomDocument } from '../schemas/hotel-room.schema';
 import { Model, ObjectId } from 'mongoose';
 import { IHotelRoomService } from '../interfaces/hotel-room.service.interface';
 import { SearchRoomsParams } from '../interfaces/search-rooms.dto';
+import { match } from 'assert';
 
 @Injectable()
 export class HotelRoomService implements IHotelRoomService {
@@ -19,9 +20,20 @@ export class HotelRoomService implements IHotelRoomService {
        return this.model.findById(id)
    };
 
-   search(params: SearchRoomsParams): Promise<HotelRoom[]> {
-        const {limit, offset, ...filter} = params
-       return this.model.find(filter).limit(limit).skip(offset);
+   async search(params: SearchRoomsParams): Promise<HotelRoom[]> {
+        const {limit, offset, title, ...filter} = params
+        const match: { title?: RegExp } = {}
+        if (title) {
+            const titleRegExp = new RegExp(title, 'i')
+            match.title = titleRegExp
+        }
+
+        return this.model.find(filter)
+                .populate({path: 'hotel', match})
+                .limit(limit)
+                .skip(offset)
+                .then((hotelRooms) => hotelRooms
+                    .filter(el => el.hotel !== null));
    };
 
    update(id: ObjectId, data: Partial<HotelRoom>): Promise<HotelRoom> {

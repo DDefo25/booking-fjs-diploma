@@ -1,6 +1,6 @@
-export function cardEditReducer (state: any, action: any) {
+export function reducer (state: any, action: any) {
     switch (action.type) {
-        case 'HANDLE INPUT TEXT': {
+        case 'HANDLE CUSTOM FIELD': {
             return {
                 ...state,
                 [action.field]: action.payload
@@ -16,6 +16,12 @@ export function cardEditReducer (state: any, action: any) {
             return {
                 ...state,
                 [action.field]: state[action.field].splice(action.payload, 1)
+            }
+        }
+        case 'HANDLE ITEMS TO ARRAY': {
+            return {
+                ...state,
+                [action.field]: [...action.payload]
             }
         }
         default: 

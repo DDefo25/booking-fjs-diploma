@@ -2,7 +2,7 @@ import './App.css';
 import { Col, Container, Row } from 'react-bootstrap';
 import SideBar from './components/SideBar';
 import Logo from './components/Logo';
-import Profile from './components/Profile';
+import Profile from './components/AuthModule/Profile';
 import UsersModule from './components/UsersModule/UsersModule';
 import { MainContainer } from './components/MainContainer';
 import { Outlet, RouterProvider } from 'react-router-dom';

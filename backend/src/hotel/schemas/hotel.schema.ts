@@ -10,6 +10,9 @@ export class Hotel {
 
     @Prop()
     description: string;
+
+    @Prop()
+    images: string[]
 }
 
 const HotelSchema = SchemaFactory.createForClass(Hotel);

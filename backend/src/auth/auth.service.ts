@@ -47,12 +47,11 @@ export class AuthService {
     //Доступно только не аутентифицированным пользователям.
     async register(data: RegisterClientDto): Promise<any> {
         const { email, password } = data;
+        console.log(data)
         const userExist = await this.validateUser(email)
-
         if (userExist) {
             throw new BadRequestException('Email уже занят')
         }
-
         await this.userService.create(data);
         return await this.login({email, password})
 

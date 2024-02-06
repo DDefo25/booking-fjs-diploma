@@ -1,7 +1,7 @@
 import { Container } from "react-bootstrap";
 import UsersModule from "./UsersModule/UsersModule";
 import UserReservations from "./UsersModule/UserReservationsModule";
-import HotelsModule from "./HotelsModule/HotelsModule";
+import HotelsModule from "./HotelsModule/HotelSearchModule";
 
 export function MainContainer () {
     const users = [{
