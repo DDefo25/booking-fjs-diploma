@@ -4,7 +4,7 @@ import HotelsModule from "./components/HotelsModule/HotelSearchModule";
 import UsersModule from "./components/UsersModule/UsersModule";
 import HotelRoomsModule from "./components/HotelsModule/HotelRoomsModule";
 import HotelCreateModule from "./components/HotelsModule/HotelCreateModule";
-import { SERVER_URL } from "./config";
+import { SERVER_URL } from "./config/config";
 import axios, { AxiosResponse } from "axios";
 
 export default createBrowserRouter([

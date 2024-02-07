@@ -1,12 +1,5 @@
 import { Button, Card, Form } from "react-bootstrap";
-import { CarouselImages } from "../utilites-components/CarouselImages";
-import { useEffect, useReducer, useRef, useState } from "react";
 
-import { IHotelSearch } from "./interfaces/Hotel.search.interface.dto";
-import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
-import { reducer } from "../../reducers/common.reducer";
-import axios from "axios";
-import { SERVER_URL } from "../../config";
 
 
 

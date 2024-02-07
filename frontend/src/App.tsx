@@ -17,7 +17,7 @@ function App() {
             <Logo />
           </Col>
           <Col sm={8}>
-            <Profile placement='bottom'/>
+            <Profile />
           </Col>
       </Row>
       <Row>

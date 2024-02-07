@@ -1,11 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit'
-import inputReducer from './features/inputFieldSlice'
+import userReducer from './features/userSlice'
 
 export const store = configureStore({
     reducer: {
-      input: inputReducer,
-    //   hotels: hotelsReducer,
-    //   users: usersReducer,
+      user: userReducer
     },
 })
 

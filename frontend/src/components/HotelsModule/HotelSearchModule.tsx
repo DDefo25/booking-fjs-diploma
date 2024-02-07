@@ -6,7 +6,7 @@ import axios, { AxiosResponse } from "axios";
 import { useReducer } from "react";
 import { IHotelSearch } from "./interfaces/Hotel.search.interface.dto";
 import { reducer } from "../../reducers/common.reducer";
-import { SERVER_URL } from "../../config";
+import { SERVER_URL } from "../../config/config";
 import { IHotel } from "./interfaces/Hotel.interface.dto";
 import React from "react";
 import { hotelModuleReducer } from "../../reducers/hotelModule.reducer";
