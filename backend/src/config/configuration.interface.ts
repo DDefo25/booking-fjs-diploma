@@ -17,6 +17,8 @@ export interface IUploadConfiguration {
 export interface IJwtConfiguration {
     secret: string,
     expiresIn: string | number,
+    secretRefreshToken: string
+    expiresInRefreshToken: string | number,
 }
 
 export interface ICookiesConfiguration {

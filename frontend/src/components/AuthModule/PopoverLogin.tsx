@@ -1,49 +1,62 @@
 import { useState } from "react"
-import { Button, Form } from "react-bootstrap"
-import { AuthService } from "../../services/auth.service"
-import { useAppDispatch } from "../../hooks/hooksRedux";
-import { loginUser } from "../../features/userSlice";
+import { Button, Form, Spinner } from "react-bootstrap"
+import { LoginRequest, useLoginMutation } from "../../services/auth.service"
+import { useNavigate } from "react-router-dom";
 
 export default function PopoverLogin () {
-    const dispatch = useAppDispatch();
+  const navigate = useNavigate()
 
-    const [inputEmail, setInputEmail] = useState<string>("");
-    const [inputPassword, setInputPassword] = useState<string>("");
+  const [formState, setFormState] = useState<LoginRequest>({
+    email: '',
+    password: '',
+  })
 
 
-    const handlers = {
-      submit: async (e: any) => {
-        e.preventDefault();
-        try {
-          const user = await AuthService.login({ email: inputEmail, password: inputPassword })
-          dispatch(loginUser({user}))
-        } catch (error) {
-          console.log(error)
-        }
+  const [login, {isLoading}] = useLoginMutation()
+  const handlers = {
+    onChange: ({ target: { name, value } }: React.ChangeEvent<HTMLInputElement>) => {
+      setFormState((prev) => ({ ...prev, [name]: value}))
+    },
+    
+    onSubmit: async (e: React.FormEvent) => {
+      e.preventDefault();
+      try {
+        await login(formState).unwrap()
+        navigate('/')
+      } catch (error) {
+        console.log(error)
       }
     }
-
+  }
+    
     return (
-    <Form onSubmit={handlers.submit}>
-      <Form.Group className="mb-3" controlId="formBasicEmail">
-        <Form.Control 
-          type="email" 
-          placeholder="Введите логин" 
-          name='email' 
-          onChange={ (e) => setInputEmail(e.target.value) } 
-          value={ inputEmail } />
-      </Form.Group>
+      <>
+      { isLoading ? 
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>  
+      : 
+        <Form onSubmit={handlers.onSubmit}>
+          <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Control 
+              type="email" 
+              placeholder="Введите логин" 
+              name='email' 
+              onChange={ handlers.onChange } 
+              value={ formState.email } />
+          </Form.Group>
 
-      <Form.Group className="mb-3" controlId="formBasicPassword">
-        <Form.Control 
-          type="password" 
-          placeholder="Введите пароль" 
-          name='password' 
-          onChange={ (e) => setInputPassword(e.target.value) } 
-          value={ inputPassword }/>
-      </Form.Group>
-
-      <Button variant="primary" type="submit">Войти</Button>
-    </Form>
+          <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Control 
+              type="password" 
+              placeholder="Введите пароль" 
+              name='password' 
+              onChange={ handlers.onChange } 
+              value={ formState.password }/>
+          </Form.Group>
+          <Button variant="primary" type="submit">Войти</Button>
+        </Form> 
+      }
+      </>
     )
 }

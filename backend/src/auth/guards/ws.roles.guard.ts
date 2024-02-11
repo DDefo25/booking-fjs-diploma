@@ -19,9 +19,6 @@ export class WsRolesGuard implements CanActivate {
     const client: Socket = context.switchToWs().getClient();
     const { role } = client['user']
 
-    return (
-      requiredRoles.some((el) => {
-        return role.includes(el)
-      }))
+    return requiredRoles.some((el) => role.includes(el))
   }
 }

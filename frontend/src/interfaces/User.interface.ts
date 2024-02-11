@@ -1,10 +1,12 @@
-export interface IUser {
+import { SerializedError } from "@reduxjs/toolkit"
+
+export interface User {
     _id: string,
     name: string,
     email: string
 }
 
-export interface IUserState {
-    isLoggedIn?: boolean,
-    user: IUser
+export interface AuthState {
+    user: User | null
+    token: string | null
 }

@@ -4,11 +4,11 @@ import UserGreeting from "./UserGreeting"
 import GuestGreeting from "./GuestGreeting"
 
 export default function Profile () {
-    const {isLoggedIn} = useAppSelector(userSelector)
 
-    if (isLoggedIn) {
+
+    // if (user) {
         return <UserGreeting />
-    } else {
-        return <GuestGreeting />
-    }
+    // } else {
+    //     return <GuestGreeting />
+    // }
 }

@@ -4,6 +4,6 @@ export interface LoginUserResponseDto  {
         name: string,
         contactPhone: string
     },
-    accessToken: string
-
+    token: string
+    refreshToken: string
 }

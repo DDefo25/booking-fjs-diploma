@@ -4,13 +4,25 @@ import { UserService } from 'src/user/user.service';
 import { RegisterClientDto } from './interfaces/register-user.dto';
 import { LoginUserDto } from './interfaces/login-user.dto';
 import { LoginUserResponseDto } from './interfaces/login-user-response.dto';
+import { ConfigService } from '@nestjs/config';
+import { IJwtConfiguration } from 'src/config/configuration.interface';
+import { User } from 'src/user/schemas/user.schema';
 
 @Injectable()
 export class AuthService {
     constructor (
         private userService: UserService,
-        private jwtService: JwtService
+        private jwtService: JwtService,
+        private configService: ConfigService
     ) {}
+
+    async createResponse({_id, email, name, contactPhone, role}: any) {
+        return {
+            user: { email, name, contactPhone },
+            token: await this.createToken({ id: _id, email, role }),
+            refreshToken: await this.createToken({ id: _id, email, role }, true),
+        };
+    }
 
     async validateUser(email: string): Promise<any> {
         const user = await this.userService.findByEmail( email, ['+passwordHash'])
@@ -20,28 +32,15 @@ export class AuthService {
         return user;
     }
 
-    async login({email, password: pass}: LoginUserDto): Promise<LoginUserResponseDto> {
-        const user = await this.validateUser( email )
-        const isPasswordValid = await user.validateHash( pass )
+    async login({email: reqEmail, password: reqPass}: LoginUserDto): Promise<LoginUserResponseDto> {
+        const user = await this.validateUser( reqEmail )
+        const isPasswordValid = await user.validateHash( reqPass )
         
         if (!isPasswordValid || !user) {
             throw new UnauthorizedException('Пользователя с указанным email не существует или неверный пароль');
         }
 
-        const payload = { 
-            id: user._id, 
-            email: user.email, 
-            role: user.role
-        };
-        
-        return {
-            user: {
-                email: user.email,
-                name: user.name,
-                contactPhone: user.contactPhone
-            },
-            accessToken: await this.createToken(payload),
-        };
+        return this.createResponse(user)
     }
 
     //Доступно только не аутентифицированным пользователям.
@@ -54,10 +53,14 @@ export class AuthService {
         }
         await this.userService.create(data);
         return await this.login({email, password})
+    }
 
-      }
+    async createToken(payload: any, refresh: boolean = false) {
+        const { expiresInRefreshToken: expiresIn, secretRefreshToken: secret } = this.configService.get<IJwtConfiguration>('jwt')
+        return await this.jwtService.signAsync(payload, refresh ? { expiresIn, secret } : null );
+    }
 
-    async createToken(payload: any) {
-        return await this.jwtService.signAsync(payload);
+    async refreshToken(user: any) {
+        return this.createResponse(user)
     }
 }

@@ -7,12 +7,13 @@ import { IDBConfiguration } from '../configuration.interface';
 export class MongooseConfigService implements MongooseOptionsFactory {
     constructor(private configService: ConfigService) {}
     createMongooseOptions(): MongooseModuleOptions | Promise<MongooseModuleOptions> {
-        const dbConfig = this.configService.get<IDBConfiguration>('database')
+        const {user, pass, dbName, host, port } = this.configService
+            .get<IDBConfiguration>('database')
         return {
-            uri: `mongodb://${dbConfig.host}:${dbConfig.port}`,
-            user: dbConfig.user,
-            pass: dbConfig.pass,
-            dbName: dbConfig.dbName
+            uri: `mongodb://${host}:${port}`,
+            user,
+            pass,
+            dbName
         }
     }
 }

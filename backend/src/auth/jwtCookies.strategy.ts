@@ -7,18 +7,17 @@ import { Socket } from "socket.io";
 import { parse } from 'cookie'
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class JwtStrategyCookies extends PassportStrategy(Strategy, 'jwt-cookies') {
   constructor(
     private authService: AuthService
   ) {
     super({
       jwtFromRequest:  ExtractJwt.fromExtractors([
-        ExtractJwt.fromAuthHeaderAsBearerToken(),
-        // JwtStrategy.extractJWTFromWS,
-        // JwtStrategy.extractJWTFromCookies,
+        JwtStrategyCookies.extractJWTFromCookies,
+        // JwtStrategyCookies.extractJWTFromWS,
       ]),
       ignoreExpiration: false,
-      secretOrKey: process.env.JWT_SECRET_KEY,
+      secretOrKey: process.env.JWT_SECRET_KEY_REFRESH_TOKEN,
     });
   }
 
@@ -31,21 +30,18 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   private static extractJWTFromWS(req: Socket): string | null {
-    console.log(req)
-    const { headers } = req?.handshake
-    if ( headers.authorization ) {
-        if ( headers.authorization?.length) return headers.authorization
+    const { cookie } = req?.handshake?.headers
+    if ( cookie ) {
+      const { refreshToken } = parse(cookie)
+        if ( refreshToken ) return refreshToken
     }
     return null;
   }
 
-  // private static extractJWTFromCookies(req: RequestType): string | null {
-  //   const cookie = req?.cookies
-  //   if ( cookie ) {
-  //     const { tokenRefresh } = parse(cookie)
-  //       if ( tokenRefresh ) return tokenRefresh
-  //   }
-  //   return null;
-  // }
+  private static extractJWTFromCookies(req: RequestType): string | null {
+    const { refreshToken } = req.cookies
+    if ( refreshToken ) return refreshToken
+    return null;
+  }
 
 }

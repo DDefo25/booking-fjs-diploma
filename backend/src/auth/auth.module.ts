@@ -8,6 +8,7 @@ import { JwtConfigService } from 'src/config/jwt-config/jwt-config.service';
 import { JwtStrategy } from './jwt.strategy';
 import { RolesGuard } from './guards/http.roles.guard';
 import { APP_GUARD } from '@nestjs/core';
+import { JwtStrategyCookies } from './jwtCookies.strategy';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { APP_GUARD } from '@nestjs/core';
   providers: [
     AuthService, 
     JwtStrategy,
+    JwtStrategyCookies,
     JwtConfigService
   ],
   controllers: [AuthController],

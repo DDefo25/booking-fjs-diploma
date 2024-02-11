@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import App from "./App";
+import App, { appLoader } from "./App";
 import HotelsModule from "./components/HotelsModule/HotelSearchModule";
 import UsersModule from "./components/UsersModule/UsersModule";
 import HotelRoomsModule from "./components/HotelsModule/HotelRoomsModule";
@@ -10,7 +10,9 @@ import axios, { AxiosResponse } from "axios";
 export default createBrowserRouter([
     {
       path: '/',
+      id: 'root',
       element: <App />,
+      loader: appLoader,
       children: [
         { 
             path: 'hotels',

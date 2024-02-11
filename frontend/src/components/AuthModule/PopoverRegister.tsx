@@ -1,31 +1,31 @@
-import { Button, Form } from "react-bootstrap"
+import { Button, Form, Spinner } from "react-bootstrap"
 import { useState } from "react"
-import { AuthService } from "../../services/auth.service"
-import { useAppDispatch } from "../../hooks/hooksRedux"
-import { loginUser } from "../../features/userSlice"
+import { AuthService, RegisterRequest, useRegisterMutation } from "../../services/auth.service"
+import { useAppDispatch, useAppSelector } from "../../hooks/hooksRedux"
+import { userSelector } from "../../features/userSlice";
+import { useNavigate } from "react-router-dom";
+// import { loginUser } from "../../features/userSlice"
 
 export default function PopoverRegister () {
-    const [inputEmail, setInputEmail] = useState<string>("");
-    const [inputPassword, setInputPassword] = useState<string>("");
-    const [inputName, setInputName] = useState<string>("");
-    const [inputContactPhone, setInputContactPhone] = useState<string>("");
+  const navigate = useNavigate()
+  const [formState, setFormState] = useState<RegisterRequest>({
+    email: '',
+    password: '',
+    name: '',
+    contactPhone: ''
+  })
+  
+  const [ register, { isLoading }] = useRegisterMutation();
 
-    const dispatch = useAppDispatch();
-
-    const handlers = {
-      submit: async (e: any) => {
+  const handlers = {
+      onChange: ({target: {name, value}}: React.ChangeEvent<HTMLInputElement>) => {
+        setFormState((prev) => ({ ...prev, [name]: value}))
+      },
+      onSubmit: async (e: React.FormEvent) => {
         e.preventDefault();
-        
-        const data = { 
-          email: inputEmail, 
-          name: inputName, 
-          password: inputPassword, 
-          contactPhone: inputContactPhone
-        }
-        
         try {
-          const user = await AuthService.register(data)
-          dispatch(loginUser({user}))
+          await register(formState).unwrap()
+          navigate('/')
         } catch (error) {
           console.log(e)
         }
@@ -33,15 +33,20 @@ export default function PopoverRegister () {
     }
 
     return (
-      <Form onSubmit={handlers.submit}>
-
+      <>
+      { isLoading ? 
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>  
+      : 
+      <Form onSubmit={handlers.onSubmit}>
         <Form.Group className="mb-3" controlId="formBasicName">
           <Form.Control 
             type="text" 
             placeholder="Введите имя" 
             name='name' 
-            onChange={ (e) => setInputName(e.target.value) } 
-            value={ inputName }
+            onChange={ handlers.onChange } 
+            value={ formState.name }
           />
         </Form.Group>
         
@@ -50,8 +55,8 @@ export default function PopoverRegister () {
             type="email" 
             placeholder="Введите логин" 
             name='email' 
-            onChange={ (e) => setInputEmail(e.target.value) } 
-            value= {inputEmail }
+            onChange={ handlers.onChange } 
+            value= { formState.email }
           />
         </Form.Group>
 
@@ -60,8 +65,8 @@ export default function PopoverRegister () {
             type="password" 
             placeholder="Введите пароль" 
             name='password' 
-            onChange={ (e) => setInputPassword(e.target.value) } 
-            value={ inputPassword }
+            onChange={ handlers.onChange } 
+            value={ formState.password }
           />
         </Form.Group>
 
@@ -70,13 +75,14 @@ export default function PopoverRegister () {
             type="phone" 
             placeholder="Введите номер телефона" 
             name='contactPhone' 
-            onChange={ (e) => setInputContactPhone(e.target.value) } 
-            value={ inputContactPhone }
+            onChange={ handlers.onChange } 
+            value={ formState.contactPhone }
           />
         </Form.Group>
 
         <Button variant="primary" type="submit">Регистрация</Button>
-
     </Form>
+    }
+    </>
     )
 }
