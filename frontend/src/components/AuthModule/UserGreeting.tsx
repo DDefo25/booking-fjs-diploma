@@ -1,5 +1,5 @@
 import { Button, Container, Image, ListGroup, OverlayTrigger, Popover, Spinner } from "react-bootstrap"
-import { clearCredentials, userSelector } from "../../features/userSlice"
+import { authSelector } from "../../features/userSlice"
 import { useAppDispatch, useAppSelector } from "../../hooks/hooksRedux"
 import { AuthService, useLoginMutation, useLogoutMutation } from "../../services/auth.service"
 import { useEffect } from "react"
@@ -8,20 +8,20 @@ import { useNavigate } from "react-router-dom"
 const placement = 'bottom'
 
 export default function UserGreeting () {
-    const user = useAppSelector(userSelector)
-    const dispatch = useAppDispatch()
+    const {user, isAuth} = useAppSelector(authSelector)
+    // const user = useAppSelector(userSelector)
     const [logout, { isLoading }] = useLogoutMutation()
     const navigate = useNavigate()
 
     
-    useEffect(() => {
-        console.log('user form useEffect from UserGreeting Component' + JSON.stringify(user))
-    }, [user])
+    // useEffect(() => {
+    //     console.log('user form useEffect from UserGreeting Component' + JSON.stringify(user))
+    // }, [user])
 
     const handlers = {
         logout: async () => {
             try {
-                const result = await logout(undefined).unwrap()
+                const result = await logout().unwrap()
                 console.log(result)
                 navigate('/')
               } catch (error) {
@@ -32,18 +32,18 @@ export default function UserGreeting () {
     
     return (
         <Container>
-            {user ? (
+            {isAuth ? (
             <OverlayTrigger
                 trigger="click"
                 key={placement}
                 placement={placement}
                 overlay={
                 <Popover id={`popover-positioned-${placement}`}>
-                    <Popover.Header as="h3">{ user.name }</Popover.Header>
+                    <Popover.Header as="h3">{ user?.name }</Popover.Header>
                     <Popover.Body>
                         <ListGroup variant="flush">
                             {/* <ListGroup.Item><strong>id</strong> { user._id }</ListGroup.Item> */}
-                            <ListGroup.Item><strong>email</strong> { user.email }</ListGroup.Item>
+                            <ListGroup.Item><strong>email</strong> { user?.email }</ListGroup.Item>
                         </ListGroup>
                     </Popover.Body>
                     { isLoading ? 

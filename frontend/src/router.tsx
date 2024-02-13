@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import App, { appLoader } from "./App";
+import App from "./App";
 import HotelsModule from "./components/HotelsModule/HotelSearchModule";
 import UsersModule from "./components/UsersModule/UsersModule";
 import HotelRoomsModule from "./components/HotelsModule/HotelRoomsModule";
@@ -12,7 +12,7 @@ export default createBrowserRouter([
       path: '/',
       id: 'root',
       element: <App />,
-      loader: appLoader,
+      // loader: appLoader,
       children: [
         { 
             path: 'hotels',

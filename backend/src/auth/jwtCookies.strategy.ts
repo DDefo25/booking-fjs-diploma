@@ -29,18 +29,18 @@ export class JwtStrategyCookies extends PassportStrategy(Strategy, 'jwt-cookies'
     return user;
   }
 
-  private static extractJWTFromWS(req: Socket): string | null {
-    const { cookie } = req?.handshake?.headers
-    if ( cookie ) {
-      const { refreshToken } = parse(cookie)
-        if ( refreshToken ) return refreshToken
-    }
-    return null;
-  }
+  // private static extractJWTFromWS(req: Socket): string | null {
+  //   const { cookie } = req?.handshake?.headers
+  //   if ( cookie ) {
+  //     const { refreshToken } = parse(cookie)
+  //       if ( refreshToken ) return refreshToken
+  //   }
+  //   return null;
+  // }
 
   private static extractJWTFromCookies(req: RequestType): string | null {
     const { refreshToken } = req.cookies
-    if ( refreshToken ) return refreshToken
+    if ( refreshToken && refreshToken.length > 0 ) return refreshToken
     return null;
   }
 

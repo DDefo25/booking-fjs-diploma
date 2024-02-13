@@ -5,14 +5,24 @@ import { ILoginDto } from "./interfaces/login.params";
 import instance from "../config/axiosConfig";
 import { catchError } from '../exceptions/catchError'
 import { BaseQueryFn, createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { RootState } from "../store";
+import { RootState } from "../store/store";
 import { User } from "../interfaces/User.interface";
-import { clearCredentials, setCredentials } from "../features/userSlice";
+import { authInProgress, clearCredentials, setCredentials } from "../features/userSlice";
+
+export interface LoginResponse {
+  user: User
+  token: string
+}
 
 export interface UserResponse {
   user: User
   token: string
 }
+
+export interface LogoutResponse {
+  success: boolean
+}
+
 
 export interface LoginRequest {
   email: string
@@ -58,10 +68,15 @@ export class AuthService {
     }
 
 
-    static getUser = async () => {
+    static getUser: () => any = async () => {
+      const token = localStorage.getItem('token' )
+      if (!token || token?.length < 0) {
+        return { user: null, token: null }
+      }
+
       try {
         const { data: user } = await instance.get("/api/auth/get-user")
-        return user
+        return { user, token }
       } catch (e) {
         return catchError(e)
       };
@@ -74,31 +89,43 @@ export class AuthService {
       endpoints: builder => ({
         login: builder.mutation<UserResponse, LoginRequest>({
           queryFn: async (credentials, apiState) => {
-            const response = await instance.post('/api/auth/login', credentials)
-            const { data: { user, token } } = response
-            console.log({ user, token })
-            localStorage.setItem('token', token )
-            apiState.dispatch(setCredentials({ user, token }))
-            return response
+            // apiState.dispatch(authInProgress())
+            return instance
+              .post('/api/auth/login', credentials)
+              .then(response => {
+                const { data: { user, token } } = response
+                console.log({ user, token })
+                localStorage.setItem('token', token )
+                apiState.dispatch(setCredentials({ user, token }))
+                return response
+              })
           },
         }),
         register: builder.mutation<UserResponse, RegisterRequest>({
           queryFn: async (credentials, apiState) => {
-            const response = await instance.post('/api/auth/login', credentials)
-            const { data: { user, token } } = response
-            console.log({ user, token })
-            localStorage.setItem('token', token )
-            apiState.dispatch(setCredentials({ user, token }))
-            return response
+            // apiState.dispatch(authInProgress())
+            return instance
+              .post('/api/auth/login', credentials)
+              .then(response => {
+                const { data: { user, token } } = response
+                console.log({ user, token })
+                localStorage.setItem('token', token )
+                apiState.dispatch(setCredentials({ user, token }))
+                return response
+              })
           },
         }),
-        logout: builder.mutation<UserResponse, undefined>({
+        logout: builder.mutation<LogoutResponse, void>({
           queryFn: async (_, apiState) => {
-            const response = await instance.post('/api/auth/logout')
-            localStorage.removeItem('token')
-            apiState.dispatch(clearCredentials())
-            console.log('state from logout after' + JSON.stringify(apiState.getState()))
-            return response
+            // apiState.dispatch(authInProgress())
+            return instance
+              .post('/api/auth/logout')
+              .then(response => {
+                localStorage.removeItem('token')
+                apiState.dispatch(clearCredentials())
+                console.log('state from logout after' + JSON.stringify(apiState.getState()))
+                return response
+              })
           },
         }),
       })

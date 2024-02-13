@@ -4,9 +4,10 @@ const baseURL = process.env.NODE_ENV === "development"
   ? "http://localhost:4000/"
   : "http://example.com"
 
+
 const instance = axios.create({
     baseURL,
-    withCredentials: true
+    withCredentials: true,
 })
 
 instance.interceptors.request.use( request => {
@@ -23,17 +24,16 @@ instance.interceptors.response.use(
     return response
   }, 
   async (error) => {
-    const originalRequest = error.config;
-    console.log(error)
+    const { config: originalRequest, response } = error
      if ( 
-        error.response.status === 401 && 
+        response.status === 401 && 
         !originalRequest._isRetry
      ) {
-      originalRequest._isRetry = true;
+      originalRequest._isRetry = true
        try {
          const { data: { token }} = await instance.get("/api/auth/refresh");
-         localStorage.setItem("token", token);
-         return instance.request(originalRequest);
+         localStorage.setItem("token", token)
+         return instance.request(originalRequest)
        } catch (error) {
          console.log("AUTH ERROR");
        }

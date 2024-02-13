@@ -1,7 +1,9 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button, Form, Spinner } from "react-bootstrap"
 import { LoginRequest, useLoginMutation } from "../../services/auth.service"
 import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "../../hooks/hooksRedux";
+import { authSelector } from "../../features/userSlice";
 
 export default function PopoverLogin () {
   const navigate = useNavigate()
@@ -11,6 +13,7 @@ export default function PopoverLogin () {
     password: '',
   })
 
+  const { isAuth, isAuthInProgress } = useAppSelector(authSelector)
 
   const [login, {isLoading}] = useLoginMutation()
   const handlers = {
@@ -28,6 +31,10 @@ export default function PopoverLogin () {
       }
     }
   }
+
+  useEffect(() => {
+    console.log({isAuth, isAuthInProgress})
+  }, [isAuth, isAuthInProgress])
     
     return (
       <>

@@ -2,7 +2,7 @@ import { Button, Form, Spinner } from "react-bootstrap"
 import { useState } from "react"
 import { AuthService, RegisterRequest, useRegisterMutation } from "../../services/auth.service"
 import { useAppDispatch, useAppSelector } from "../../hooks/hooksRedux"
-import { userSelector } from "../../features/userSlice";
+import { authSelector } from "../../features/userSlice";
 import { useNavigate } from "react-router-dom";
 // import { loginUser } from "../../features/userSlice"
 

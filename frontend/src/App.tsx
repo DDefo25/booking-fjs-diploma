@@ -6,17 +6,24 @@ import { Outlet, useLoaderData } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './hooks/hooksRedux';
 import UserGreeting from './components/AuthModule/UserGreeting';
 import GuestGreeting from './components/AuthModule/GuestGreeting';
-import { setCredentials, userSelector } from './features/userSlice';
+import { setCredentials, authSelector } from './features/userSlice';
 import { AuthService } from './services/auth.service';
-
+import Profile from './components/AuthModule/Profile';
 
 function App() {
-  const payload: any = useLoaderData()
+  // const {user, token}: any = useLoaderData()
+  // const dispatch = useAppDispatch()
+  // // const dispatch = useAppDispatch()
+  
+  // // dispatch(setCredentials(payload))
 
-  const dispatch = useAppDispatch()
-  dispatch(setCredentials(payload))
+  // // const user = useAppSelector(userSelector)
 
-  const user = useAppSelector(userSelector)
+  // if (user && token) {
+  //   dispatch(setCredentials({user, token}))
+  // }
+
+
 
   return (
     <Container>
@@ -25,7 +32,7 @@ function App() {
             <Logo />
           </Col>
           <Col sm={8}>
-            { user ? <UserGreeting /> : <GuestGreeting /> }
+            <Profile />
           </Col>
       </Row>
       <Row>
@@ -40,18 +47,15 @@ function App() {
   );
 }
 
-export const appLoader = async () => {
-  const token = localStorage.getItem('token')
-  if (token) {
-    try {
-      const user = await AuthService.getUser()
-      return { user, token }
-    } catch (e) {
-      console.log(e)
-    }
-  }
-  return { user: null, token: null }
-}
-
 export default App;
+
+// export const appLoader = async () => {
+//   try {
+//     const user = await AuthService.getUser()
+//     const token = localStorage.getItem('token')
+//     return { user, token }
+//   } catch (e) {
+//     return { user: null, token: null }
+//   }
+// }
 

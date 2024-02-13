@@ -18,9 +18,9 @@ export class AuthService {
 
     async createResponse({_id, email, name, contactPhone, role}: any) {
         return {
-            user: { email, name, contactPhone },
-            token: await this.createToken({ id: _id, email, role }),
-            refreshToken: await this.createToken({ id: _id, email, role }, true),
+            user: { email, name, contactPhone, role },
+            token: await this.createToken({ id: _id, email }),
+            refreshToken: await this.createToken({ id: _id, email }, true),
         };
     }
 

@@ -36,7 +36,7 @@ export class AuthController {
     async logout(
         @Res({ passthrough: true }) res: Response
     ) {
-        res.cookie('refreshToken', null, {expires: new Date(Date.now())})
+        res.cookie('refreshToken', '', {expires: new Date(Date.now())})
         return { success: true }
     }
 

@@ -30,14 +30,14 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     return user;
   }
 
-  private static extractJWTFromWS(req: Socket): string | null {
-    console.log(req)
-    const { headers } = req?.handshake
-    if ( headers.authorization ) {
-        if ( headers.authorization?.length) return headers.authorization
-    }
-    return null;
-  }
+  // private static extractJWTFromWS(req: Socket): string | null {
+  //   console.log(req)
+  //   const { headers } = req?.handshake
+  //   if ( headers.authorization ) {
+  //       if ( headers.authorization?.length) return headers.authorization
+  //   }
+  //   return null;
+  // }
 
   // private static extractJWTFromCookies(req: RequestType): string | null {
   //   const cookie = req?.cookies
