@@ -1,10 +1,7 @@
 import { Button, Form, Spinner } from "react-bootstrap"
 import { useState } from "react"
-import { AuthService, RegisterRequest, useRegisterMutation } from "../../services/auth.service"
-import { useAppDispatch, useAppSelector } from "../../hooks/hooksRedux"
-import { authSelector } from "../../features/userSlice";
 import { useNavigate } from "react-router-dom";
-// import { loginUser } from "../../features/userSlice"
+import { RegisterRequest, useRegisterMutation } from "../../services/auth.service";
 
 export default function PopoverRegister () {
   const navigate = useNavigate()
@@ -15,30 +12,21 @@ export default function PopoverRegister () {
     contactPhone: ''
   })
   
-  const [ register, { isLoading }] = useRegisterMutation();
+  const [ register ] = useRegisterMutation({ fixedCacheKey: 'shared-register'});
 
   const handlers = {
       onChange: ({target: {name, value}}: React.ChangeEvent<HTMLInputElement>) => {
         setFormState((prev) => ({ ...prev, [name]: value}))
       },
-      onSubmit: async (e: React.FormEvent) => {
+      onSubmit: (e: React.FormEvent) => {
         e.preventDefault();
-        try {
-          await register(formState).unwrap()
-          navigate('/')
-        } catch (error) {
-          console.log(e)
-        }
+        register(formState)
+        navigate('/')
       }
     }
 
     return (
       <>
-      { isLoading ? 
-        <Spinner animation="border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </Spinner>  
-      : 
       <Form onSubmit={handlers.onSubmit}>
         <Form.Group className="mb-3" controlId="formBasicName">
           <Form.Control 
@@ -53,7 +41,7 @@ export default function PopoverRegister () {
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Control 
             type="email" 
-            placeholder="Введите логин" 
+            placeholder="Введите email" 
             name='email' 
             onChange={ handlers.onChange } 
             value= { formState.email }
@@ -82,7 +70,6 @@ export default function PopoverRegister () {
 
         <Button variant="primary" type="submit">Регистрация</Button>
     </Form>
-    }
     </>
     )
 }

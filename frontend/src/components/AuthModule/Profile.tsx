@@ -1,58 +1,30 @@
-// import { userSelector } from "../../features/userSlice"
-import { useAppDispatch, useAppSelector } from "../../hooks/hooksRedux"
-import UserGreeting from "./UserGreeting"
+import { useSelector } from "react-redux"
 import GuestGreeting from "./GuestGreeting"
-import { AuthService } from "../../services/auth.service"
-import { authSelector, setCredentials } from "../../features/userSlice"
-import { useEffect, useState } from "react"
-import { Spinner } from "react-bootstrap"
+import UserGreeting from "./UserGreeting"
+import { selectIsAuth } from "../../features/auth/authSlice"
+import { useLoginMutation, useRegisterMutation } from "../../services/auth.service"
+import { Loading } from "../utilites-components/Loading"
+
 
 export default function Profile () {
-    const dispatch = useAppDispatch()
-    const { isAuth, isAuthInProgress } = useAppSelector(authSelector)
-    const [ isLoading, setIsLoading ] = useState(true)
+    const isAuth = useSelector(selectIsAuth)
 
-    useEffect(() => {
-        if (!isAuth) {
-            AuthService.getUser().then(({user, token} : {user: any, token: any}) => {
-                if ( user && token ) {
-                    dispatch(setCredentials({user, token}))
-                }
-                setIsLoading(false)
-            })
-        }
-      }, []);
+    const [ 
+        _login, 
+        { isLoading: isLoadingLogin } 
+    ] = useLoginMutation({ fixedCacheKey: 'shared-login'})
+    
+    const [ 
+        _register, 
+        { isLoading: isLoadingRegister} 
+    ] = useRegisterMutation({ fixedCacheKey: 'shared-register'})
 
-    useEffect(() => {
-        console.log('isAuthInProgress ' + isAuthInProgress)
-    }, [isAuthInProgress])
-
-    useEffect(() => {
-        console.log('isAuth ' + isAuth)
-    }, [isAuth])
-
-
-    console.log( isAuth )
+    if (isLoadingLogin || isLoadingRegister) return <Loading />
 
     return (
-        <>
-        { !isLoading ? 
-            isAuth ? 
-                <UserGreeting /> 
-            : 
-                <GuestGreeting /> 
-        :
-            <Spinner animation="border" role="status">
-                <span className="visually-hidden">Loading...</span>
-            </Spinner>  
-        }
-        </>
+        isAuth ? 
+            <UserGreeting /> 
+        : 
+            <GuestGreeting /> 
     )
-
-
-    // if (user) {
-        // return <UserGreeting />
-    // } else {
-    //     return <GuestGreeting />
-    // }
 }

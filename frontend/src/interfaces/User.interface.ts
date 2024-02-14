@@ -1,10 +1,10 @@
-import { SerializedError } from "@reduxjs/toolkit"
+import { Role } from "../config/roles.enum"
 
 export interface User {
     _id: string,
     name: string,
     email: string,
-    role: string
+    role: Role
 }
 
 export interface AuthState {

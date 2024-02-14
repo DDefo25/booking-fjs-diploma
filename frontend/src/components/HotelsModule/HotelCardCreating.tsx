@@ -4,6 +4,7 @@ import { CarouselImages } from "../utilites-components/CarouselImages";
 import { useReducer, useRef } from "react";
 import { reducer } from "../../reducers/common.reducer";
 
+
 export function HotelCardCreating () {
     const initialFormState: IHotel = {
         title: '',

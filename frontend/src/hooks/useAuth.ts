@@ -1,9 +1,10 @@
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { authSelector } from '../features/userSlice'
+import { selectAuth } from '../features/auth/authSlice'
+
 
 export const useAuth = () => {
-  const auth = useSelector(authSelector)
+  const auth = useSelector(selectAuth)
 
   return useMemo(() => ({ auth }), [auth])
 }

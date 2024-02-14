@@ -3,7 +3,7 @@ import { IHotelRoom } from "./interfaces/HotellRoom.interface.dto";
 import { HotelSearch } from "./HotelSearch";
 import { HotelSearchList } from "./HotelSearchList";
 import axios, { AxiosResponse } from "axios";
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { IHotelSearch } from "./interfaces/Hotel.search.interface.dto";
 import { reducer } from "../../reducers/common.reducer";
 import { SERVER_URL } from "../../config/config";
@@ -11,7 +11,8 @@ import { IHotel } from "./interfaces/Hotel.interface.dto";
 import React from "react";
 import { hotelModuleReducer } from "../../reducers/hotelModule.reducer";
 import { HotelSearchCard } from "./HotelSearchCard";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigation } from "react-router-dom";
+import { Loading } from "../utilites-components/Loading";
 
 
 
@@ -21,14 +22,12 @@ interface pageState {
 }
 
 export default function HotelSearchModule () {
-
-
     const initialFormState: IHotelSearch = {
         title: '',
         offset: 0,
         limit: 10
     }
-
+    const navigate = useNavigation()
     const initialResponse: any = useLoaderData()
 
     const initialHotelsList = {
@@ -38,6 +37,9 @@ export default function HotelSearchModule () {
 
     const [ formState, dispatch ] : [ IHotelSearch, React.Dispatch<any> ] = useReducer(reducer, initialFormState )
     const [ pageState, dispatchPage ]: [pageState, React.Dispatch<any>] = useReducer(hotelModuleReducer, initialHotelsList)
+
+    if (navigate.state === 'loading') return <Loading />
+    
 
     const handlers = {
         input: (e: any) => {
@@ -64,6 +66,8 @@ export default function HotelSearchModule () {
     }
 
     const hotelSearchList = pageState.hotels.map(hotel => <HotelSearchCard hotel={hotel}/>)
+
+  
 
     return (
         <Container>

@@ -1,38 +1,25 @@
-import { Button, Container, Image, ListGroup, OverlayTrigger, Popover, Spinner } from "react-bootstrap"
-import { authSelector } from "../../features/userSlice"
-import { useAppDispatch, useAppSelector } from "../../hooks/hooksRedux"
-import { AuthService, useLoginMutation, useLogoutMutation } from "../../services/auth.service"
-import { useEffect } from "react"
+import { logout, selectAuth } from "../../features/auth/authSlice"
+
 import { useNavigate } from "react-router-dom"
+import { useAppDispatch, useTypedSelector } from "../../store/store"
+import { Button, Container, ListGroup, OverlayTrigger, Popover, Image } from "react-bootstrap"
 
 const placement = 'bottom'
 
 export default function UserGreeting () {
-    const {user, isAuth} = useAppSelector(authSelector)
-    // const user = useAppSelector(userSelector)
-    const [logout, { isLoading }] = useLogoutMutation()
+    const {user, isAuth} = useTypedSelector(selectAuth)
+    const dispatch = useAppDispatch()
     const navigate = useNavigate()
 
-    
-    // useEffect(() => {
-    //     console.log('user form useEffect from UserGreeting Component' + JSON.stringify(user))
-    // }, [user])
-
     const handlers = {
-        logout: async () => {
-            try {
-                const result = await logout().unwrap()
-                console.log(result)
-                navigate('/')
-              } catch (error) {
-                console.log(error)
-              }
+        logout: () => {
+            dispatch(logout())
+            navigate('/')
         }
     }
     
     return (
         <Container>
-            {isAuth ? (
             <OverlayTrigger
                 trigger="click"
                 key={placement}
@@ -46,19 +33,12 @@ export default function UserGreeting () {
                             <ListGroup.Item><strong>email</strong> { user?.email }</ListGroup.Item>
                         </ListGroup>
                     </Popover.Body>
-                    { isLoading ? 
-                        <Spinner animation="border" role="status">
-                            <span className="visually-hidden">Loading...</span>
-                        </Spinner>  
-                    : 
-                        <Button variant="secondary" onClick={handlers.logout}>Выйти</Button>
-                    }
+                    <Button variant="secondary" onClick={handlers.logout}>Выйти</Button>
                 </Popover>
                 }
             >   
                 <Image src="https://picsum.photos/60/60" fluid rounded />
             </OverlayTrigger>
-            ) : null }
         </Container>
     )
 }
