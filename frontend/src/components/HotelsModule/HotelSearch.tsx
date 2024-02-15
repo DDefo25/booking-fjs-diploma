@@ -8,7 +8,7 @@ export function HotelSearch ({handlers, formState}: {handlers: any, formState: a
         <Card>
                 <Card.Body>
                     <Card.Title>Поиск гостиницы</Card.Title>
-                    <Form onSubmit={handlers.submit}>
+                    <Form onSubmit={handlers.onSubmit}>
                         <Card.Text>
                             <Form.Group className="mb-3" controlId="formSearchHotelTitle">
                                 <Form.Control 
@@ -16,7 +16,7 @@ export function HotelSearch ({handlers, formState}: {handlers: any, formState: a
                                     placeholder="Введите название гостиницы (необязательно)" 
                                     type="text" 
                                     value={formState.title}
-                                    onChange={handlers.input}/>
+                                    onChange={handlers.onChange}/>
                             </Form.Group>
                         </Card.Text>
                         <Card.Text>
@@ -27,7 +27,7 @@ export function HotelSearch ({handlers, formState}: {handlers: any, formState: a
                                     type="date" 
                                     placeholder="Заезд" 
                                     value={formState.startDate} 
-                                    onChange={handlers.input}/>
+                                    onChange={handlers.onChange}/>
                             </Form.Group>
                         </Card.Text>
                         <Card.Text>
@@ -38,7 +38,7 @@ export function HotelSearch ({handlers, formState}: {handlers: any, formState: a
                                     type="date" 
                                     placeholder="Выезд" 
                                     value={formState.endDate} 
-                                    onChange={handlers.input}/>
+                                    onChange={handlers.onChange}/>
                             </Form.Group>
                         </Card.Text>
                         <Button variant="primary" type="submit">Искать</Button>

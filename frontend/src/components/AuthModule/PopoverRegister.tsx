@@ -1,7 +1,9 @@
 import { Button, Form, Spinner } from "react-bootstrap"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom";
-import { RegisterRequest, useRegisterMutation } from "../../services/auth.service";
+import { RegisterRequest, useRegisterMutation } from "../../services/authAPI";
+import { HandlersForm } from "../interfaces/handlers";
+
 
 export default function PopoverRegister () {
   const navigate = useNavigate()
@@ -14,7 +16,7 @@ export default function PopoverRegister () {
   
   const [ register ] = useRegisterMutation({ fixedCacheKey: 'shared-register'});
 
-  const handlers = {
+  const handlers: HandlersForm = {
       onChange: ({target: {name, value}}: React.ChangeEvent<HTMLInputElement>) => {
         setFormState((prev) => ({ ...prev, [name]: value}))
       },

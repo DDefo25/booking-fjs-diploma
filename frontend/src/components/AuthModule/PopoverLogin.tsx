@@ -1,21 +1,25 @@
 import { useNavigate } from "react-router-dom"
-import { LoginRequest, useLoginMutation } from "../../services/auth.service"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button, Form } from "react-bootstrap"
+import { LoginRequest, useLoginMutation } from "../../services/authAPI"
+import { ErrorModal } from "../utilites-components/Error"
+import { HandlersForm } from "../interfaces/handlers"
 
 export default function PopoverLogin () {
   const navigate = useNavigate()
 
-  const [ login ] = useLoginMutation({ fixedCacheKey: 'shared-login'})
+  const [ login, { error } ] = useLoginMutation({ fixedCacheKey: 'shared-login'})
+
 
   const [formState, setFormState] = useState<LoginRequest>({
     email: '',
     password: '',
   })
 
-  const handlers = {
+
+  const handlers: HandlersForm = {
     onChange: ({ target: { name, value } }: React.ChangeEvent<HTMLInputElement>) => {
-      setFormState((prev) => ({ ...prev, [name]: value}))
+      setFormState((state) => ({ ...state, [name]: value}))
     },
     
     onSubmit: (e: React.FormEvent) => {
@@ -24,8 +28,12 @@ export default function PopoverLogin () {
       navigate('/')
     }
   }
-    
-    return (
+
+  useEffect (() => {
+    console.log('error', error)
+  }, [error])
+
+  return (
       <>
         <Form onSubmit={handlers.onSubmit}>
           <Form.Group className="mb-3" controlId="formBasicEmail">

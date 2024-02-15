@@ -11,9 +11,9 @@ const emptyImageSrc = 'https://picsum.photos/150/150'
 
 export function CarouselImages({ images, imagesInRow, handleImageAdd, ...props }: InputGroupProps) {
 
-    const imagesComponents = images.map(image => {
+    const imagesComponents = images.map((image, index) => {
         return (
-            <Col xs={6} md={4} >
+            <Col xs={6} md={4} key={index} >
                 <Container style={{position: 'relative'}}>
                     <Image src={image} rounded />
                     <CloseButton variant="white" style={{position: 'absolute', top: 5, right: 5}}/>
@@ -38,8 +38,9 @@ export function CarouselImages({ images, imagesInRow, handleImageAdd, ...props }
     const filePickerRef = useRef<HTMLInputElement>(null)
 
     if (handleImageAdd) {
+        const index = handleImageAdd.length
         imagesComponents.push(
-            <Col xs={6} md={4}>
+            <Col xs={6} md={4} key={index}>
                 <Image src={emptyImageSrc} rounded onClick={() => filePickerRef.current?.click()} style={{cursor: "pointer"}}/>
                 <Form.Control ref={filePickerRef} type='file' accept="image/*" name='images' onChange={previewFile} hidden/>
             </Col>

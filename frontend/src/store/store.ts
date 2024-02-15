@@ -16,7 +16,8 @@ import {
 import storage from 'redux-persist/lib/storage'
 
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
-import { api } from '../services/api'
+import { authAPI } from '../services/authAPI'
+import { hotelAPI } from '../services/hotelAPI'
 
 const persistConfig = {
   key: 'root',
@@ -25,8 +26,9 @@ const persistConfig = {
 }
 
 const rootReducer = combineReducers({
-  [api.reducerPath]: api.reducer,
-  auth: authReducer
+  auth: authReducer,
+  [authAPI.reducerPath]: authAPI.reducer,
+  [hotelAPI.reducerPath]: hotelAPI.reducer,
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
@@ -38,7 +40,10 @@ export const store = configureStore({
         serializableCheck: {
           ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
         },
-      }).concat(api.middleware)
+      }).concat(
+        authAPI.middleware, 
+        hotelAPI.middleware
+      )
 })
 
 

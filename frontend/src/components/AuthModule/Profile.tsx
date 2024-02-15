@@ -1,30 +1,48 @@
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import GuestGreeting from "./GuestGreeting"
 import UserGreeting from "./UserGreeting"
-import { selectIsAuth } from "../../features/auth/authSlice"
-import { useLoginMutation, useRegisterMutation } from "../../services/auth.service"
+import { clearError, selectError, selectIsAuth } from "../../features/auth/authSlice"
+
 import { Loading } from "../utilites-components/Loading"
+import { useLoginMutation, useRegisterMutation } from "../../services/authAPI"
+import { ErrorModal } from "../utilites-components/Error"
+import { useEffect, useState } from "react"
+import { useAppDispatch, useTypedSelector } from "../../store/store"
 
 
 export default function Profile () {
-    const isAuth = useSelector(selectIsAuth)
+    const isAuth = useTypedSelector(selectIsAuth)
+    const error = useTypedSelector(selectError)
+    const dispatch = useAppDispatch()
 
-    const [ 
-        _login, 
-        { isLoading: isLoadingLogin } 
-    ] = useLoginMutation({ fixedCacheKey: 'shared-login'})
+    const [,{ 
+            isLoading: isLoadingLogin, 
+            reset: loginReset
+        }] = useLoginMutation({ fixedCacheKey: 'shared-login'})
     
-    const [ 
-        _register, 
-        { isLoading: isLoadingRegister} 
-    ] = useRegisterMutation({ fixedCacheKey: 'shared-register'})
+    const [,{ 
+        isLoading: isLoadingRegister,
+        reset: registerReset
+    }] = useRegisterMutation({ fixedCacheKey: 'shared-register'})
 
-    if (isLoadingLogin || isLoadingRegister) return <Loading />
+    const handlerError = () => {
+        loginReset()
+        registerReset()
+        dispatch(clearError())
+    }
+
+    if ( isLoadingLogin || isLoadingRegister ) return <Loading />
 
     return (
-        isAuth ? 
+    <>
+        { error ? <ErrorModal error={error.data.message} handlerOnClose={handlerError}/> : null }
+        { isAuth ? 
             <UserGreeting /> 
-        : 
+            : 
             <GuestGreeting /> 
+        }
+
+    </>
+
     )
 }

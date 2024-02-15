@@ -1,19 +1,24 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { User } from "../../interfaces/User.interface"
 import { RootState } from "../../store/store"
-import { authApi, UserResponse } from "../../services/auth.service"
+import { authAPI, UserResponse } from "../../services/authAPI"
+import { ErrorResponse } from "../../store/axiosBaseQuery"
+
+
 
 
 export interface AuthState {
     user: User | null
     token: string | null
     isAuth: boolean,
+    error: ErrorResponse | null
 }
 
 const initialState: AuthState = {
     user: null,
     token: null,
     isAuth: false,
+    error: null
 }
 
 export const slice = createSlice({
@@ -23,14 +28,30 @@ export const slice = createSlice({
         logout: () => {
             localStorage.removeItem('token')
             return initialState
+        },
+        clearError: (state: AuthState): void => {
+            state.error = null
         }
     },
     extraReducers: (builder) => {
         builder
-            .addMatcher(authApi.endpoints.login.matchPending, (state, action) => {
+            .addMatcher(authAPI.endpoints.getUser.matchPending, (state, action) => {
                 console.log('pending', action)
             })
-            .addMatcher(authApi.endpoints.login.matchFulfilled, (state, {payload}: PayloadAction<UserResponse>) => {
+            .addMatcher(authAPI.endpoints.getUser.matchFulfilled, (state, {payload: user}: PayloadAction<User>) => {
+                console.log('fulfilled', user)
+                const token = localStorage.getItem('token')
+                state.user = user
+                state.token = token
+                state.isAuth = !!user 
+            })
+            .addMatcher(authAPI.endpoints.getUser.matchRejected, (state, action) => {
+                console.log('rejected', action)
+            })
+            .addMatcher(authAPI.endpoints.login.matchPending, (state, action) => {
+                console.log('pending', action)
+            })
+            .addMatcher(authAPI.endpoints.login.matchFulfilled, (state, {payload}: PayloadAction<UserResponse>) => {
                 console.log('fulfilled', payload)
                 const { user, token } = payload
                 localStorage.setItem('token', token)
@@ -38,27 +59,31 @@ export const slice = createSlice({
                 state.token = token
                 state.isAuth = !!user 
             })
-            .addMatcher(authApi.endpoints.login.matchRejected, (state, action) => {
-                console.log('rejected', action)
+            .addMatcher(authAPI.endpoints.login.matchRejected, (state, {payload}: any) => {
+                console.log('rejected', payload)
+                state.error = payload
+                
             })
-            .addMatcher(authApi.endpoints.register.matchPending, (state, action) => {
+            .addMatcher(authAPI.endpoints.register.matchPending, (state, action) => {
                 console.log('pending', action)
             })
-            .addMatcher(authApi.endpoints.register.matchFulfilled, (state, action) => {
+            .addMatcher(authAPI.endpoints.register.matchFulfilled, (state, action) => {
                 console.log('fulfilled', action)
                 const { payload: { user, token } }: PayloadAction<UserResponse> = action
                 state.user = user
                 state.token = token
                 state.isAuth = !!user
             })
-            .addMatcher(authApi.endpoints.register.matchRejected, (state, action) => {
-                console.log('rejected', action)
+            .addMatcher(authAPI.endpoints.register.matchRejected, (state, {payload}: any) => {
+                console.log('rejected', payload)
+                state.error = payload
             })
     }
 })
 
-export const { logout } = slice.actions
+export const { logout, clearError } = slice.actions
 export const selectAuth = (state: RootState) => state.auth
 export const selectIsAuth = (state: RootState) => state.auth.isAuth
 export const selectUser = (state: RootState) => state.auth.user
+export const selectError = (state: RootState) => state.auth.error
 export default slice.reducer;

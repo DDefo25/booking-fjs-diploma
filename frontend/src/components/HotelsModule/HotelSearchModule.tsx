@@ -1,73 +1,36 @@
 import { Container } from "react-bootstrap";
-import { IHotelRoom } from "./interfaces/HotellRoom.interface.dto";
 import { HotelSearch } from "./HotelSearch";
 import { HotelSearchList } from "./HotelSearchList";
-import axios, { AxiosResponse } from "axios";
-import { useEffect, useReducer } from "react";
+import { useState } from "react";
 import { IHotelSearch } from "./interfaces/Hotel.search.interface.dto";
-import { reducer } from "../../reducers/common.reducer";
-import { SERVER_URL } from "../../config/config";
-import { IHotel } from "./interfaces/Hotel.interface.dto";
-import React from "react";
-import { hotelModuleReducer } from "../../reducers/hotelModule.reducer";
 import { HotelSearchCard } from "./HotelSearchCard";
-import { useLoaderData, useNavigation } from "react-router-dom";
 import { Loading } from "../utilites-components/Loading";
+import { HandlersForm } from "../interfaces/handlers";
+import { useGetHotelRoomsQuery } from "../../services/hotelAPI";
 
-
-
-interface pageState {
-    hotelRooms: IHotelRoom[],
-    hotels: IHotel[]
+const initialFormState: IHotelSearch = {
+    title: '',
+    offset: 0,
+    limit: 10
 }
 
 export default function HotelSearchModule () {
-    const initialFormState: IHotelSearch = {
-        title: '',
-        offset: 0,
-        limit: 10
-    }
-    const navigate = useNavigation()
-    const initialResponse: any = useLoaderData()
+    const [ formState, setForm ] = useState(initialFormState )
+    const { data: hotelsRoom, isLoading, refetch } = useGetHotelRoomsQuery(formState)
 
-    const initialHotelsList = {
-        hotelRooms: initialResponse.data,
-        hotels: Array.from(new Map(initialResponse.data.map((item: IHotelRoom) => [item.hotel._id, item.hotel])).values())
-    }
-
-    const [ formState, dispatch ] : [ IHotelSearch, React.Dispatch<any> ] = useReducer(reducer, initialFormState )
-    const [ pageState, dispatchPage ]: [pageState, React.Dispatch<any>] = useReducer(hotelModuleReducer, initialHotelsList)
-
-    if (navigate.state === 'loading') return <Loading />
-    
-
-    const handlers = {
-        input: (e: any) => {
-            dispatch({
-                type: 'HANDLE CUSTOM FIELD',
-                field: e.target.name,
-                payload: e.target.value,
-            })
+    const handlers: HandlersForm = {
+        onChange: ({target: { name, value }}) => {
+            setForm((state) => ({...state, [name]: value}))
         },
 
-        submit: async (e: any) => {
+        onSubmit: async (e ) => {
             e.preventDefault();
-            const response = await axios({
-                method: 'get',
-                url: SERVER_URL + '/api/common/hotel-rooms',
-                params: {  ...formState }
-              })
-              
-            dispatchPage({
-                type: 'UPDATE HOTEL ROOMS',
-                payload: response.data
-            })
+            refetch()
         }
     }
+    const hotelSearchList = hotelsRoom && hotelsRoom.map(({hotel}, index, self) => <HotelSearchCard key={hotel._id} hotel={hotel} />)
 
-    const hotelSearchList = pageState.hotels.map(hotel => <HotelSearchCard hotel={hotel}/>)
-
-  
+    if (isLoading) return <Loading />
 
     return (
         <Container>

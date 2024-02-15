@@ -1,4 +1,4 @@
-import { logout, selectAuth } from "../../features/auth/authSlice"
+import { logout, selectUser } from "../../features/auth/authSlice"
 
 import { useNavigate } from "react-router-dom"
 import { useAppDispatch, useTypedSelector } from "../../store/store"
@@ -7,7 +7,7 @@ import { Button, Container, ListGroup, OverlayTrigger, Popover, Image } from "re
 const placement = 'bottom'
 
 export default function UserGreeting () {
-    const {user, isAuth} = useTypedSelector(selectAuth)
+    const user = useTypedSelector(selectUser)
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
 
