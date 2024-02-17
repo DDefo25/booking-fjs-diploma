@@ -11,18 +11,26 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/http.roles.guard';
 
-@Roles(Role.Admin, Role.Client)
-@UseGuards(JwtAuthGuard, RolesGuard)
+
 @Controller('api/:role/hotels')
 export class HotelController {
     constructor(
         private readonly hotelService: HotelService
     ) {}
-    
+
+   /*
+        Доступно всем пользователям, включая неаутентифицированных.
+    */
+    @Get(':id')
+    async findById( @Param('id') id: ObjectId) {
+        return await this.hotelService.findById(id)
+    }
     
     /*
         Доступно только аутентифицированным пользователям с ролью admin.
     */
+    @Roles(Role.Admin)
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Post()
     async create( @Body(new HttpValidationPipe()) data: Partial<Hotel>) {
         return await this.hotelService.create(data)
@@ -32,15 +40,21 @@ export class HotelController {
     /*
         Доступно только аутентифицированным пользователям с ролью admin.
     */
+    @Roles(Role.Admin)
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Get()
     async find( @Query() query: SearchHotelParams) {
         return await this.hotelService.search(query)
     }
 
 
+
+
     /*
         Доступно только аутентифицированным пользователям с ролью admin.
     */
+    @Roles(Role.Admin)
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Put(':id')
     async update( @Param('id') id: ObjectId, @Body(new HttpValidationPipe()) data: UpdateHotelParams) {
         return await this.hotelService.update( id, data );

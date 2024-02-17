@@ -10,6 +10,13 @@ export interface HotelRoomRequest {
   title?: string
 }
 
+export interface HotelRoomEditRequest {
+  id: string,
+  hotel: string,
+  description?: string,
+  images: string[]
+}
+
 
 export interface HotelRequest {
   limit: number,
@@ -23,11 +30,13 @@ export interface HotelAddRequest {
   images: string[]
 }
 
+
+
 export interface HotelEditRequest {
   id: string,
-  title?: string,
+  title: string,
   description?: string,
-  images?: string[]
+  images: string[]
 }
 
 export interface Hotel {
@@ -70,6 +79,15 @@ export const hotelAPI = createApi({
         providesTags: ['HotelRoom']
       }),
 
+      editHotelRoom: build.mutation<HotelRoom, HotelRoomEditRequest>({
+        query: ({id, ...data}) => ({
+            url: `/admin/hotel-rooms/${id}`,
+            method: 'put',
+            data
+        }),
+        invalidatesTags: ['HotelRoom']
+      }),
+
       addHotel: build.mutation<Hotel, HotelAddRequest>({
         query: (data) => ({
           url: '/admin/hotels',
@@ -88,6 +106,13 @@ export const hotelAPI = createApi({
         providesTags: ['Hotel']
       }),
 
+      getHotel: build.query<Hotel, string>({
+        query: (id) => ({
+          url: `/common/hotels/${id}`,
+          method: 'get',
+        }),
+        providesTags: ['Hotel']
+      }),
 
       editHotel: build.mutation<Hotel, HotelEditRequest>({
         query: ({id, ...data}) => ({
@@ -106,4 +131,6 @@ export const {
   useGetHotelRoomQuery,
   useGetHotelsQuery,
   useGetHotelRoomsQuery,
+  useGetHotelQuery,
+  useEditHotelRoomMutation
 } = hotelAPI

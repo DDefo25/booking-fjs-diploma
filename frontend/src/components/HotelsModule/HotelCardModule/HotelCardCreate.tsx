@@ -1,11 +1,11 @@
 import { Button, Card, Container, Form, Image } from "react-bootstrap";
-import { IHotel } from "./interfaces/Hotel.interface.dto";
-import { CarouselImages } from "../utilites-components/CarouselImages";
+import { IHotel } from "../interfaces/Hotel.interface.dto";
+import { CarouselImages } from "../../utilites-components/CarouselImages";
 import { useReducer, useRef } from "react";
-import { reducer } from "../../reducers/common.reducer";
+import { reducer } from "../../../reducers/common.reducer";
 
 
-export function HotelCardCreating () {
+export function HotelCardCreate () {
     const initialFormState: IHotel = {
         title: '',
         description: '',

@@ -1,5 +1,6 @@
 import { ComponentPropsWithoutRef, useRef } from "react";
 import { Carousel, Col, Container, Row, Image, CarouselProps, Form, CloseButton, Overlay } from "react-bootstrap";
+import { SERVER_URL } from "../../config/config";
 
 interface InputGroupProps extends CarouselProps {
     images: string[], 
@@ -9,15 +10,17 @@ interface InputGroupProps extends CarouselProps {
 
 const emptyImageSrc = 'https://picsum.photos/150/150'
 
+
+
 export function CarouselImages({ images, imagesInRow, handleImageAdd, ...props }: InputGroupProps) {
+
+    const downloadImageUrl = `${SERVER_URL}/api/common/download/image`
 
     const imagesComponents = images.map((image, index) => {
         return (
-            <Col xs={6} md={4} key={index} >
-                <Container style={{position: 'relative'}}>
-                    <Image src={image} rounded />
-                    <CloseButton variant="white" style={{position: 'absolute', top: 5, right: 5}}/>
-                </Container>
+            <Col style={{position: 'relative', display: 'flex', justifyContent: 'center'}}>
+                <Image src={`${downloadImageUrl}?img_path=${image}`} rounded style={{width: '12vw'}}/>
+                <CloseButton  style={{position: 'absolute', top: 5, right: 5}}/>
             </Col>
         )
     })
@@ -40,7 +43,7 @@ export function CarouselImages({ images, imagesInRow, handleImageAdd, ...props }
     if (handleImageAdd) {
         const index = handleImageAdd.length
         imagesComponents.push(
-            <Col xs={6} md={4} key={index}>
+            <Col key={index}>
                 <Image src={emptyImageSrc} rounded onClick={() => filePickerRef.current?.click()} style={{cursor: "pointer"}}/>
                 <Form.Control ref={filePickerRef} type='file' accept="image/*" name='images' onChange={previewFile} hidden/>
             </Col>

@@ -1,11 +1,5 @@
-import { Container, Table } from "react-bootstrap";
-import { HotelCard } from "./HotelCard";
-import { HotelRoomsList } from "./HotelRoomsList";
-import { IHotelRoom } from "./interfaces/HotellRoom.interface.dto";
-import { HotelCardEditing } from "./HotelCardEditing";
-import { HotelCardCreating } from "./HotelCardCreating";
-import { HotelSearch } from "./HotelSearch";
-import { HotelSearchList } from "./HotelSearchList";
+import { Container } from "react-bootstrap";
+import { HotelCardCreate } from "./HotelCardModule/HotelCardCreate";
 
 
 export default function HotelCreateModule () {
@@ -100,7 +94,7 @@ export default function HotelCreateModule () {
 
     return (
         <Container>
-            <HotelCardCreating />
+            <HotelCardCreate />
             {/* <HotelCard hotel={hotel}/> */}
             {/* <HotelSearch /> */}
             {/* <HotelRoomsList hotelRooms={hotelRooms}/> */}

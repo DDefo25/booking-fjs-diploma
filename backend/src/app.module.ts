@@ -12,6 +12,8 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MongooseConfigService } from './config/mongoose-config/mongoose-config.service';
 import { AuthModule } from './auth/auth.module';
 import { SupportRequestController } from './support-chat/support-request.controller';
+import { FileModule } from './file-module/file-module.module';
+
 
 @Module({
   imports: [
@@ -30,6 +32,7 @@ import { SupportRequestController } from './support-chat/support-request.control
     HotelModule,
     ReservationModule,
     SupportChatModule,
+    FileModule,
   ],
   controllers: [AppController],
   providers: [AppService],

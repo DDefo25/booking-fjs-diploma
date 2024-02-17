@@ -1,14 +1,15 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import UsersModule from "./components/UsersModule/UsersModule";
-import HotelRoomsModule from "./components/HotelsModule/HotelRoomsModule";
 import HotelCreateModule from "./components/HotelsModule/HotelCreateModule";
-import { SERVER_URL } from "./config/config";
-import axios, { AxiosResponse } from "axios";
 import { ProtectedRoute } from "./components/utilites-components/ProtectedRoute";
 import { Role } from "./config/roles.enum";
-import HotelSearchModule from "./components/HotelsModule/HotelSearchModule";
-import { LoadingNavigate } from "./components/utilites-components/LoadingNavigate";
+import { HotelModule } from "./components/HotelsModule/HotelModule";
+import { HotelCardModule } from "./components/HotelsModule/HotelCardModule/HotelCardModule";
+import { HotelCardEdit } from "./components/HotelsModule/HotelCardModule/HotelCardEdit";
+import { HotelCardView } from "./components/HotelsModule/HotelCardModule/HotelCardView";
+import { HotelRoomCardEdit } from "./components/HotelsModule/HotelRoomModule/HotelRoomCardEdit";
+
 
 export default createBrowserRouter([
     {
@@ -19,21 +20,7 @@ export default createBrowserRouter([
       children: [
         { 
             path: 'hotels',
-            element: (
-              //  <LoadingNavigate>
-                <HotelSearchModule />
-              //  </LoadingNavigate>
-            ),
-            loader: async (): Promise<AxiosResponse> => {
-              return await axios({
-                method: 'get',
-                url: SERVER_URL + '/api/common/hotel-rooms',
-                params: {  
-                  limit: 10,
-                  offset: 0
-                 }
-              })
-            },
+            element: <HotelModule />,
         },
         { 
             path: 'users',
@@ -44,12 +31,38 @@ export default createBrowserRouter([
             ),
         },
         { 
-            path: 'hotel-rooms',
-            element: <HotelRoomsModule />
+            path: 'hotel-create',
+            element: (
+              <ProtectedRoute roles={[ Role.Admin ]}>
+                <HotelCreateModule />
+              </ProtectedRoute>
+            )
         },
         { 
-            path: 'hotel-create',
-            element: <HotelCreateModule />
+          path: 'hotel/:id',
+          element: (
+            <HotelCardModule />
+          ),
+          children: [
+            {
+              path: '',
+              element: <HotelCardView />
+            }, {
+              path: 'edit',
+              element: (
+                <ProtectedRoute roles={[ Role.Admin ]}>
+                    <HotelCardEdit />
+                </ProtectedRoute>
+              )
+            }, {
+              path: ':roomId/edit',
+              element: (
+                <ProtectedRoute roles={[ Role.Admin ]}>
+                    <HotelRoomCardEdit />
+                </ProtectedRoute>
+              )
+            }
+          ]
         },
       ]
     },
