@@ -1,14 +1,16 @@
-import { createBrowserRouter } from "react-router-dom";
+import { Outlet, createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import UsersModule from "./components/UsersModule/UsersModule";
-import HotelCreateModule from "./components/HotelsModule/HotelCreateModule";
 import { ProtectedRoute } from "./components/utilites-components/ProtectedRoute";
 import { Role } from "./config/roles.enum";
-import { HotelModule } from "./components/HotelsModule/HotelModule";
-import { HotelCardModule } from "./components/HotelsModule/HotelCardModule/HotelCardModule";
+import { HotelsModule } from "./components/HotelsModule/HotelsModule";
 import { HotelCardEdit } from "./components/HotelsModule/HotelCardModule/HotelCardEdit";
 import { HotelCardView } from "./components/HotelsModule/HotelCardModule/HotelCardView";
 import { HotelRoomCardEdit } from "./components/HotelsModule/HotelRoomModule/HotelRoomCardEdit";
+import { HotelCreate } from "./components/HotelsModule/HotelCreateModule/HotelCreate";
+import HotelModule from "./components/HotelsModule/HotelCreateModule/HotelModule";
+import { HotelSearchModule } from "./components/HotelsModule/HotelSearchModule";
+import { UserCreate } from "./components/UsersModule/UserCreate";
 
 
 export default createBrowserRouter([
@@ -19,49 +21,70 @@ export default createBrowserRouter([
       // loader: appLoader,
       children: [
         { 
-            path: 'hotels',
-            element: <HotelModule />,
+            path: 'hotel-rooms',
+            element: <HotelSearchModule />,
         },
         { 
             path: 'users',
             element: (
               <ProtectedRoute roles={[ Role.Manager, Role.Admin ]}>
-                <UsersModule />
+                <Outlet />
               </ProtectedRoute>
             ),
+            children: [
+              { 
+                path: '',
+                element: <UsersModule />,
+              }, { 
+                path: 'create',
+                element: <UserCreate />,
+              },
+            ]
         },
         { 
-            path: 'hotel-create',
+            path: 'hotels',
             element: (
               <ProtectedRoute roles={[ Role.Admin ]}>
-                <HotelCreateModule />
+                <HotelsModule />
               </ProtectedRoute>
             )
         },
         { 
-          path: 'hotel/:id',
+          path: 'hotel',
           element: (
-            <HotelCardModule />
+            <HotelModule />
           ),
           children: [
             {
-              path: '',
-              element: <HotelCardView />
-            }, {
-              path: 'edit',
+              path: 'create',
               element: (
                 <ProtectedRoute roles={[ Role.Admin ]}>
-                    <HotelCardEdit />
+                    <HotelCreate />
                 </ProtectedRoute>
-              )
+              ),
             }, {
-              path: ':roomId/edit',
-              element: (
-                <ProtectedRoute roles={[ Role.Admin ]}>
-                    <HotelRoomCardEdit />
-                </ProtectedRoute>
-              )
-            }
+              path: ':id',
+              children: [
+                {
+                  path: '',
+                  element: <HotelCardView />
+                }, {
+                  path: 'edit',
+                  element: (
+                    <ProtectedRoute roles={[ Role.Admin ]}>
+                        <HotelCardEdit />
+                    </ProtectedRoute>
+                  )
+                }, {
+                  path: ':roomId/edit',
+                  element: (
+                    <ProtectedRoute roles={[ Role.Admin ]}>
+                        <HotelRoomCardEdit />
+                    </ProtectedRoute>
+                  )
+                }
+              ]
+            },  
           ]
         },
       ]

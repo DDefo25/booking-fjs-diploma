@@ -3,7 +3,8 @@ import { useEffect, useState } from "react"
 import { Button, Form } from "react-bootstrap"
 import { LoginRequest, useLoginMutation } from "../../services/authAPI"
 import { ErrorModal } from "../utilites-components/Error"
-import { HandlersForm } from "../interfaces/handlers"
+import { HandlersForm } from "../../features/handlers/Handler"
+
 
 export default function PopoverLogin () {
   const navigate = useNavigate()

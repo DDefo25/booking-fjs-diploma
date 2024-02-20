@@ -19,7 +19,7 @@ export const axiosBaseQuery =
         },
         unknown,
         unknown
-    > =>
+    > => 
     async ({ url, method, data, params, headers }) => {
         try {
             const { data: dataResponse } = await instance({

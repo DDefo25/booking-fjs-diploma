@@ -4,11 +4,12 @@ import { SearchRoomsParams } from '../interfaces/search-rooms.dto';
 import { ObjectId } from 'mongoose';
 import { HttpValidationPipe } from 'src/validation/http.validation.pipe';
 import { HotelRoom } from '../schemas/hotel-room.schema';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { AnyFilesInterceptor, FileFieldsInterceptor, FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { Role } from 'src/auth/roles.enum';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/http.roles.guard';
+import { UpdateHotelRoomDto } from '../interfaces/update-hotel-room.dto';
 
 @Controller('api/:role/hotel-rooms')
 export class HotelRoomController {
@@ -57,19 +58,20 @@ export class HotelRoomController {
     @Roles(Role.Admin)
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Put(':id')
-    @UseInterceptors(FilesInterceptor('images'))
+    @UseInterceptors(AnyFilesInterceptor())
     async update( 
         @Param('id') id: ObjectId,
-        @UploadedFiles() images: Express.Multer.File[],
-        @Body(new HttpValidationPipe()) data: Partial<HotelRoom>, 
+        @UploadedFiles() imagesFiles: Express.Multer.File[],
+        @Body() data: UpdateHotelRoomDto, 
         ) {
+        console.log(data)
         const updateData = { ...data }
         updateData.images = Array.isArray(data.images) ? [
             ...data.images, 
-            ...images.map(image => image.path)
+            ...imagesFiles.map(image => image.path)
         ] : [
             data.images,
-            ...images.map(image => image.path)
+            ...imagesFiles.map(image => image.path)
         ]
         
         return this.hotelRoomService.update( id, updateData );

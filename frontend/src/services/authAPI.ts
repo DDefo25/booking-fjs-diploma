@@ -69,9 +69,3 @@ export const authAPI = createApi({
 })
 
 export const { useLoginMutation, useRegisterMutation, useGetUserQuery } = authAPI
-
-// export const enhancedApi = api.enhanceEndpoints({
-//   endpoints: () => ({
-//     getPost: () => 'test',
-//   }),
-// })

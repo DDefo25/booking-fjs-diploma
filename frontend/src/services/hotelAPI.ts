@@ -2,6 +2,7 @@ import { createApi } from "@reduxjs/toolkit/query/react"
 import { SERVER_URL } from "../config/config"
 import { User } from "../interfaces/User.interface"
 import { axiosBaseQuery } from "../store/axiosBaseQuery"
+import { IHotel } from "../components/HotelsModule/interfaces/Hotel.interface.dto"
 
 export interface HotelRoomRequest {
   hotel?: string,
@@ -12,9 +13,11 @@ export interface HotelRoomRequest {
 
 export interface HotelRoomEditRequest {
   id: string,
-  hotel: string,
+  hotel: IHotel | string,
   description?: string,
   images: string[]
+  imagesFiles: File[]
+  imagesPreview: string[],
 }
 
 
@@ -27,7 +30,7 @@ export interface HotelRequest {
 export interface HotelAddRequest {
   title: string,
   description: string,
-  images: string[]
+  images: File[]
 }
 
 
@@ -79,10 +82,11 @@ export const hotelAPI = createApi({
         providesTags: ['HotelRoom']
       }),
 
-      editHotelRoom: build.mutation<HotelRoom, HotelRoomEditRequest>({
-        query: ({id, ...data}) => ({
+      editHotelRoom: build.mutation<HotelRoom, any>({
+        query: ({id, data}) => ({
             url: `/admin/hotel-rooms/${id}`,
             method: 'put',
+            headers: {"Content-Type": "multipart/form-data"},
             data
         }),
         invalidatesTags: ['HotelRoom']
@@ -90,9 +94,10 @@ export const hotelAPI = createApi({
 
       addHotel: build.mutation<Hotel, HotelAddRequest>({
         query: (data) => ({
-          url: '/admin/hotels',
-          method: 'post',
-          data
+            url: '/admin/hotels',
+            method: 'post',
+            headers: {"Content-Type": "multipart/form-data"},
+            data
         }),
         invalidatesTags: ['Hotel']
       }),
@@ -118,6 +123,7 @@ export const hotelAPI = createApi({
         query: ({id, ...data}) => ({
             url: `/admin/hotels/${id}`,
             method: 'put',
+            headers: {"Content-Type": "multipart/form-data"},
             data
         }),
         invalidatesTags: ['Hotel']
@@ -131,6 +137,7 @@ export const {
   useGetHotelRoomQuery,
   useGetHotelsQuery,
   useGetHotelRoomsQuery,
+  useLazyGetHotelsQuery,
   useGetHotelQuery,
   useEditHotelRoomMutation
 } = hotelAPI

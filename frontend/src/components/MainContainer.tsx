@@ -1,7 +1,7 @@
 import { Container } from "react-bootstrap";
 import UsersModule from "./UsersModule/UsersModule";
 import UserReservations from "./UsersModule/UserReservationsModule";
-import { HotelModule } from "./HotelsModule/HotelModule";
+import { HotelSearchModule } from "./HotelsModule/HotelSearchModule";
 
 
 export function MainContainer () {
@@ -9,7 +9,7 @@ export function MainContainer () {
         <Container>
             {/* <UsersModule /> */}
             {/* <UserReservations user={users[0]} reservations={reservations}/> */}
-            <HotelModule />
+            <HotelSearchModule />
         </Container>
     )
 }

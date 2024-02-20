@@ -8,4 +8,8 @@ export class UpdateHotelParams  {
     @IsString()
     @IsDefined()
     description: string;
+
+    @IsString()
+    @IsDefined()
+    images: string[];
 }

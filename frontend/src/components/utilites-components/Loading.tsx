@@ -1,9 +1,12 @@
-import { Spinner } from "react-bootstrap";
+import { Spinner, SpinnerProps } from "react-bootstrap";
+import './Loading.css'
 
-export function Loading() {
+export function Loading(props: React.HTMLAttributes<HTMLBodyElement> & SpinnerProps & React.DOMAttributes<HTMLBodyElement>) {
     return (
-        <Spinner animation="border" role="status">
+      <>
+        <Spinner className="loading-spinner" animation="border" role="status" {...props}>
           <span className="visually-hidden">Loading...</span>
-        </Spinner>  
+        </Spinner> 
+      </> 
     )
 }

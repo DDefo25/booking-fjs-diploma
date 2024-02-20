@@ -7,6 +7,6 @@ export class FileController {
 
     @Get('image')
     downloadImg(@Query('img_path') imgPath: string, @Res() res): Observable<Object> {
-        return of(res.sendfile( path.join( `${process.cwd()}\\${imgPath}` )))
+        return of(res.sendFile( path.join( `${process.cwd()}\\${imgPath}` )))
     }
 }

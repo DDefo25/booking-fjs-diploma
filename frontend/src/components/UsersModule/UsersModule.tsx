@@ -1,25 +1,83 @@
-import { Container } from "react-bootstrap";
+import { Button, Container, FloatingLabel, Form, Stack } from "react-bootstrap";
 import UsersTable from "./UsersTable";
-import { UserSearchForm } from "./UserSearchForm";
-import UserReservations from "./UserReservationsModule";
-import { useReducer } from "react";
-import { reducer } from "../../reducers/common.reducer";
-import { useLoaderData } from "react-router-dom";
-import { AxiosResponse } from "axios";
-import { IUserDto } from "./interfaces/User.interface.dto";
+import React, { FormEvent, useState } from "react";
+import { GetUsersRequest, GetUsersResponse, useGetUsersQuery } from "../../services/userAPI";
+import { useTypedSelector } from "../../store/store";
+import { selectUser } from "../../features/auth/authSlice";
+import { Handler } from "../../features/handlers/Handler";
+import { LoadingBox } from "../utilites-components/LoadingBox";
+import { Link } from "react-router-dom";
+import { Pagination } from "../utilites-components/Pagination";
 
 
 
 export default function UsersModule () {
-    // const loaderData: any = useLoaderData()
-    const initialState: IUserDto[] = []
+    const user = useTypedSelector( selectUser )
 
-    const [ users, dispatch ] = useReducer(reducer, initialState)
+    const initialState: GetUsersRequest = {
+        limit: 10,
+        offset: 0,
+        filter: '',
+        requestRole: user && user?.role 
+    }
+
+    const [ formState, setForm ] = useState( initialState )
+    const { data, isLoading, isFetching, refetch } = useGetUsersQuery( formState )
+    const { users, count } = data || {} as GetUsersResponse
+
+    const handlers = {
+        onSubmut: (e: FormEvent) => {
+            e.preventDefault()
+            refetch()
+        },
+
+        onChangeInput: (e: React.ChangeEvent) => Handler.onChangeInput<GetUsersRequest>(e, setForm),
+        onPaginationClick: (i: number) => Handler.onPaginationClick<GetUsersRequest>(i, setForm)
+    }
+
 
     return (
         <Container>
-            <UserSearchForm />
-            <UsersTable users={users}/>
+            <Form onSubmit={ handlers.onSubmut }>
+                <FloatingLabel
+                    controlId="floatingInput"
+                    label="Введите имя пользователя, id, телефон или почту"
+                    className="mb-3"
+                >
+                    <Form.Control 
+                        type="text" 
+                        name='filter'
+                        placeholder="Введите имя пользователя, id, телефон или почту"
+                        onChange={ handlers.onChangeInput }
+                    />
+                </FloatingLabel>
+                <Stack gap={3} direction="horizontal" >
+                    <Button 
+                        variant="primary" 
+                        type="submit"
+                        disabled={isLoading || isFetching}
+                    >
+                        { isLoading || isFetching ? 'Поиск...' : 'Искать' }
+                    </Button>
+                    <Link to={'create'}>
+                        <Button 
+                            variant="warning" 
+                        >
+                            Новый пользователь
+                        </Button>
+                    </Link>
+                </Stack>
+            </Form>
+            <Container className="loading-box-parent">
+                { users && <UsersTable users={users}/> } 
+                { isLoading || isFetching ? <LoadingBox /> : null }
+            </Container>
+            <Pagination 
+                limit={ formState.limit }
+                offset={ formState.offset }
+                count={ count }
+                onPaginationClick={ handlers.onPaginationClick }
+            />
         </Container>
     )
 }

@@ -2,7 +2,8 @@ import { Button, Form, Spinner } from "react-bootstrap"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom";
 import { RegisterRequest, useRegisterMutation } from "../../services/authAPI";
-import { HandlersForm } from "../interfaces/handlers";
+import { HandlersForm } from "../../features/handlers/Handler";
+
 
 
 export default function PopoverRegister () {

@@ -3,8 +3,21 @@ import { CarouselImages } from "../../utilites-components/CarouselImages";
 import { redirect, useNavigate, useParams } from "react-router-dom";
 import { HotelEditRequest, useEditHotelMutation, useGetHotelQuery } from "../../../services/hotelAPI";
 import { Loading } from "../../utilites-components/Loading";
-import { useEffect, useState } from "react";
-import { HandlersForm } from "../../interfaces/handlers";
+import React, { useEffect, useState } from "react";
+import { Handler, HandlersForm } from "../../../features/handlers/Handler";
+import { CarouselImagesEdit } from "../../utilites-components/CarouselImagesEdit";
+import { Image } from "../../utilites-components/Image";
+import { DOWNLOAD_IMAGE_URL } from "../../../config/config";
+
+export interface HotelEditInitial {
+    id: string,
+    title: string,
+    description: string,
+    images: string[],
+    imagesFiles: File[]
+    imagesPreview: string[],
+}
+
 
 export function HotelCardEdit () {
     const { id } = useParams()
@@ -13,11 +26,13 @@ export function HotelCardEdit () {
     const { data: hotel, isLoading } = useGetHotelQuery(id!, { refetchOnMountOrArgChange: true})
     const [ editHotel, { isLoading: isLoadingEdit } ] = useEditHotelMutation()
 
-    const initialState: HotelEditRequest = {
+    const initialState: HotelEditInitial = {
         id: '',
         title: '',
         images: [],
-        description: ''
+        description: '',
+        imagesFiles: [],
+        imagesPreview: [],
     }
 
     const [ formState, setForm ] = useState( initialState )
@@ -28,20 +43,47 @@ export function HotelCardEdit () {
             id: _id!,
             title,
             images,
-            description
+            description,
+            imagesFiles: [],
+            imagesPreview: []
         })
     }, [hotel])
 
-    const handlers: HandlersForm = {
-        onChange: ({target: { name, value }}) => {
-            setForm(prev => ({...prev, [name]: value}))
-        },
+    const handlers = {
 
-        onSubmit: (event) => {
+        onSubmit: (event: React.FormEvent) => {
             event.preventDefault()
             editHotel(formState).then(() => navigate('..'))
             
         },
+
+        onChangeInput: (e: React.ChangeEvent) => Handler.onChangeInput<HotelEditInitial>( e, setForm ),
+        onChangeFile: (e: React.ChangeEvent) => Handler.onChangeFile<HotelEditInitial>( e, setForm ),
+        onDelete: ( index: number ) => Handler.onDelete<HotelEditInitial>( index, setForm ),
+        onDeletePreview: ( index: number ) => Handler.onDeletePreview<HotelEditInitial>( index, setForm )
+
+        // onChangeFile: ({target: { name, files }}) => {
+        //     console.log('{ name, files }', { name, files })
+        //     const filesPreview = files && [...files].map(file => URL.createObjectURL(file))
+        //     setForm(prev => ({...prev, [name]: files, imagesFilesPreview: filesPreview!}))
+        // },
+
+        // onDelete: ( index) => {
+        //     setForm(prev => ({
+        //         ...prev,
+        //         images: prev.images.filter((_, i) => index !== i)
+        //     }))
+        // },
+
+        // onDeletePreview: (index) => {
+        //     setForm(prev => {
+        //         const arrayFiles = [...prev.imagesFiles]
+        //         return {
+        //         ...prev,
+        //         imagesFiles: arrayFiles.filter((_, i) => index !== i),
+        //         imagesFilesPreview: prev.imagesFilesPreview.filter((_, i) => index !== i)
+        //     }})
+        // }
     }
 
     if (isLoading) return <Loading />
@@ -50,8 +92,14 @@ export function HotelCardEdit () {
         <>
         { hotel ? 
             <Card>
-                <Form onSubmit={handlers.onSubmit}>
-                    <CarouselImages images={formState.images} imagesInRow={3} variant={"dark"} fade/>
+                <Form onSubmit={ handlers.onSubmit }>
+                    <CarouselImagesEdit 
+                        images={ formState.images } 
+                        imagesPreview={ formState.imagesPreview } 
+                        imagesInRow={3} 
+                        handlers={ handlers }
+                        variant={"dark"} 
+                        fade/>
                     <Card.Body>
                         <Card.Title>
                             <Form.Group className="mb-3" controlId="formBasicHotelTitle">
@@ -60,7 +108,7 @@ export function HotelCardEdit () {
                                     placeholder="Название отеля" 
                                     name='title'
                                     value={formState.title} 
-                                    onChange={handlers.onChange}
+                                    onChange={ handlers.onChangeInput }
                                     disabled={ isLoadingEdit }
                                     readOnly={ isLoadingEdit }
                                 />
@@ -74,7 +122,7 @@ export function HotelCardEdit () {
                                     placeholder="Описание отеля" 
                                     name='description'
                                     value={formState.description} 
-                                    onChange={handlers.onChange}
+                                    onChange={ handlers.onChangeInput }
                                     disabled={ isLoadingEdit }
                                     readOnly={ isLoadingEdit }
                                 />

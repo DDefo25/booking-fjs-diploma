@@ -11,28 +11,29 @@ export class UserService implements IUserService {
          @InjectModel(User.name) private readonly model: Model<UserDocument>
     ) {}
 
-    async create(data: Partial<User>): Promise<User> {
-        const user =  await this.model.create(data)
-        return user
+    create(data: Partial<User>): Promise<User> {
+        return this.model.create(data)
+        
     };
 
-    async findById(id: ObjectId): Promise<User> {
-        return await this.model.findById(id)
+    findById(id: ObjectId): Promise<User> {
+        return this.model.findById(id)
     };
 
-    async findByEmail(email: string, projection: Object|String|String[] = null): Promise<User> {
+    findByEmail(email: string, projection: Object|String|String[] = null): Promise<User> {
         return this.model.findOne({email}, projection)
     };
 
-    async findAll(params: SearchUserParams): Promise<User[]> {
-        const regExFields = new Set(['email', 'name', 'contactPhone'])
-        const {limit, offset, ...filter} = params
+    async findAll(params: SearchUserParams): Promise<{ users: User[], count: number }> {
+        
+        const searchFields: Array<keyof User>  = ['email', 'name', 'contactPhone', 'role']
+        const { limit, offset, filter: filterString}  = params
 
-        for (let [key, value] of Object.entries(params)) {
-            if (regExFields.has(key)) {
-                filter[key] = new RegExp(value, 'i')
-            }
+        const regex = new RegExp(filterString,'i');
+        const filter = { $or: searchFields.map( key => ({ [key]: regex }))}
+        return {
+            users: await this.model.find(filter).skip(offset).limit(limit),
+            count: await this.model.countDocuments(filter)
         }
-        return await this.model.find(filter).limit(limit).skip(offset);
     };
 }

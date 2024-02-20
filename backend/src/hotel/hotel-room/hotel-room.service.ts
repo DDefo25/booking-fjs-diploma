@@ -5,6 +5,8 @@ import { Model, ObjectId } from 'mongoose';
 import { IHotelRoomService } from '../interfaces/hotel-room.service.interface';
 import { SearchRoomsParams } from '../interfaces/search-rooms.dto';
 import { match } from 'assert';
+import { UpdateHotelRoomDto } from '../interfaces/update-hotel-room.dto';
+import { UpdateHotelRoomParams } from '../interfaces/update-hotel-room.params';
 
 @Injectable()
 export class HotelRoomService implements IHotelRoomService {
@@ -36,7 +38,7 @@ export class HotelRoomService implements IHotelRoomService {
                     .filter(el => el.hotel !== null));
    };
 
-   update(id: ObjectId, data: Partial<HotelRoom>): Promise<HotelRoom> {
+   update(id: ObjectId, data: UpdateHotelRoomParams): Promise<HotelRoom> {
         return this.model.findByIdAndUpdate(id, {$set: data}, {returnDocument: 'after'})
    }
 }

@@ -21,8 +21,14 @@ export class HotelService implements IHotelService {
    };
 
    search(params: SearchHotelParams): Promise<Hotel[]> {
-        const {limit, offset, title} = params
-        const filter = title ? { title } : {};
+        const {limit, offset, title} = params || {} as SearchHotelParams
+
+        const filter = {
+            title: new RegExp(title, 'i')
+        }
+
+        console.log(filter)
+
        return this.model.find(filter).limit(limit).skip(offset)
    };
 

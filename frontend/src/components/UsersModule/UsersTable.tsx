@@ -1,16 +1,23 @@
 import { Table } from "react-bootstrap";
 import { IUserDto } from "./interfaces/User.interface.dto";
 import UserRow from "./UserRow";
+import { User } from "../../interfaces/User.interface";
+import { useLazyGetUsersQuery } from "../../services/userAPI";
+import { useEffect } from "react";
 
 
-export default function UsersTable ({users}: {users: IUserDto[]}) {
+export default function UsersTable ({users} : { users: User[]}) {
     const columns = {
-        _id: 'ID',
-        name: 'ФИО',
         email: 'Email',
+        name: 'ФИО',
         contactPhone: "Телефон",
+        _id: 'ID',
         role: 'Права',
     }
+
+    useEffect(() => {
+      console.log('users', users)
+    }, [users])
 
     function TheadEls({columns}: {columns: Object}) {
         const theadEls = Object.values(columns).map((value) => <th>{value}</th>)
@@ -20,9 +27,6 @@ export default function UsersTable ({users}: {users: IUserDto[]}) {
             </tr>
         )
     }
-    
-
-    const UsersEls = users.map(user => <UserRow user={user} columns={columns} />)
 
     return (
         <Table striped bordered hover>
@@ -30,7 +34,7 @@ export default function UsersTable ({users}: {users: IUserDto[]}) {
             <TheadEls columns={columns} />
           </thead>
           <tbody>
-            {UsersEls}
+            {users && users.map(user => <UserRow user={user} columns={columns} />)}
           </tbody>
         </Table>
       );

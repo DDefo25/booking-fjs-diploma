@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { SearchRoomsParams } from './interfaces/search-rooms.dto';
 import { HotelService } from './hotel.service';
 import { HttpValidationPipe } from 'src/validation/http.validation.pipe';
@@ -10,6 +10,7 @@ import { Role } from 'src/auth/roles.enum';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/http.roles.guard';
+import { AnyFilesInterceptor, FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 
 
 @Controller('api/:role/hotels')
@@ -31,9 +32,15 @@ export class HotelController {
     */
     @Roles(Role.Admin)
     @UseGuards(JwtAuthGuard, RolesGuard)
+    @UseInterceptors(AnyFilesInterceptor())
     @Post()
-    async create( @Body(new HttpValidationPipe()) data: Partial<Hotel>) {
-        return await this.hotelService.create(data)
+    async create( 
+        @UploadedFiles() images: Express.Multer.File[],
+        @Body() data: Partial<Hotel>
+        ) {
+            console.log(images)
+            data.images = [...images.map(image => image.path)]
+            return await this.hotelService.create(data)
     }
 
 
@@ -55,8 +62,21 @@ export class HotelController {
     */
     @Roles(Role.Admin)
     @UseGuards(JwtAuthGuard, RolesGuard)
+    @UseInterceptors(FilesInterceptor('imagesFiles[]'))
     @Put(':id')
-    async update( @Param('id') id: ObjectId, @Body(new HttpValidationPipe()) data: UpdateHotelParams) {
-        return await this.hotelService.update( id, data );
+    async update( 
+        @Param('id') id: ObjectId, 
+        @UploadedFiles() imagesFiles: Express.Multer.File[],
+        @Body() data: UpdateHotelParams
+    ) {
+            const updateData = { ...data }
+            updateData.images = Array.isArray(data.images) ? [
+                ...data.images, 
+                ...imagesFiles.map(image => image.path)
+            ] : [
+                data.images,
+                ...imagesFiles.map(image => image.path)
+            ]
+            return await this.hotelService.update( id, updateData );
     }
 }

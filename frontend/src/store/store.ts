@@ -18,17 +18,20 @@ import storage from 'redux-persist/lib/storage'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import { authAPI } from '../services/authAPI'
 import { hotelAPI } from '../services/hotelAPI'
+import { userAPI } from '../services/userAPI'
 
 const persistConfig = {
   key: 'root',
   version: 1,
   storage,
+  whitelist: ['auth']
 }
 
 const rootReducer = combineReducers({
   auth: authReducer,
   [authAPI.reducerPath]: authAPI.reducer,
   [hotelAPI.reducerPath]: hotelAPI.reducer,
+  [userAPI.reducerPath]: userAPI.reducer,
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
@@ -42,7 +45,8 @@ export const store = configureStore({
         },
       }).concat(
         authAPI.middleware, 
-        hotelAPI.middleware
+        hotelAPI.middleware,
+        userAPI.middleware
       )
 })
 

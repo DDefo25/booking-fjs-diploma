@@ -1,7 +1,7 @@
 import './App.css';
 import { Col, Container, Row } from 'react-bootstrap';
-import SideBar from './components/SideBar';
-import Logo from './components/Logo';
+import SideBar from './components/SideBar/SideBar';
+import Logo from './components/SideBar/Logo';
 import { Outlet } from 'react-router-dom';
 import Profile from './components/AuthModule/Profile';
 

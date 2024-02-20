@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseGuards, UseInterceptors } from '@nestjs/common';
 import { CreateUserDto } from 'src/user/interfaces/create-user.dto';
 import { UserService } from 'src/user/user.service';
 import { HttpValidationPipe } from 'src/validation/http.validation.pipe';
@@ -7,6 +7,7 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/auth/roles.enum';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/http.roles.guard';
+import { NoFilesInterceptor } from '@nestjs/platform-express';
 
 @Roles( Role.Admin )
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -24,7 +25,9 @@ export class UsersController {
     */
 
     @Post()
+    @UseInterceptors(NoFilesInterceptor())
     async create(@Body(new HttpValidationPipe()) data: CreateUserDto) {
+        console.log(data)
         data['passwordHash'] = data.password
         return await this.userService.create(data)
     }

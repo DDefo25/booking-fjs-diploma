@@ -1,23 +1,15 @@
-import { IsNumber, IsOptional, IsString} from "class-validator";
+import { IsNumber, IsOptional, IsString, IsDefined } from "class-validator";
 
 export class SearchUserParams {
     @IsNumber()
-    @IsOptional()
-    limit?: number;
+    @IsDefined()
+    limit: number;
 
     @IsNumber()
-    @IsOptional()
-    offset?: number;
+    @IsDefined()
+    offset: number;
 
     @IsString()
-    @IsOptional()
-    email?: string;
-
-    @IsString()
-    @IsOptional()
-    name?: string;
-
-    @IsString()
-    @IsOptional()
-    contactPhone?: string;
+    @IsDefined()
+    filter: string;
   }
