@@ -25,7 +25,9 @@ export class ReservationController {
     */
     @Get()
     async getAllReservations(@Req() req) {
-        return await this.reservationService.getReservations({userId: req.user._id})
+        // const response = await this.reservationService.getReservations({user: req.user._id})
+        // console.log(response)
+        return await this.reservationService.getReservations({user: req.user._id});
     }
     
     
@@ -40,8 +42,8 @@ export class ReservationController {
         @Body( new HttpValidationPipe()) data: ReservationCreateRequestDto, 
         @Req() req) {
             const createReservationData = {
-                userId: req.user, 
-                roomId: data.hotelRoom,
+                user: req.user, 
+                hotelRoom: data.hotelRoom,
                 dateStart: new Date( data.startDate ),
                 dateEnd: new Date( data.endDate )
             }
@@ -93,8 +95,8 @@ export class ReservationController {
     */
     @Roles(Role.Manager)
     @Get(':userId')
-    async getReservationById(@Param('userId') userId: ObjectId) {
-        return await this.reservationService.getReservations({userId})
+    async getReservationById(@Param('userId') user: ObjectId) {
+        return await this.reservationService.getReservations({user})
     }
 
 

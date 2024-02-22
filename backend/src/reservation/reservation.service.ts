@@ -15,37 +15,37 @@ export class ReservationService implements IReservationService {
     ) {}
 
     async addReservation(data: ReservationCreateDto): Promise<Reservation> {
-        const { roomId } = data
+        const { hotelRoom: hotelRoomId } = data
 
-        const hotelRoom = await this.modelHotelRomm.findById(roomId)
+        const hotelRoom = await this.modelHotelRomm.findById(hotelRoomId)
         const isReserved = await this.hasReservation(data)
 
         if(isReserved || !hotelRoom || !hotelRoom.isEnabled) {
             throw new BadRequestException('Номер с указанным ID не существует или он отключён')
         }
 
-        return this.model.create({hotelId: hotelRoom?.hotel, ...data})
+        return (await this.model.create({hotel: hotelRoom?.hotel, ...data})).populate(['hotel', 'hotelRoom'])
     };
 
-    async removeReservation(id: ObjectId, userId?: any): Promise<void> {
+    async removeReservation(id: ObjectId, user?: any): Promise<void> {
         const reservation = await this.model.findById(id)
 
         if (!reservation) {
             throw new BadRequestException('Брони с указанным ID не существует')
-        } else if (userId && reservation.userId.toString() !== userId._id?.toString()) {
+        } else if (user && reservation.user.toString() !== user._id?.toString()) {
             throw new BadRequestException('ID текущего пользователя не совпадает с ID пользователя в брони')
         }
         await reservation.deleteOne()
     };
 
     getReservations(filter: ReservationSearchParams): Promise<Array<Reservation>> {
-        return this.model.find(filter)
+        return this.model.find(filter).populate(['hotel', 'hotelRoom'])
     };
 
     private async hasReservation(data: ReservationCreateDto): Promise<boolean> {
-        const {roomId, dateStart, dateEnd} = data;
+        const {hotelRoom, dateStart, dateEnd} = data;
         const reservations = await this.model.find({
-            roomId,
+            hotelRoom,
             dateStart: {
                 $gte: dateStart,
                 $lte: dateEnd},

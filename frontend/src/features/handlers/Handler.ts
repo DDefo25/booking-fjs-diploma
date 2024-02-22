@@ -16,25 +16,6 @@ export interface IHandlers {
     onDeletePreview: (index: number) => void
 }
 
-// export class Handler<T> implements IHandlers {
-//     constructor( 
-//         private readonly dispatch: React.Dispatch<React.SetStateAction<T>>
-//     ) {
-//     }
-//     onChangeInput = ({ target: { name, value }}: React.ChangeEvent<any>) => {
-//         this.dispatch((prev) => ({...prev, [name]: value}))
-//     }
-
-//     onSubmitFrom = (event: React.FormEvent<any>, ) => {
-//         event.preventDefault()
-
-//     };
-//     onChangeFile = (params: React.ChangeEvent<HTMLInputElement>) => {};
-//     onDelete = (index: number) => {}
-//     onDeletePreview = (index: number) => {}
-    
-// }
-
 export class Handler {
     static onChangeInput = <T> (
         { target: { name, value }}: React.ChangeEvent<any>, 

@@ -10,21 +10,21 @@ export class Reservation {
         type: MongooseSchema.Types.ObjectId,
         ref: 'User'
     })
-    userId: ObjectId;
+    user: ObjectId;
 
     @Prop( {
         required: true,
         type: MongooseSchema.Types.ObjectId,
         ref: 'Hotel'
     })
-    hotelId: ObjectId;
+    hotel: ObjectId;
 
     @Prop( {
         required: true,
         type: MongooseSchema.Types.ObjectId,
         ref: 'HotelRoom'
     })
-    roomId: ObjectId;
+    hotelRoom: ObjectId;
 
     @Prop( {required: true})
     dateStart: Date;

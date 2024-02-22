@@ -3,7 +3,7 @@ import { ObjectId } from "mongoose";
 
 export class ReservationSearchParams {
     @IsMongoId()
-    userId?: ObjectId;
+    user?: ObjectId;
 
     @IsDate()
     dateStart?: Date;

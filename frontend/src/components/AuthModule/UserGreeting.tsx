@@ -1,8 +1,12 @@
-import { logout, selectUser } from "../../features/auth/authSlice"
+import { logout, selectUser } from "../../features/slices/authSlice"
 
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useAppDispatch, useTypedSelector } from "../../store/store"
-import { Button, Container, ListGroup, OverlayTrigger, Popover, Image } from "react-bootstrap"
+import { Button, Container, ListGroup, OverlayTrigger, Popover, Image, Card, Stack } from "react-bootstrap"
+import { Role } from "../../config/roles.enum"
+import { useGetUserQuery } from "../../services/authAPI"
+import { useEffect } from "react"
+
 
 const placement = 'bottom'
 
@@ -10,6 +14,15 @@ export default function UserGreeting () {
     const user = useTypedSelector(selectUser)
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
+
+    // const { data, isLoading, isFetching, isError } = useGetUserQuery()
+
+    // useEffect(() => {
+    //     console.log('userData', data)
+    //     console.log('userData isLoading', isLoading)
+    //     console.log('userData isFetching', isFetching)
+    //     console.log('userData isError', data )
+    // },[data, isLoading, isFetching, isError])
 
     const handlers = {
         logout: () => {
@@ -22,18 +35,23 @@ export default function UserGreeting () {
         <Container>
             <OverlayTrigger
                 trigger="click"
+                rootClose={true}
+                rootCloseEvent='mousedown'
                 key={placement}
                 placement={placement}
                 overlay={
-                <Popover id={`popover-positioned-${placement}`}>
-                    <Popover.Header as="h3">{ user?.name }</Popover.Header>
-                    <Popover.Body>
-                        <ListGroup variant="flush">
-                            {/* <ListGroup.Item><strong>id</strong> { user._id }</ListGroup.Item> */}
-                            <ListGroup.Item><strong>email</strong> { user?.email }</ListGroup.Item>
-                        </ListGroup>
-                    </Popover.Body>
-                    <Button variant="secondary" onClick={handlers.logout}>Выйти</Button>
+                <Popover id={`popover-positioned-${placement}`} className="p-2">
+                    <Card className="border border-0"> 
+                        <Card.Title className="fs-2">{ user?.name }</Card.Title>
+                        <Card.Subtitle className="mb-2 text-muted"><strong>ID:</strong> { user?._id }</Card.Subtitle>
+                        <Card.Subtitle className="mb-2 text-muted"><strong>email:</strong> { user?.email }</Card.Subtitle>
+                        <Stack gap={2}>
+                            <Button variant="info" hidden={user?.role !== Role.Client}>
+                                <Link to={'/reservation'} style={{textDecoration: "none"}} >Мои бронирования</Link>
+                            </Button>
+                            <Button variant="secondary" onClick={handlers.logout}>Выйти</Button>
+                        </Stack>
+                    </Card>
                 </Popover>
                 }
             >   

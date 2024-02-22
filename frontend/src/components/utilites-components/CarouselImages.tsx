@@ -10,13 +10,22 @@ interface InputGroupProps extends CarouselProps {
 
 export function CarouselImages({ images, imagesInRow, ...props }: InputGroupProps) {
 
-
     const imagesComponents = images.map((image, index) => {
         return (
-            <Col style={{position: 'relative', display: 'flex', justifyContent: 'center'}}>
+            <Col style={{
+                position: 'relative', 
+                display: 'flex', 
+                justifyContent: 'center',
+            }}>
                 <Image 
                     attributes={{src: `${DOWNLOAD_IMAGE_URL}?img_path=${image}`, rounded: true}} 
-                    styleAttr={{ width: '12vw' }}
+                    styleAttr={{ 
+                        display: 'block',
+                        maxHeight: '30vh', 
+                        maxWidth: '12vw', 
+                        width: 'auto',
+                        height: 'auto' 
+                    }}
                 />
             </Col>
         )

@@ -2,10 +2,14 @@ import instance from "../config/axiosConfig"
 import type { BaseQueryFn } from '@reduxjs/toolkit/query'
 import type { AxiosError, AxiosRequestConfig } from 'axios'
 
-export interface ErrorResponse {
-    status: number,
+export interface FulfillResponse {
     data: any,
 }
+
+// export interface RejectResponse {
+//     status: number,
+//     data: any,
+// }
 
 export const axiosBaseQuery = 
     ({ baseUrl } : {baseUrl: string} = { baseUrl: '' })
@@ -32,10 +36,15 @@ export const axiosBaseQuery =
             return { data: dataResponse }
         } catch (axiosError) {
             const err = axiosError as AxiosError
+            console.log('error in axiosBaseQuery',  {
+                status: err.response?.status,
+                data: err.response?.data || err.message,
+            },)
             return {
                 error: {
                     status: err.response?.status,
                     data: err.response?.data || err.message,
+                    statusText: err.response?.statusText
                 },
             }
         }

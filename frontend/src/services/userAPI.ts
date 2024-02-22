@@ -2,7 +2,6 @@ import { createApi } from "@reduxjs/toolkit/query/react"
 import { SERVER_URL } from "../config/config"
 import { User } from "../interfaces/User.interface"
 import { axiosBaseQuery } from "../store/axiosBaseQuery"
-import { IHotel } from "../components/HotelsModule/interfaces/Hotel.interface.dto"
 import { Role } from "../config/roles.enum"
 
 export interface CreateUserRequest {

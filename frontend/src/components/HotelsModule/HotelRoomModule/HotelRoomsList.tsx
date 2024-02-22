@@ -1,7 +1,7 @@
 import { HotelRoomCardView } from "./HotelRoomCardView";
-import { IHotelRoom } from "../interfaces/HotellRoom.interface.dto";
+import { HotelRoom } from "../interfaces/HotellRoom.interface.dto";
 
-export function HotelRoomsList ({hotelRooms}: {hotelRooms: IHotelRoom[]}) {
+export function HotelRoomsList ({hotelRooms}: {hotelRooms: HotelRoom[]}) {
     const hotelRoomsComponents = hotelRooms.map(hotelRoom => <HotelRoomCardView hotelRoom={hotelRoom}/>)
     return (
         <>

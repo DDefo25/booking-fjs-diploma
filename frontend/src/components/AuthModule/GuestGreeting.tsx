@@ -39,15 +39,19 @@ export default function GuestGreeting () {
     
     
     return (
-        <Container>
+        <Container >
             <OverlayTrigger
                 trigger="click"
+                rootClose={true}
+                rootCloseEvent='mousedown'
                 key={placement}
                 placement={placement}
                 overlay={
-                <Popover id={`popover-positioned-${placement}`}>
+                <Popover id={`popover-positioned-${placement}`} className="p-2">
                     <Nav 
-                        justify variant="tabs" 
+                        justify 
+                        variant="pills" 
+                        className="mb-2"
                         defaultActiveKey={navKey}
                         onSelect={(eventKey) => handleSelect(eventKey)}
                         >

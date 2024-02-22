@@ -1,14 +1,10 @@
-import { Button, Card, Container, Form, Stack, Image } from "react-bootstrap";
-import { IHotelRoom } from "../interfaces/HotellRoom.interface.dto";
-import { CarouselImages } from "../../utilites-components/CarouselImages";
-import { useCheckRoles } from "../../../hooks/useCheckRoles";
-import { Role } from "../../../config/roles.enum";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Button, Card, Form, Stack } from "react-bootstrap";
+import { useNavigate, useParams } from "react-router-dom";
 import { HotelRoomEditRequest, useEditHotelRoomMutation, useGetHotelRoomQuery } from "../../../services/hotelAPI";
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { Loading } from "../../utilites-components/Loading";
 import { CarouselImagesEdit } from "../../utilites-components/CarouselImagesEdit";
-import { Handler, HandlersForm } from "../../../features/handlers/Handler";
+import { Handler } from "../../../features/handlers/Handler";
 
 export function HotelRoomCardEdit () {
     const { roomId } = useParams()
@@ -68,7 +64,7 @@ export function HotelRoomCardEdit () {
     return (
         <>
         { hotelRoom ? 
-        <Card>
+        <Card className="mb-3">
             <Form ref={formRef} onSubmit={handlers.onSubmit}>
                 <CarouselImagesEdit 
                     images={formState.images} 
@@ -76,6 +72,7 @@ export function HotelRoomCardEdit () {
                     handlers={handlers} 
                     imagesInRow={3} 
                     variant={"dark"} 
+                    className="p-4"
                     fade/>
                 <Card.Body>
                     <Card.Text>

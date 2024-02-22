@@ -4,7 +4,8 @@ export interface User {
     _id: string,
     name: string,
     email: string,
-    role: Role
+    role: Role,
+    contactPhone: string
 }
 
 export interface AuthState {

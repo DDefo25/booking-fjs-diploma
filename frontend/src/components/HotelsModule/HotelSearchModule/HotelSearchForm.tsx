@@ -3,9 +3,9 @@ import { Button, Card, Form } from "react-bootstrap";
 
 
 
-export function HotelSearch ({handlers, formState}: {handlers: any, formState: any}) {
+export function HotelSearchForm ({handlers, formState}: {handlers: any, formState: any}) {
     return (
-        <Card>
+        <Card className="mb-3">
                 <Card.Body>
                     <Card.Title>Поиск гостиницы</Card.Title>
                     <Form onSubmit={handlers.onSubmit}>

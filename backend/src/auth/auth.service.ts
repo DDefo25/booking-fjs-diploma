@@ -18,7 +18,7 @@ export class AuthService {
 
     async createResponse({_id, email, name, contactPhone, role}: any) {
         return {
-            user: { email, name, contactPhone, role },
+            user: { email, name, contactPhone, role, _id },
             token: await this.createToken({ id: _id, email }),
             refreshToken: await this.createToken({ id: _id, email }, true),
         };
@@ -46,7 +46,6 @@ export class AuthService {
     //Доступно только не аутентифицированным пользователям.
     async register(data: RegisterClientDto): Promise<any> {
         const { email, password } = data;
-        console.log(data)
         const userExist = await this.validateUser(email)
         if (userExist) {
             throw new BadRequestException('Email уже занят')

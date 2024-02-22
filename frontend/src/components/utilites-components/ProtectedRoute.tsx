@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { selectAuth } from "../../features/auth/authSlice"
+import { selectAuth } from "../../features/slices/authSlice"
 import { useTypedSelector } from "../../store/store"
 import { Role } from "../../config/roles.enum";
 import { useCheckRoles } from "../../hooks/useCheckRoles";

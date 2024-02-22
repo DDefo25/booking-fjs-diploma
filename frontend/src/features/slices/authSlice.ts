@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { User } from "../../interfaces/User.interface"
 import { RootState } from "../../store/store"
 import { authAPI, UserResponse } from "../../services/authAPI"
-import { ErrorResponse } from "../../store/axiosBaseQuery"
+import { ErrorResponse } from "react-router-dom"
 
 
 
@@ -40,6 +40,7 @@ export const slice = createSlice({
             })
             .addMatcher(authAPI.endpoints.getUser.matchFulfilled, (state, {payload: user}: PayloadAction<User>) => {
                 console.log('fulfilled', user)
+                // const token = localStorage.getItem('token')
                 const token = localStorage.getItem('token')
                 state.user = user
                 state.token = token
@@ -47,6 +48,8 @@ export const slice = createSlice({
             })
             .addMatcher(authAPI.endpoints.getUser.matchRejected, (state, action) => {
                 console.log('rejected', action)
+                localStorage.removeItem('token')
+                state = {...initialState}
             })
             .addMatcher(authAPI.endpoints.login.matchPending, (state, action) => {
                 console.log('pending', action)

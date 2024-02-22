@@ -7,7 +7,7 @@ import { Role } from "../../config/roles.enum";
 import { Handler } from "../../features/handlers/Handler";
 import { Loading } from "../utilites-components/Loading";
 import { useTypedSelector } from "../../store/store";
-import { selectUser } from "../../features/auth/authSlice";
+import { selectUser } from "../../features/slices/authSlice";
 
 interface CreateUserRequestExtended extends CreateUserRequest{
     passwordRepeat: string,

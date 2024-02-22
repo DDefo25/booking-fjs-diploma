@@ -2,7 +2,9 @@ import { createApi } from "@reduxjs/toolkit/query/react"
 import { SERVER_URL } from "../config/config"
 import { User } from "../interfaces/User.interface"
 import { axiosBaseQuery } from "../store/axiosBaseQuery"
-import { IHotel } from "../components/HotelsModule/interfaces/Hotel.interface.dto"
+import { HotelRoom } from "../components/HotelsModule/interfaces/HotellRoom.interface.dto"
+import { Hotel } from "../components/HotelsModule/interfaces/Hotel.interface.dto"
+
 
 export interface HotelRoomRequest {
   hotel?: string,
@@ -13,7 +15,7 @@ export interface HotelRoomRequest {
 
 export interface HotelRoomEditRequest {
   id: string,
-  hotel: IHotel | string,
+  hotel: Hotel | string,
   description?: string,
   images: string[]
   imagesFiles: File[]
@@ -42,20 +44,20 @@ export interface HotelEditRequest {
   images: string[]
 }
 
-export interface Hotel {
-  _id?: string,
-  title: string,
-  description: string,
-  images: string[]
-}
+// export interface Hotel {
+//   _id?: string,
+//   title: string,
+//   description: string,
+//   images: string[]
+// }
 
-export interface HotelRoom {
-  _id: string,
-  description: string,
-  images: string[],
-  isEnabled: boolean,
-  hotel: Hotel
-}
+// export interface HotelRoom {
+//   _id: string,
+//   description: string,
+//   images: string[],
+//   isEnabled: boolean,
+//   hotel: Hotel
+// }
 
 export const hotelAPI = createApi({
     reducerPath: "hotelAPI",

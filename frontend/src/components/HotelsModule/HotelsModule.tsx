@@ -28,7 +28,7 @@ export function HotelsModule () {
     
     return ( 
         <> 
-            <Card>
+            <Card className="mb-3">
                 <Card.Body>
                     <Card.Title>Поиск гостиницы</Card.Title>
                     <Form onSubmit={ handlers.onSubmit }>
@@ -54,10 +54,10 @@ export function HotelsModule () {
                 </Card.Body>
         </Card>
             { hotels && hotels.map( hotel => (
-                <Container className="loading-box-parent">
-                    <HotelCard key={hotel._id} hotel={hotel}/>
+                <div className="loading-box-parent">
+                    <HotelCard key={hotel._id} hotel={hotel} />
                     { isLoading || isFetching ? <LoadingBox /> : null }
-                </Container>
+                </div>
             ))}
 
 

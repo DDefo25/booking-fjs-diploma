@@ -1,7 +1,7 @@
 import { Container, Navbar, Stack, Image } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useTypedSelector } from "../../store/store";
-import { selectAuth } from "../../features/auth/authSlice";
+import { selectAuth } from "../../features/slices/authSlice";
 import { useCheckRoles } from "../../hooks/useCheckRoles";
 import { Role } from "../../config/roles.enum";
 import { SideBarLink } from "./SideBarLink";
@@ -16,7 +16,7 @@ export default function SideBar () {
         }, {
             path: 'hotels',
             title: 'Все гостиницы',
-            allowedRoles: [ Role.Admin, Role.Manager ]
+            allowedRoles: [ Role.Admin ]
         }, {
             path: 'hotel/create',
             title: 'Добавить гостиницу',

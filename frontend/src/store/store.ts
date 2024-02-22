@@ -1,5 +1,6 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
-import authReducer from '../features/auth/authSlice'
+import authReducer from '../features/slices/authSlice'
+import toastReducer from '../features/slices/toastSlice'
 
 
 import {
@@ -19,19 +20,23 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import { authAPI } from '../services/authAPI'
 import { hotelAPI } from '../services/hotelAPI'
 import { userAPI } from '../services/userAPI'
+import { reservationAPI } from '../services/reservationAPI'
+import { rtkQueryErrorMiddleware } from '../features/middleware/rtkQueryErrorMiddleware'
 
 const persistConfig = {
   key: 'root',
   version: 1,
   storage,
-  whitelist: ['auth']
+  whitelist: ['auth, toast']
 }
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  toast: toastReducer,
   [authAPI.reducerPath]: authAPI.reducer,
   [hotelAPI.reducerPath]: hotelAPI.reducer,
   [userAPI.reducerPath]: userAPI.reducer,
+  [reservationAPI.reducerPath]: reservationAPI.reducer,
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
@@ -46,7 +51,9 @@ export const store = configureStore({
       }).concat(
         authAPI.middleware, 
         hotelAPI.middleware,
-        userAPI.middleware
+        userAPI.middleware,
+        reservationAPI.middleware,
+        rtkQueryErrorMiddleware
       )
 })
 

@@ -17,6 +17,6 @@ export default () => ({
       expiresInRefreshToken: process.env.JWT_EXPIRATION_TIME_REFRESH_TOKEN || '15d'
     },
     cookies: {
-      expires: process.env.COOKIES_EXPIRATION_TIME || 60 * 60 * 1000
+      expires: Number(process.env.COOKIES_EXPIRATION_TIME) || 60 * 60 * 1000
     }
   });

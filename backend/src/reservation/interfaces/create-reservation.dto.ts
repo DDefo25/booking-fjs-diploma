@@ -3,13 +3,13 @@ import { ObjectId } from "mongoose";
 
 export class ReservationCreateDto  {
     @IsMongoId()
-    userId: ObjectId;
+    user: ObjectId;
 
     @IsMongoId()
-    hotelId?: ObjectId;
+    hotel?: ObjectId;
 
     @IsMongoId()
-    roomId: ObjectId;
+    hotelRoom: ObjectId;
 
     @IsDate()
     dateStart: Date;

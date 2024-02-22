@@ -23,6 +23,7 @@ export class HotelRoomController {
     */
     @Get()
     async findHotelRooms(@Query() query: SearchRoomsParams) {
+        console.log(query)
         return await this.hotelRoomService.search(query)
     }
 

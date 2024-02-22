@@ -1,9 +1,10 @@
-import { IHotel } from "./Hotel.interface.dto";
+import { Hotel } from "./Hotel.interface.dto";
 
-export interface IHotelRoom {
+export interface HotelRoom {
   _id: string,
+  title: string
   description: string,
   images: string[],
   isEnabled: boolean,
-  hotel: IHotel
+  hotel: Hotel
 }
