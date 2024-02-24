@@ -11,6 +11,14 @@ export interface HotelRoomRequest {
   limit: number,
   offset: number,
   title?: string
+  dateStart?: string,
+  dateEnd?: string
+}
+
+export interface GetHotelRoomsDto {
+  _id: string,
+  hotel: Hotel,
+  hotelRooms: HotelRoom[],
 }
 
 export interface HotelRoomEditRequest {
@@ -44,21 +52,6 @@ export interface HotelEditRequest {
   images: string[]
 }
 
-// export interface Hotel {
-//   _id?: string,
-//   title: string,
-//   description: string,
-//   images: string[]
-// }
-
-// export interface HotelRoom {
-//   _id: string,
-//   description: string,
-//   images: string[],
-//   isEnabled: boolean,
-//   hotel: Hotel
-// }
-
 export const hotelAPI = createApi({
     reducerPath: "hotelAPI",
     baseQuery: axiosBaseQuery({
@@ -67,7 +60,7 @@ export const hotelAPI = createApi({
     tagTypes: ['Hotel', 'HotelRoom'],
     endpoints: (build) => ({
 
-      getHotelRooms: build.query<HotelRoom[], HotelRoomRequest>({
+      getHotelRooms: build.query<GetHotelRoomsDto[], HotelRoomRequest>({
         query: (params) => ({
           url: '/common/hotel-rooms',
           method: 'get',

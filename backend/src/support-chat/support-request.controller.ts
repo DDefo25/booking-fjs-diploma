@@ -42,6 +42,7 @@ export class SupportRequestController {
         const { isActive } = query
         const response = []
         
+        console.log(query)
         switch (role) {
             case Role.Client: {
                 const supportRequests = await this.supportRequest.findSupportRequests({user: req.user._id, isActive: !!isActive});
@@ -72,6 +73,7 @@ export class SupportRequestController {
                 break;
             }
         }
+        console.log(response)
         return response
     };
 

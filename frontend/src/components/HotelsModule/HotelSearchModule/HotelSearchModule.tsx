@@ -8,18 +8,31 @@ import { Loading } from "../../utilites-components/Loading";
 import { useGetHotelRoomsQuery } from "../../../services/hotelAPI";
 import { Outlet } from "react-router-dom";
 import { Handler, HandlersForm } from "../../../features/handlers/Handler";
+import { format, add } from 'date-fns'
+import { LoadingBox } from "../../utilites-components/LoadingBox";
+import { useAppDispatch, useTypedSelector } from "../../../store/store";
+import { ReservationDateState, editReservationDate, selectReservationDates } from "../../../features/slices/reservationDateSlice";
 
-const initialFormState: HotelSearch = {
-    title: '',
-    offset: 0,
-    limit: 10,
-    startDate: '',
-    endDate: ''
-}
+
 
 export function HotelSearchModule () {
+    const initialFormState: HotelSearch = {
+        title: '',
+        offset: 0,
+        limit: 10,
+    }
+
+
+    const queryParams = {} as ReservationDateState
+    const { dateStart, dateEnd } = useTypedSelector( selectReservationDates )
+    if ( dateStart !== '' && dateEnd !== '' ) {
+        queryParams.dateStart = dateStart;
+        queryParams.dateEnd = dateEnd;
+    }
+
     const [ formState, setForm ] = useState(initialFormState )
-    const { data: hotelsRoom, isLoading, refetch } = useGetHotelRoomsQuery(formState)
+    const { data: hotelRoomsGroupedByHotel, isLoading, isFetching, refetch } = useGetHotelRoomsQuery({...formState, ...queryParams})
+    const dispatch = useAppDispatch()
 
     const handlers = {
         onSubmit: (e: React.FocusEvent) => {
@@ -27,23 +40,23 @@ export function HotelSearchModule () {
             refetch()
         },
 
-        onChange: (e: React.ChangeEvent) => Handler.onChangeInput<HotelSearch>(e, setForm)
+        onChange: (e: React.ChangeEvent) => Handler.onChangeInput<HotelSearch>(e, setForm),
+        onChangeDate: (e: React.ChangeEvent<HTMLInputElement>) => dispatch( editReservationDate(e))
     }
-
-    useEffect(() => {
-        console.log('formState', formState)
-    }, [formState])
-    
-
-    const hotels = hotelsRoom && [...new Map(hotelsRoom.map(({hotel}) => [hotel._id, hotel])).values()]
-
-    if (isLoading) return <Loading />
 
     return (
         <>
         <Container>
             <HotelSearchForm handlers={handlers} formState={formState}/>
-            { hotels && hotels.map((hotel) => <HotelSearchCard key={hotel._id} hotel={hotel} />) }
+            <div className="loading-box-parent">
+                { isLoading || isFetching
+                    ? <LoadingBox /> 
+                    : hotelRoomsGroupedByHotel 
+                        && hotelRoomsGroupedByHotel.map((hotelGrouped) => 
+                            <HotelSearchCard key={hotelGrouped._id} hotelGrouped={hotelGrouped} 
+                        />)
+                }
+            </div>
         </Container>
         </>
     )

@@ -1,44 +1,48 @@
 import { Button, Card, Form } from "react-bootstrap";
+import { useTypedSelector } from "../../../store/store";
+import { selectReservationDates } from "../../../features/slices/reservationDateSlice";
 
 
 
 
 export function HotelSearchForm ({handlers, formState}: {handlers: any, formState: any}) {
+    const { dateStart, dateEnd } = useTypedSelector( selectReservationDates )
+
     return (
         <Card className="mb-3">
                 <Card.Body>
                     <Card.Title>Поиск гостиницы</Card.Title>
-                    <Form onSubmit={handlers.onSubmit}>
+                    <Form onSubmit={ handlers.onSubmit }>
                         <Card.Text>
                             <Form.Group className="mb-3" controlId="formSearchHotelTitle">
                                 <Form.Control 
                                     name='title' 
                                     placeholder="Введите название гостиницы (необязательно)" 
                                     type="text" 
-                                    value={formState.title}
-                                    onChange={handlers.onChange}/>
+                                    value={ formState.title }
+                                    onChange={ handlers.onChange }/>
                             </Form.Group>
                         </Card.Text>
                         <Card.Text>
                             <Form.Group className="mb-3" controlId="formSearchHotelStartDate">
                                 <Form.Label>Заезд</Form.Label>
                                 <Form.Control 
-                                    name='startDate'
+                                    name='dateStart'
                                     type="date" 
                                     placeholder="Заезд" 
-                                    value={formState.startDate} 
-                                    onChange={handlers.onChange}/>
+                                    value={dateStart} 
+                                    onChange={ handlers.onChangeDate }/>
                             </Form.Group>
                         </Card.Text>
                         <Card.Text>
                             <Form.Group className="mb-3" controlId="formSearchHotelEndDate">
                                 <Form.Label>Выезд</Form.Label>
                                 <Form.Control 
-                                    name='endDate'
+                                    name='dateEnd'
                                     type="date" 
                                     placeholder="Выезд" 
-                                    value={formState.endDate} 
-                                    onChange={handlers.onChange}/>
+                                    value={ dateEnd } 
+                                    onChange={ handlers.onChangeDate }/>
                             </Form.Group>
                         </Card.Text>
                         <Button variant="primary" type="submit">Искать</Button>

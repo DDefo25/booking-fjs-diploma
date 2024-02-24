@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { HTMLAttributes, useRef, useState } from "react";
 import { ImageProps, Image as ReactImage } from "react-bootstrap";
 import { Loading } from "./Loading";
 
@@ -6,7 +6,7 @@ export const Image = ( {
         attributes, 
         styleAttr,
     } : {
-        attributes?: React.ImgHTMLAttributes<HTMLImageElement> & ImageProps & React.DOMAttributes<HTMLImageElement>, 
+        attributes?: React.ImgHTMLAttributes<HTMLImageElement> & ImageProps & React.DOMAttributes<HTMLImageElement>
         styleAttr?: React.CSSProperties
     }) => {
 

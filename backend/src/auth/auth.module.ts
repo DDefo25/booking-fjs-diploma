@@ -9,6 +9,7 @@ import { JwtStrategy } from './jwt.strategy';
 import { RolesGuard } from './guards/http.roles.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtStrategyCookies } from './jwtCookies.strategy';
+import { JwtStrategyWs } from './ws.jwt.strategy';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { JwtStrategyCookies } from './jwtCookies.strategy';
     AuthService, 
     JwtStrategy,
     JwtStrategyCookies,
+    JwtStrategyWs,
     JwtConfigService
   ],
   controllers: [AuthController],

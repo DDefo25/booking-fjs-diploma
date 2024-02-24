@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, Query, Request, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query, Request, UploadedFiles, UseGuards, UseInterceptors, ValidationPipe } from '@nestjs/common';
 import { HotelRoomService } from './hotel-room.service';
 import { SearchRoomsParams } from '../interfaces/search-rooms.dto';
 import { ObjectId } from 'mongoose';
@@ -22,11 +22,9 @@ export class HotelRoomController {
         Доступно всем пользователям, включая неаутентифицированных.
     */
     @Get()
-    async findHotelRooms(@Query() query: SearchRoomsParams) {
-        console.log(query)
+    async findHotelRooms(@Query( new HttpValidationPipe()) query: SearchRoomsParams) {
         return await this.hotelRoomService.search(query)
     }
-
 
     /*
         Доступно всем пользователям, включая неаутентифицированных.

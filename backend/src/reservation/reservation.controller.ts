@@ -7,6 +7,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/http.roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { ReservationCreateRequestDto } from './interfaces/create-reservation.request.dto';
+import { ReservationBetweenRequestDto } from './interfaces/reservation.between';
 
 @Roles(Role.Client)
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -49,6 +50,18 @@ export class ReservationController {
             }
 
             return await this.reservationService.addReservation(createReservationData)
+    }
+
+    @Post('get-between')
+    async reservationsBetweenDates( 
+        @Body( new HttpValidationPipe()) data: ReservationBetweenRequestDto, 
+        @Req() req) {
+            const findReservations = {
+                dateStart: new Date( data.startDate ),
+                dateEnd: new Date( data.endDate )
+            }
+
+            return await this.reservationService.getReservationsBetweenDates(findReservations)
     }
 
     

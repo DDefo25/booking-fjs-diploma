@@ -3,7 +3,7 @@ import {AuthGuard} from "@nestjs/passport";
 import { WsException } from "@nestjs/websockets";
 
 @Injectable()
-export class WsJwtAuthGuard extends AuthGuard('jwt') {
+export class WsJwtAuthGuard extends AuthGuard('jwt-socket.io') {
     public canActivate(context: ExecutionContext) {
         return super.canActivate(context);
     }

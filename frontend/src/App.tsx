@@ -5,8 +5,16 @@ import Logo from './components/SideBar/Logo';
 import { Outlet } from 'react-router-dom';
 import Profile from './components/AuthModule/Profile';
 import { ToastList } from './components/utilites-components/Toast/ToastList';
+import { SupporRequestModule } from './components/SupportRequest/SupportRequestModule';
+import { useTypedSelector } from './store/store';
+import { selectIsAuth, selectUser } from './features/slices/authSlice';
+import { User } from './interfaces/User.interface';
+import { useCheckRoles } from './hooks/useCheckRoles';
+import { Role } from './config/roles.enum';
 
 function App() {
+  const isAllow = useCheckRoles()
+
   return (<>
     <div className='position-relative'>
       <Navbar sticky="top" className="bg-body-tertiary">
@@ -27,6 +35,7 @@ function App() {
           <SideBar />
       </Col>
       <ToastList />
+      { isAllow([Role.Manager, Role.Client]) && <SupporRequestModule /> }
     </div>
     </>
   );

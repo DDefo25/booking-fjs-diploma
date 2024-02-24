@@ -6,6 +6,9 @@ import { ReservationSearchParams } from './interfaces/search-reservation.dto';
 import { Reservation, ReservationDocument } from './schemas/reservation.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { HotelRoom, HotelRoomDocument } from 'src/hotel/schemas/hotel-room.schema';
+import { startOfDay, endOfDay } from 'date-fns'
+import { ReservationBetweenRequestDto } from './interfaces/reservation.between';
+import { ReservationBetweenDto } from './interfaces/reservation.between.dto';
 
 @Injectable()
 export class ReservationService implements IReservationService {
@@ -19,6 +22,8 @@ export class ReservationService implements IReservationService {
 
         const hotelRoom = await this.modelHotelRomm.findById(hotelRoomId)
         const isReserved = await this.hasReservation(data)
+
+        console.log(isReserved)
 
         if(isReserved || !hotelRoom || !hotelRoom.isEnabled) {
             throw new BadRequestException('Номер с указанным ID не существует или он отключён')
@@ -46,14 +51,40 @@ export class ReservationService implements IReservationService {
         const {hotelRoom, dateStart, dateEnd} = data;
         const reservations = await this.model.find({
             hotelRoom,
-            dateStart: {
-                $gte: dateStart,
-                $lte: dateEnd},
-            dateEnd:{
-                $gte: dateStart,
-                $lte: dateEnd}
+            $or: [{ 
+                dateStart: {
+                    $gte: dateStart,
+                    $lt: dateEnd
+                }}, { 
+                dateEnd: {
+                    $gt: dateStart,
+                    $lte: dateEnd
+                }}]
         })
 
         return reservations.length > 0
+    }
+
+    getReservationsBetweenDates(data: ReservationBetweenDto): Promise<Reservation[]> {
+        const {dateStart, dateEnd} = data;
+        return this.model
+            .aggregate([{
+                $match: {
+                    $or: [{ 
+                        dateStart: {
+                            $gte: dateStart,
+                            $lt: dateEnd
+                        }}, { 
+                        dateEnd: {
+                            $gt: dateStart,
+                            $lte: dateEnd
+                        }}]
+                    }},
+            ])
+            .group({
+                _id: "$hotelRoom",
+                hotel: { $first: '$hotel'},
+                reservations: { $push: "$$ROOT" } 
+            })
     }
 }
