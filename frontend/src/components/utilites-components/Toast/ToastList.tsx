@@ -7,7 +7,7 @@ export const ToastList = () => {
     const toastList = useTypedSelector( selectToastList )
 
     return (
-        <ToastContainer className="position-fixed end-0 m-4" style={{bottom: '10vh'}}>
+        <ToastContainer className="position-fixed start-0 m-4" style={{bottom: '10vh'}}>
             { toastList.map( toast => <Toast toast={toast} /> ) }
         </ToastContainer>
     )

@@ -4,8 +4,8 @@ import { HotelRoom } from "../../components/HotelsModule/interfaces/HotellRoom.i
 
 export interface Reservation {
     _id: string,
-    startDate: string,
-    endDate: string,
+    dateStart: string,
+    dateEnd: string,
     hotelRoom: HotelRoom,
     hotel: Hotel
   }

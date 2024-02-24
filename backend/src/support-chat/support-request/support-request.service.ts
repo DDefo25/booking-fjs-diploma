@@ -17,10 +17,16 @@ export class SupportRequestService implements ISupportRequestService {
         private eventEmitter: EventEmitter2
     ) {}
 
-    async findSupportRequests(_params: GetChatListParams): Promise<SupportRequest[]> {
-        return await this.supportRequestModel.find(_params)
-        .populate({path: 'user', model: 'User'})
-        .select('-user.passwordHash')
+    async findSupportRequests({limit, offset, ..._params}: GetChatListParams): Promise<{ supportRequests: SupportRequest[], count: number }>  {
+        return {
+            count: await this.supportRequestModel.countDocuments(_params),
+            supportRequests: await this.supportRequestModel.find(_params)
+            .populate({path: 'user', model: 'User'})
+            .sort({ createdAt: 'desc' })
+            .skip(offset)
+            .limit(limit)
+            .select('-user.passwordHash')
+        }
     };
     
     async sendMessage(data: SendMessageDto): Promise<Message> {

@@ -6,7 +6,8 @@ import { Button, Container, ListGroup, OverlayTrigger, Popover, Image, Card, Sta
 import { Role } from "../../config/roles.enum"
 import { useGetUserQuery } from "../../services/authAPI"
 import { useEffect } from "react"
-
+import { socket } from "../../socket/socket"
+import { useCheckRoles } from "../../hooks/useCheckRoles"
 
 const placement = 'bottom'
 
@@ -14,15 +15,16 @@ export default function UserGreeting () {
     const user = useTypedSelector(selectUser)
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
+    const isAllow = useCheckRoles()  
 
-    // const { data, isLoading, isFetching, isError } = useGetUserQuery()
-
-    // useEffect(() => {
-    //     console.log('userData', data)
-    //     console.log('userData isLoading', isLoading)
-    //     console.log('userData isFetching', isFetching)
-    //     console.log('userData isError', data )
-    // },[data, isLoading, isFetching, isError])
+    useEffect(() => {
+        isAllow([ Role.Client, Role.Manager ]) 
+            && socket.connect()
+      
+        return () => { 
+            socket.disconnect() 
+        }
+    }, []);
 
     const handlers = {
         logout: () => {
@@ -59,4 +61,8 @@ export default function UserGreeting () {
             </OverlayTrigger>
         </Container>
     )
+}
+
+function isAllow(arg0: Role[]) {
+    throw new Error("Function not implemented.")
 }

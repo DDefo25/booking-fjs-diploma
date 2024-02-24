@@ -25,13 +25,17 @@ export function HotelCardView () {
     
     console.log('queryParams', queryParams)
     
-    const { data: hotelRoomsGroupedByHotel, isLoading, isFetching, refetch } = useGetHotelRoomsQuery(queryParams, { refetchOnMountOrArgChange: true })
-    const { data: hotel, isLoading: isLoadingHotel, isFetching: isFetchingHotel } = useGetHotelQuery(id!, { refetchOnMountOrArgChange: true })
+    const { data: hotelRoomsGroupedByHotel, isLoading, isFetching, refetch } = useGetHotelRoomsQuery(queryParams, )
+    const { data: hotel, isLoading: isLoadingHotel, isFetching: isFetchingHotel } = useGetHotelQuery(id!, )
     const dispatch = useAppDispatch()
 
     useEffect(() => {
         console.log('{ dateStart, dateEnd }', { dateStart, dateEnd })
     }, [dateStart, dateEnd])
+
+    useEffect(() => {
+        console.log('hotelRoomsGroupedByHotel in HotelCardView', hotelRoomsGroupedByHotel)
+    }, [hotelRoomsGroupedByHotel])
 
     const handlers = {
         onSubmit: (e: React.FormEvent) => {

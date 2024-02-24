@@ -26,7 +26,7 @@ export function ReservationCard ({reservation, onClick}: {reservation: Reservati
                         Даты бронирования
                     </Card.Text>
                     <Card.Text className="p-2 ">
-                        с <Moment format={'DD.MM.YYYY'} date={reservation.startDate} /> по <Moment format={'DD.MM.YYYY'} date={reservation.endDate} />
+                        с <Moment format={'DD.MM.YYYY'} date={reservation.dateStart} /> по <Moment format={'DD.MM.YYYY'} date={reservation.dateEnd} />
                     </Card.Text>
                     <Button variant="warning" className="p-2 ms-auto" onClick={ onClick }>Отменить бронирование</Button>
                 </Stack>

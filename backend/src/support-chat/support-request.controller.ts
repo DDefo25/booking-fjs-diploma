@@ -39,13 +39,14 @@ export class SupportRequestController {
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Get()
     async getSupportRequest(@Query() query: SearchSupportRequestParams, @Req() req, @Param('role') role: Partial<Role>) {
-        const { isActive } = query
+        // const { isActive } = query
         const response = []
-        
+        let count
         console.log(query)
+        
         switch (role) {
             case Role.Client: {
-                const supportRequests = await this.supportRequest.findSupportRequests({user: req.user._id, isActive: !!isActive});
+                const { supportRequests, count: countClientSR } = await this.supportRequest.findSupportRequests({user: req.user._id, ...query});
                 for (let el of supportRequests) {
                     const unreadCount = await this.supportRequestClient.getUnreadCount(el['_id'])
                     response.push( {
@@ -55,11 +56,12 @@ export class SupportRequestController {
                         hasNewMessages: unreadCount.length > 0
                     })
                 }
+                count = countClientSR
                 break;
             }
 
             case Role.Manager: {
-                const supportRequests = await this.supportRequest.findSupportRequests({isActive: !!isActive})
+                const { supportRequests, count: countManagerSR } = await this.supportRequest.findSupportRequests(query)
                 for (let el of supportRequests) {
                     const unreadCount = await this.supportRequestEmployee.getUnreadCount(el['_id'])
                     response.push( {
@@ -70,11 +72,15 @@ export class SupportRequestController {
                         client: el.user
                     })
                 }
+                count = countManagerSR
                 break;
             }
         }
         console.log(response)
-        return response
+        return {
+            supportRequests: response,
+            count
+        }
     };
 
     // GET /api/common/support-requests/:id/messages
@@ -98,6 +104,7 @@ export class SupportRequestController {
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Post(':id/messages')
     async sendMessage(@Param('id') supportRequest: ObjectId, @Req() req, @Body(new HttpValidationPipe()) { text }) {
+        console.log('sendMessage', { text })
         return await this.supportRequest.sendMessage({ 
             text, 
             author: req.user, 
@@ -125,5 +132,13 @@ export class SupportRequestController {
             return { success: false, error: e }
         }
         return { success: true }
+    }
+
+    //POST /api/common/support-requests/:id/close
+    @Roles(Role.Manager)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Post(':id/close')
+    async closeSupportRequest(@Param('id') supportRequest: ObjectId ) {
+        return await this.supportRequestEmployee.closeRequest( supportRequest )
     }
 }

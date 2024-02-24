@@ -13,14 +13,14 @@ export const Pagination = ({
     onPaginationClick: (i: number) => void,
     props?: PaginationProps & React.RefAttributes<HTMLUListElement> & React.DOMAttributes<HTMLElement>
 }) => {
-    const active = Math.ceil(count / offset);
     const numbers = Math.ceil(count / limit)
+
+    console.log('count, offset, limit, active, numbers', [count, offset, limit, numbers])
     const items = [];
     for (let i = 1; i <= numbers; i++) {
         items.push(
     <PaginationReact.Item 
                 key={i} 
-                active={i === active} 
                 onClick={() => onPaginationClick(i)}
                 {...props} 
             >

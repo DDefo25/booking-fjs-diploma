@@ -8,6 +8,8 @@ import { LoadingBox } from "../utilites-components/LoadingBox";
 import { Link } from "react-router-dom";
 import { Pagination } from "../utilites-components/Pagination";
 import { UsersStack } from "./UsersStack";
+import { useCheckRoles } from "../../hooks/useCheckRoles";
+import { Role } from "../../config/roles.enum";
 
 
 
@@ -24,6 +26,7 @@ export default function UsersModule () {
     const [ formState, setForm ] = useState( initialState )
     const { data, isLoading, isFetching, refetch } = useGetUsersQuery( formState )
     const { users, count } = data || {} as GetUsersResponse
+    const isAllow = useCheckRoles()
 
     const handlers = {
         onSubmut: (e: FormEvent) => {
@@ -59,13 +62,15 @@ export default function UsersModule () {
                     >
                         { isLoading || isFetching ? 'Поиск...' : 'Искать' }
                     </Button>
-                    <Link to={'create'}>
-                        <Button 
-                            variant="warning" 
-                        >
-                            Новый пользователь
-                        </Button>
-                    </Link>
+                    { isAllow([ Role.Admin ]) && 
+                        <Link to={'create'}>
+                            <Button 
+                                variant="warning" 
+                            >
+                                Новый пользователь
+                            </Button>
+                        </Link>
+                    }
                 </Stack>
             </Form>
             <Container className="loading-box-parent">

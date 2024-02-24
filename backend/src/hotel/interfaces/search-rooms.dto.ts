@@ -1,6 +1,7 @@
 import { Transform } from "class-transformer";
 import { IsBoolean, IsDate, IsDefined, IsMongoId, IsNumber, IsOptional, IsString} from "class-validator";
-import { ObjectId } from "mongoose";
+import { IsObjectId } from 'class-validator-mongo-object-id';
+import mongoose, { ObjectId } from "mongoose";
 
 export class SearchRoomsParams {
     @IsNumber()
@@ -17,9 +18,10 @@ export class SearchRoomsParams {
     @IsOptional()
     title: string;
 
-    @IsMongoId()
+    @IsObjectId()
     @IsOptional()
-    hotel: string;
+    @Transform(({value}) => new mongoose.Types.ObjectId(value))
+    hotel: ObjectId;
 
     @IsBoolean()
     @IsOptional()

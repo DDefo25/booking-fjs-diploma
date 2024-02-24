@@ -30,10 +30,12 @@ export class SupportChatGateway {
   async handleMessage( 
       @MessageBody(new WsValidationPipe()) { chatId }: SubscribeToSupportRequestDto, 
       @ConnectedSocket() client: any) {      
-        const _params = client.user.role === Role.Client ? {user: client.user, isActive: true} : {isActive: true}
-        const supportRequests = await this.supportRequestService.findSupportRequests(_params)
+        const _params = client.user.role === Role.Client 
+          ? {user: client.user, isActive: true} 
+          : {isActive: true}
+        const data = await this.supportRequestService.findSupportRequests(_params)
 
-        if ( supportRequests.every(el => el['_id'].toString() !== chatId) ) {
+        if ( data.supportRequests.every(el => el['_id'].toString() !== chatId) ) {
           throw new WsException('Некорректный chatId')
         } 
 

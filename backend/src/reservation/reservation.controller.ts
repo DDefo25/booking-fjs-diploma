@@ -42,14 +42,7 @@ export class ReservationController {
     async createReservation( 
         @Body( new HttpValidationPipe()) data: ReservationCreateRequestDto, 
         @Req() req) {
-            const createReservationData = {
-                user: req.user, 
-                hotelRoom: data.hotelRoom,
-                dateStart: new Date( data.startDate ),
-                dateEnd: new Date( data.endDate )
-            }
-
-            return await this.reservationService.addReservation(createReservationData)
+            return await this.reservationService.addReservation({ ...data, user: req.user })
     }
 
     @Post('get-between')

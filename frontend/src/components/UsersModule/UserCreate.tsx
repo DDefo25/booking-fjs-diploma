@@ -56,7 +56,6 @@ export function UserCreate () {
 
         onSubmit: (e: React.FormEvent<HTMLFormElement>) => {
             const form = e.currentTarget;
-            console.log(form)
 
             if (form.checkValidity() === false) {
                 e.preventDefault();
@@ -82,11 +81,6 @@ export function UserCreate () {
             }))
         },
     }
-
-    // useEffect(() => {
-    //     console.log('formState', formState)
-    //     console.log(isEqualPasswords())
-    // }, [formState])
 
     if (isLoading) return <Loading />
 

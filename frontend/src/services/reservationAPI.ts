@@ -8,8 +8,8 @@ import { Reservation } from "./interfaces/Reservation.interface"
 
 export interface CreateReservationRequest {
     hotelRoom: string,
-    startDate: string,
-    endDate: string
+    dateStart: string,
+    dateEnd: string
 }
 
 export interface DeleteReservationRequest {
@@ -22,7 +22,7 @@ export const reservationAPI = createApi({
     baseQuery: axiosBaseQuery({
       baseUrl: `${SERVER_URL}/api`
     }),
-    tagTypes: ['Reservation'],
+    tagTypes: ['Reservation', 'HotelRoom'],
     endpoints: (build) => ({
       getReservations: build.query<Reservation[], void>({
         query: () => ({
@@ -46,7 +46,7 @@ export const reservationAPI = createApi({
             method: 'post',
             data
         }),
-        invalidatesTags: ['Reservation']
+        invalidatesTags: ['Reservation', 'HotelRoom']
       }),
 
       
@@ -55,7 +55,7 @@ export const reservationAPI = createApi({
             url: `/${role}/reservations/${id}`,
             method: 'delete'
         }),
-        invalidatesTags: ['Reservation']
+        invalidatesTags: ['Reservation', 'HotelRoom']
       }),
     }),
 })

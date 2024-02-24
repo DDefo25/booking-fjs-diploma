@@ -1,7 +1,7 @@
-import { Accordion, Card } from "react-bootstrap"
+import { Accordion, Button, Card } from "react-bootstrap"
 import { SupportRequest } from "../../services/supportRequestAPI"
 import { format } from "date-fns"
-import { SupportRequestChat } from "./Chat/SRChat"
+import { SupportRequestChat } from "./Chat/SupportRequestChat"
 
 export const SupportRequestItem = ({eventKey, supportRequest}: { eventKey: string, supportRequest: SupportRequest }) => {
     const { id, createdAt } = supportRequest
@@ -11,7 +11,6 @@ export const SupportRequestItem = ({eventKey, supportRequest}: { eventKey: strin
                 {`ID: ${id}`}
                 <small>{`создан: ${format(createdAt, 'dd-MM-yyyy HH:mm')}`}</small>
             </Accordion.Header>
-
             <Accordion.Body>
                 <SupportRequestChat id={id}/>
             </Accordion.Body>

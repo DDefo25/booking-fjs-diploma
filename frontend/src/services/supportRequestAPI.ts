@@ -21,6 +21,15 @@ export interface SupportRequest {
   createdAt: Date
 }
 
+export interface SupportRequestResponse {
+  supportRequests: SupportRequest[],
+  count: number
+}
+
+export interface CreateSupportRequest {
+  text: string
+}
+
 export interface SearchSupportRequest {
   limit: number,
   offset: number,
@@ -40,7 +49,7 @@ export const supportRequestAPI = createApi({
     }),
     tagTypes: ['SupportRequest', 'SupportRequestMessage'],
     endpoints: (build) => ({
-      getSupportRequests: build.query<SupportRequest[], SearchSupportRequest>({
+      getSupportRequests: build.query<SupportRequestResponse, SearchSupportRequest>({
         query: ({role, ...params}) => ({
           url: `/${role}/support-requests`,
           method: 'get',
@@ -49,7 +58,7 @@ export const supportRequestAPI = createApi({
         providesTags: ['SupportRequest']
       }),
 
-      createSupportRequest: build.mutation<SupportRequest, { text: string }>({
+      createSupportRequest: build.mutation<SupportRequest, CreateSupportRequest>({
         query: (data) => ({
             url: `/${Role.Client}/support-requests`,
             method: 'post',
@@ -83,6 +92,14 @@ export const supportRequestAPI = createApi({
         }),
         invalidatesTags: ['SupportRequestMessage']
       }),
+
+      closeSupportRequest: build.mutation<SupportRequest, string>({
+        query: (id) => ({
+            url: `/${Role.Manager}/support-requests/${id}/close`,
+            method: 'post',
+        }),
+        invalidatesTags: ['SupportRequest']
+      }),
     }),
 })
 
@@ -91,5 +108,6 @@ export const {
   useGetSupportRequestMessagesQuery,
   useGetSupportRequestsQuery,
   useReadSupportRequestMessagesMutation,
-  useSendSupportRequestMessageMutation
+  useSendSupportRequestMessageMutation,
+  useCloseSupportRequestMutation
 } = supportRequestAPI

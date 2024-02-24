@@ -3,13 +3,15 @@ import { onConnectSocket, onDisconnectSocket, onSubscribeToChatEvents } from "..
 import { useAppDispatch, useTypedSelector } from "../../store/store";
 import { socket } from "../../socket/socket";
 import { Accordion, Image, Offcanvas } from "react-bootstrap";
-import { useGetSupportRequestsQuery } from "../../services/supportRequestAPI";
+import { SupportRequestResponse, useGetSupportRequestsQuery } from "../../services/supportRequestAPI";
 import { User } from "../../interfaces/User.interface";
 import { selectUser } from "../../features/slices/authSlice";
 import { LoadingBox } from "../utilites-components/LoadingBox";
 import { Handler } from "../../features/handlers/Handler";
 import { Pagination } from "../utilites-components/Pagination";
 import { SupportRequestItem } from "./SupportRequestitem";
+import { Button } from "@chatscope/chat-ui-kit-react";
+import { CreateSupportRequestModal } from "./CreateSupportRequestModal";
 
 interface GetSupportRequest {
     limit: number,
@@ -24,56 +26,32 @@ const initialState: GetSupportRequest = {
 }
 
 export const SupporRequestModule = () => {
-    const dispatch = useAppDispatch()
-  
-    useEffect(() => {
-      function onConnect() {
-        dispatch( onConnectSocket());
-      }
-  
-      function onDisconnect() {
-        dispatch( onDisconnectSocket());
-      }
-  
-      function onFooEvent(value: (...args: any[]) => void ) {
-        dispatch( onSubscribeToChatEvents(value));
-      }
-  
-      socket.on('connect', onConnect);
-      socket.on('disconnect', onDisconnect);
-      socket.on('foo', onFooEvent);
-  
-      return () => {
-        socket.off('connect', onConnect);
-        socket.off('disconnect', onDisconnect);
-        socket.off('foo', onFooEvent);
-      };
-    }, []);
-
-    const [show, setShow] = useState(false);
-      
-    const handleClose = () => setShow(false);
-    const toggleShow = () => setShow((state) => !state);
+    const [ show, setShow ] = useState(false);
+    const [ showModal, setShowModal ] = useState(false);
 
     const { role } = useTypedSelector( selectUser ) || {} as User
-    const { data: supportRequests, isLoading, isFetching } = useGetSupportRequestsQuery({...initialState, role }, { refetchOnMountOrArgChange: true })
-
     const [ formState, setForm ] = useState(initialState)
+    const { data , isLoading, isFetching } = useGetSupportRequestsQuery({...formState, role }, { refetchOnMountOrArgChange: true })
+    const { supportRequests, count } = data || {} as SupportRequestResponse
 
     const handlers = {
+        onClose: () => setShow(false),
+        toggleShow: () => setShow((state) => !state),
+        toggleShowModal: () => setShowModal(true),
         onPaginationClick: (i: number) => Handler.onPaginationClick<GetSupportRequest>(i, setForm)
     }
 
     useEffect(() => {
         console.log('supportRequests', supportRequests)
-    }, [supportRequests])
+        console.log('formState', formState)
+    }, [supportRequests, formState])
   
     return (
       <div className="position-fixed m-4 bottom-0" style={{right: '15vw'}}>
-        <Image src='https://picsum.photos/60' rounded onClick={toggleShow}/>
+        <Image src='https://picsum.photos/60' rounded onClick={ handlers.toggleShow }/>
         <Offcanvas 
             show={show} 
-            onHide={handleClose} 
+            onHide={ handlers.onClose } 
             scroll 
             backdrop={false} 
             placement='end' 
@@ -81,6 +59,7 @@ export const SupporRequestModule = () => {
         >
             <Offcanvas.Header closeButton>
                 <Offcanvas.Title>Техническая поддержка</Offcanvas.Title>
+                <Button onClick={ handlers.toggleShowModal }>Новый тикет</Button>
             </Offcanvas.Header>
                 <Accordion flush defaultActiveKey="0" className="loading-box-parent">
                 { supportRequests && supportRequests.map((sr, index) => {
@@ -92,13 +71,14 @@ export const SupporRequestModule = () => {
                 <Pagination 
                     limit={ formState.limit }
                     offset={ formState.offset }
-                    count={ 30 }
+                    count={ count }
                     onPaginationClick={ handlers.onPaginationClick }
                     props={{
                         className: 'mt-1'
                     }}
                 />
         </Offcanvas>
+        <CreateSupportRequestModal state={ showModal } dispatch={ setShowModal }/>
       </div>
     );
 }

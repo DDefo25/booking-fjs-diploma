@@ -1,13 +1,19 @@
-import { IsDate, IsMongoId, IsString} from "class-validator";
+import { Transform } from "class-transformer";
+import { IsDate, IsDefined, IsMongoId, IsString} from "class-validator";
 import { ObjectId } from "mongoose";
 
 export class ReservationCreateRequestDto  {
     @IsMongoId()
+    @IsDefined()
     hotelRoom: ObjectId;
 
-    @IsString()
-    startDate: string
+    @IsDate()
+    @IsDefined()
+    @Transform(({value}) => new Date( value ))
+    dateStart: Date
 
-    @IsString()
-    endDate: string;
+    @IsDate()
+    @IsDefined()
+    @Transform(({value}) => new Date( value ))
+    dateEnd: Date;
 }

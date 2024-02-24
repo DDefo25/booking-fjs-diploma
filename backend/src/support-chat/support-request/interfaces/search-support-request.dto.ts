@@ -1,3 +1,4 @@
+import { Transform } from "class-transformer";
 import { IsBoolean, IsDefined, IsNumber} from "class-validator";
 
 export class SearchSupportRequestParams {
@@ -11,5 +12,6 @@ export class SearchSupportRequestParams {
 
     @IsBoolean()
     @IsDefined()
+    @Transform(({value}) => !!value)
     isActive: boolean;
   }

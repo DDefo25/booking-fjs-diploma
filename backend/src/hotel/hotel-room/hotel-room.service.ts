@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { HotelRoom, HotelRoomDocument } from '../schemas/hotel-room.schema';
-import mongoose, { Model, ObjectId } from 'mongoose';
+import mongoose, { Model, ObjectId as ObjectIdType } from 'mongoose';
 import { IHotelRoomService } from '../interfaces/hotel-room.service.interface';
 import { SearchRoomsParams } from '../interfaces/search-rooms.dto';
 import { match } from 'assert';
@@ -20,7 +20,7 @@ export class HotelRoomService implements IHotelRoomService {
        return this.model.create(data)
    };
 
-   findById(id: ObjectId): Promise<HotelRoom> {
+   findById(id: ObjectIdType): Promise<HotelRoom> {
        return this.model.findById(id)
    };
 
@@ -33,6 +33,7 @@ export class HotelRoomService implements IHotelRoomService {
             dateEnd, 
             hotel, 
             isEnabled = true } = params
+        console.log(params)
 
         const titleRegExp = new RegExp(title, 'i')
         const reservationBetweenDates = await this.reservationService.getReservationsBetweenDates({dateStart, dateEnd})
@@ -47,7 +48,7 @@ export class HotelRoomService implements IHotelRoomService {
             { $unwind: '$hotel' },
             { $match: { 
                 $or: [
-                    { hotel: new mongoose.Types.ObjectId(hotel) },
+                    { 'hotel._id': hotel },
                     { 'hotel.title': { $regex: titleRegExp } }
                 ],
                 isEnabled,
@@ -61,7 +62,7 @@ export class HotelRoomService implements IHotelRoomService {
         ])
    };
 
-   update(id: ObjectId, data: UpdateHotelRoomParams): Promise<HotelRoom> {
+   update(id: ObjectIdType, data: UpdateHotelRoomParams): Promise<HotelRoom> {
         return this.model.findByIdAndUpdate(id, {$set: data}, {returnDocument: 'after'})
    }
 }

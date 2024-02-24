@@ -44,6 +44,10 @@ export function HotelSearchModule () {
         onChangeDate: (e: React.ChangeEvent<HTMLInputElement>) => dispatch( editReservationDate(e))
     }
 
+    useEffect(() => {
+        console.log('hotelRoomsGroupedByHotel', hotelRoomsGroupedByHotel)
+    }, [hotelRoomsGroupedByHotel])
+
     return (
         <>
         <Container>
