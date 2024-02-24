@@ -33,7 +33,6 @@ export class HotelRoomService implements IHotelRoomService {
             dateEnd, 
             hotel, 
             isEnabled = true } = params
-        console.log(params)
 
         const titleRegExp = new RegExp(title, 'i')
         const reservationBetweenDates = await this.reservationService.getReservationsBetweenDates({dateStart, dateEnd})
@@ -47,12 +46,13 @@ export class HotelRoomService implements IHotelRoomService {
                 as: 'hotel' }},
             { $unwind: '$hotel' },
             { $match: { 
-                $or: [
-                    { 'hotel._id': hotel },
+                $and: [
+                    { 'hotel._id': hotel ? { $eq: hotel } : { $ne: null } },
                     { 'hotel.title': { $regex: titleRegExp } }
                 ],
                 isEnabled,
-                _id: { $nin: hotelRoomsReserved }}},
+                _id: { $nin: hotelRoomsReserved }
+            }},
             { $group: {
                 _id: '$hotel._id',
                 hotel: { $first: '$hotel'},

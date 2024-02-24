@@ -12,8 +12,6 @@ import { HotelModule } from 'src/hotel/hotel.module';
       {name: Reservation.name, schema: ReservationSchema},
       {name: HotelRoom.name, schema: HotelRoomSchema}
     ]),
-    // HotelModule
-    // forwardRef(() => HotelModule),
   ],
   providers: [ReservationService],
   controllers: [ReservationController],

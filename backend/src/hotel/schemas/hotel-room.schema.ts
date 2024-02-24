@@ -13,7 +13,7 @@ export class HotelRoom {
     })
     hotel: Hotel;
 
-    @Prop()
+    @Prop({required: true})
     title: string;
 
     @Prop()

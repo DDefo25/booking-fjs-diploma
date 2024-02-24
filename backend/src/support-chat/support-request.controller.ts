@@ -39,10 +39,8 @@ export class SupportRequestController {
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Get()
     async getSupportRequest(@Query() query: SearchSupportRequestParams, @Req() req, @Param('role') role: Partial<Role>) {
-        // const { isActive } = query
         const response = []
-        let count
-        console.log(query)
+        let count: number
         
         switch (role) {
             case Role.Client: {
@@ -76,7 +74,6 @@ export class SupportRequestController {
                 break;
             }
         }
-        console.log(response)
         return {
             supportRequests: response,
             count

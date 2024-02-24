@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { ReservationService } from './reservation.service';
 import { HttpValidationPipe } from 'src/validation/http.validation.pipe';
 import { ObjectId } from 'mongoose';
@@ -7,7 +7,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/http.roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { ReservationCreateRequestDto } from './interfaces/create-reservation.request.dto';
-import { ReservationBetweenRequestDto } from './interfaces/reservation.between';
+import { ReservationBetweenDto } from './interfaces/reservation.between.dto';
 
 @Roles(Role.Client)
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -26,8 +26,6 @@ export class ReservationController {
     */
     @Get()
     async getAllReservations(@Req() req) {
-        // const response = await this.reservationService.getReservations({user: req.user._id})
-        // console.log(response)
         return await this.reservationService.getReservations({user: req.user._id});
     }
     
@@ -47,14 +45,9 @@ export class ReservationController {
 
     @Post('get-between')
     async reservationsBetweenDates( 
-        @Body( new HttpValidationPipe()) data: ReservationBetweenRequestDto, 
+        @Body( new HttpValidationPipe()) data: ReservationBetweenDto, 
         @Req() req) {
-            const findReservations = {
-                dateStart: new Date( data.startDate ),
-                dateEnd: new Date( data.endDate )
-            }
-
-            return await this.reservationService.getReservationsBetweenDates(findReservations)
+            return await this.reservationService.getReservationsBetweenDates(data)
     }
 
     

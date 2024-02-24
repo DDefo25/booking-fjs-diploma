@@ -63,7 +63,6 @@ export class HotelRoomController {
         @UploadedFiles() imagesFiles: Express.Multer.File[],
         @Body() data: UpdateHotelRoomDto, 
         ) {
-        console.log(data)
         const updateData = { ...data }
         updateData.images = Array.isArray(data.images) ? [
             ...data.images, 

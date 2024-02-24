@@ -38,7 +38,6 @@ export class HotelController {
         @UploadedFiles() images: Express.Multer.File[],
         @Body() data: Partial<Hotel>
         ) {
-            console.log(images)
             data.images = [...images.map(image => image.path)]
             return await this.hotelService.create(data)
     }
