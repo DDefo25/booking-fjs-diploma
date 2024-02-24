@@ -1,0 +1,11 @@
+
+
+.support-request-chat {
+  height: 80vw
+}
+
+@media (min-width: 768px) { 
+    .support-request-chat {
+    height: 22vw
+  } 
+}
