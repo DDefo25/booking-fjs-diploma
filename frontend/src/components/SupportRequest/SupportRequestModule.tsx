@@ -82,13 +82,13 @@ export const SupporRequestModule = () => {
             <Offcanvas.Header closeButton>
                 <Offcanvas.Title>Техническая поддержка</Offcanvas.Title>
             </Offcanvas.Header>
-            <div className="loading-box-parent">
-                <Accordion flush defaultActiveKey="0">
+                <Accordion flush defaultActiveKey="0" className="loading-box-parent">
                 { supportRequests && supportRequests.map((sr, index) => {
                     console.log(`${index}`)
                     return <SupportRequestItem eventKey={`${index}`} supportRequest={sr}/>})} 
-                </Accordion>
                 { isLoading || isFetching ? <LoadingBox /> : null }
+                </Accordion>
+                
                 <Pagination 
                     limit={ formState.limit }
                     offset={ formState.offset }
@@ -98,8 +98,6 @@ export const SupporRequestModule = () => {
                         className: 'mt-1'
                     }}
                 />
-            </div>
-
         </Offcanvas>
       </div>
     );
