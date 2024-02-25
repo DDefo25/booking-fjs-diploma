@@ -1,0 +1,24 @@
+.loading-box-parent {
+    position: relative;
+  }
+  
+.loading-box {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    box-shadow: inset 0 0 0 1000px rgba(0,0,0,.2);
+    -webkit-box-shadow: inset 0 0 0 1000px rgba(0,0,0,.2);
+    -moz-box-shadow: inset 0 0 0 1000px rgba(0,0,0,.2);
+}
+
+.loading-box-spinner {
+    position: absolute;
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    text-align: center;
+}
