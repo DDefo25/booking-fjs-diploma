@@ -1,15 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { RootState } from "../../store/store"
-import { socket } from "../../socket/socket";
+import { socket } from "../../socket/SocketClient"
+
 
 export interface SocketIOState {
     isConnected: boolean,
-    subscribeToChatEvents: Function[]
+    subscribeToChatEvents: Function[],
+    errorEvents: Function[],
 }
 
 const initialState: SocketIOState = {
     isConnected: socket.connected,
-    subscribeToChatEvents: []
+    subscribeToChatEvents: [],
+    errorEvents: []
 }
 
 export const slice = createSlice({
@@ -27,6 +30,10 @@ export const slice = createSlice({
         onSubscribeToChatEvents: (state: SocketIOState, { payload }: PayloadAction<Function>): void => {
             console.log('subscribeToChatEvent', payload)
             state.subscribeToChatEvents = [...state.subscribeToChatEvents, payload]
+        },
+        onErrorEvents: (state: SocketIOState, { payload }: PayloadAction<Function>): void => {
+            console.log('error', payload)
+            state.errorEvents = [...state.errorEvents, payload]
         }
     },
 })
@@ -34,8 +41,10 @@ export const slice = createSlice({
 export const { 
     onConnectSocket, 
     onDisconnectSocket, 
-    onSubscribeToChatEvents 
+    onSubscribeToChatEvents,
+    onErrorEvents
 } = slice.actions
 export const selectSocketState = (state: RootState) => state.socketIO
 export const selectSocketSubscribeToChatEvents = (state: RootState) => state.socketIO.subscribeToChatEvents
+export const selectErrorEvents = (state: RootState) => state.socketIO.errorEvents
 export default slice.reducer;

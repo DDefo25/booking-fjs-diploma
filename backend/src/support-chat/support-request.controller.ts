@@ -101,7 +101,6 @@ export class SupportRequestController {
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Post(':id/messages')
     async sendMessage(@Param('id') supportRequest: ObjectId, @Req() req, @Body(new HttpValidationPipe()) { text }) {
-        console.log('sendMessage', { text })
         return await this.supportRequest.sendMessage({ 
             text, 
             author: req.user, 

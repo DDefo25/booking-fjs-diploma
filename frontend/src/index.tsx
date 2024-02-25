@@ -5,13 +5,11 @@ import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css'
 import {
-  BrowserRouter,
   RouterProvider,
 } from "react-router-dom";
 import router from './router';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
-import App from './App';
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 

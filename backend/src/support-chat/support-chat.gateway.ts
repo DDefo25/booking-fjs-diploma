@@ -1,6 +1,6 @@
-import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from '@nestjs/websockets';
+import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException, OnGatewayInit, OnGatewayDisconnect } from '@nestjs/websockets';
 import { SupportRequestService } from './support-request/support-request.service';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { UseFilters, UseGuards } from '@nestjs/common';
 import { WsRolesGuard } from 'src/auth/guards/ws.roles.guard';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -10,6 +10,12 @@ import { WsExceptionFilter } from 'src/exceptions/ws.exception.filter';
 import { WsJwtAuthGuard } from 'src/auth/guards/ws.jwt-auth.guard';
 import { WsValidationPipe } from 'src/validation/ws.validation.pipe';
 import { SubscribeToSupportRequestDto } from './interfaces/subscribe-support-request.dto';
+import { User, UserDocument } from 'src/user/schemas/user.schema';
+import { SocketService } from '../socket/socket.service';
+import { ObjectId } from 'mongoose';
+import { MessageDocument } from './schemas/message.schema';
+
+type SocketWithUser = Socket & {user: UserDocument};
 
 @UseFilters(new WsExceptionFilter)
 @WebSocketGateway( {
@@ -18,38 +24,26 @@ import { SubscribeToSupportRequestDto } from './interfaces/subscribe-support-req
 })
 export class SupportChatGateway {
   constructor(
-    private readonly supportRequestService: SupportRequestService,
+    private readonly supportRequestService: SupportRequestService
   ) {}
-
-  @WebSocketServer()
-  server: Server;
   
   @Roles( Role.Client, Role.Manager )
   @UseGuards( WsJwtAuthGuard, WsRolesGuard )
   @SubscribeMessage('subscribeToChat')
-  async handleMessage( 
+  async subscribeToChat( 
       @MessageBody(new WsValidationPipe()) { chatId }: SubscribeToSupportRequestDto, 
-      @ConnectedSocket() client: any) {      
+      @ConnectedSocket() client: SocketWithUser
+    ) {   
         const _params = client.user.role === Role.Client 
-          ? {user: client.user, isActive: true} 
-          : {isActive: true}
+          ? { user: client.user._id, isActive: true } 
+          : { isActive: true }
         const data = await this.supportRequestService.findSupportRequests(_params)
 
-        if ( data.supportRequests.every(el => el['_id'].toString() !== chatId) ) {
+        if ( data.supportRequests.every(el => el._id.toString() !== chatId) ) {
           throw new WsException('Некорректный chatId')
         } 
 
-        const handler = (supportRequest, message) => {
-          if (
-            supportRequest === chatId
-            && message.author._id.toString() !== client.user._id.toString()
-            ) {
-            client.emit('subscribeToChat', {supportRequest, message })
-          }
-        }
-
-        this.supportRequestService.subscribe(handler)
+        client.join(chatId)
         return { success: true }
-
   }
 }

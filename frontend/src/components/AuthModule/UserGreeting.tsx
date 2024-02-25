@@ -6,8 +6,12 @@ import { Button, Container, ListGroup, OverlayTrigger, Popover, Image, Card, Sta
 import { Role } from "../../config/roles.enum"
 import { useGetUserQuery } from "../../services/authAPI"
 import { useEffect } from "react"
-import { socket } from "../../socket/socket"
+// import { socket } from "../../socket/socket"
 import { useCheckRoles } from "../../hooks/useCheckRoles"
+import { Socket } from "socket.io-client"
+import { socket } from "../../socket/SocketClient"
+
+// import { socket } from "../../socket/SocketClient"
 
 const placement = 'bottom'
 
@@ -18,8 +22,13 @@ export default function UserGreeting () {
     const isAllow = useCheckRoles()  
 
     useEffect(() => {
-        isAllow([ Role.Client, Role.Manager ]) 
-            && socket.connect()
+        
+        if (isAllow([ Role.Client, Role.Manager ])) {
+            socket.io.opts.extraHeaders = {
+                Authorization: `${localStorage.getItem('token') }`
+            }
+            socket.connect()
+        }
       
         return () => { 
             socket.disconnect() 

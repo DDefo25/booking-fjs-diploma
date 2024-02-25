@@ -14,7 +14,6 @@ export class JwtStrategyCookies extends PassportStrategy(Strategy, 'jwt-cookies'
     super({
       jwtFromRequest:  ExtractJwt.fromExtractors([
         JwtStrategyCookies.extractJWTFromCookies,
-        // JwtStrategyCookies.extractJWTFromWS,
       ]),
       ignoreExpiration: false,
       secretOrKey: process.env.JWT_SECRET_KEY_REFRESH_TOKEN,
@@ -28,15 +27,6 @@ export class JwtStrategyCookies extends PassportStrategy(Strategy, 'jwt-cookies'
     }
     return user;
   }
-
-  // private static extractJWTFromWS(req: Socket): string | null {
-  //   const { cookie } = req?.handshake?.headers
-  //   if ( cookie ) {
-  //     const { refreshToken } = parse(cookie)
-  //       if ( refreshToken ) return refreshToken
-  //   }
-  //   return null;
-  // }
 
   private static extractJWTFromCookies(req: RequestType): string | null {
     const { refreshToken } = req.cookies

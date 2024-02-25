@@ -13,9 +13,7 @@ export class JwtStrategyWs extends PassportStrategy(Strategy, 'jwt-socket.io') {
   ) {
     super({
       jwtFromRequest:  ExtractJwt.fromExtractors([
-        // ExtractJwt.fromAuthHeaderAsBearerToken(),
         JwtStrategyWs.extractJWTFromWS,
-        // JwtStrategy.extractJWTFromCookies,
       ]),
       ignoreExpiration: false,
       secretOrKey: process.env.JWT_SECRET_KEY,
@@ -31,21 +29,10 @@ export class JwtStrategyWs extends PassportStrategy(Strategy, 'jwt-socket.io') {
   }
 
   private static extractJWTFromWS(req: Socket): string | null {
-    console.log(req)
     const { headers } = req?.handshake
     if ( headers.authorization ) {
         if ( headers.authorization?.length) return headers.authorization
     }
     return null;
   }
-
-  // private static extractJWTFromCookies(req: RequestType): string | null {
-  //   const cookie = req?.cookies
-  //   if ( cookie ) {
-  //     const { tokenRefresh } = parse(cookie)
-  //       if ( tokenRefresh ) return tokenRefresh
-  //   }
-  //   return null;
-  // }
-
 }

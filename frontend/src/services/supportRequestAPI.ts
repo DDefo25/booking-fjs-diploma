@@ -2,9 +2,7 @@ import { createApi } from "@reduxjs/toolkit/query/react"
 import { SERVER_URL } from "../config/config"
 import { User } from "../interfaces/User.interface"
 import { axiosBaseQuery } from "../store/axiosBaseQuery"
-import { Hotel } from "../components/HotelsModule/interfaces/Hotel.interface.dto"
 import { Role } from "../config/roles.enum"
-import { Reservation } from "./interfaces/Reservation.interface"
 
 export interface Message {
   author: User,
@@ -15,9 +13,8 @@ export interface Message {
 
 export interface SupportRequest {
   id: string,
-  user: string,
-  messages: Message[],
-  isActive?: boolean,
+  isActive: boolean,
+  hasNewMessages: boolean
   createdAt: Date
 }
 
@@ -31,16 +28,23 @@ export interface CreateSupportRequest {
 }
 
 export interface SearchSupportRequest {
-  limit: number,
-  offset: number,
+  limit?: number,
+  offset?: number,
   isActive: boolean,
   role: Role
 }
+
+interface ReadSupportRequestMessagesRequest { 
+  id: string, 
+  createdBefore: string 
+}
+
 
 export interface ReadSupportRequestMessagesResponse { 
   success: boolean, 
   error?: unknown
 }
+
 
 export const supportRequestAPI = createApi({
     reducerPath: "supportRequestAPI",
@@ -84,13 +88,13 @@ export const supportRequestAPI = createApi({
         invalidatesTags: ['SupportRequestMessage']
       }),
 
-      readSupportRequestMessages: build.mutation<ReadSupportRequestMessagesResponse, { id: string, createdBefore: string }>({
+      readSupportRequestMessages: build.mutation<ReadSupportRequestMessagesResponse, ReadSupportRequestMessagesRequest>({
         query: ({id, ...data}) => ({
             url: `/common/support-requests/${id}/messages/read`,
             method: 'post',
             data
         }),
-        invalidatesTags: ['SupportRequestMessage']
+        invalidatesTags: ['SupportRequestMessage', 'SupportRequest']
       }),
 
       closeSupportRequest: build.mutation<SupportRequest, string>({

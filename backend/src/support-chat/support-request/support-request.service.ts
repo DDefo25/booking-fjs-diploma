@@ -8,16 +8,19 @@ import { SendMessageDto } from '../interfaces/send-message.dto';
 import { Message, MessageDocument } from '../schemas/message.schema';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { GetMessagesParams } from '../interfaces/get-messages.dto';
+import { SupportChatGateway } from '../support-chat.gateway';
+import { SocketService } from '../../socket/socket.service';
 
 @Injectable()
 export class SupportRequestService implements ISupportRequestService {
     constructor(
         @InjectModel(SupportRequest.name) readonly supportRequestModel: Model<SupportRequestDocument>,
         @InjectModel(Message.name) readonly messagetModel: Model<MessageDocument>,
+        private readonly socketService: SocketService,
         private eventEmitter: EventEmitter2
     ) {}
 
-    async findSupportRequests({limit, offset, ..._params}: GetChatListParams): Promise<{ supportRequests: SupportRequest[], count: number }>  {
+    async findSupportRequests({limit, offset, ..._params}: GetChatListParams): Promise<{ supportRequests: SupportRequestDocument[], count: number }>  {
         return {
             count: await this.supportRequestModel.countDocuments(_params),
             supportRequests: await this.supportRequestModel.find(_params)
@@ -37,8 +40,10 @@ export class SupportRequestService implements ISupportRequestService {
         }, {
             $push: { messages: message._id }
         });
-
-        this.eventEmitter.emit('supportRequest.sendMessage', supportReqID, message);
+        
+        this.socketService.server
+            .to(supportReqID.toString() )
+            .emit('subscribeToChat', { supportReqID, message })
 
         return message
     };
@@ -56,7 +61,12 @@ export class SupportRequestService implements ISupportRequestService {
         return supportRequest[0].messages
     };
 
-    subscribe(handler: (supportRequest: SupportRequest, message: Message) => void) {
-        this.eventEmitter.addListener('supportRequest.sendMessage', handler)
+    subscribe(chatId: string, handler: (supportRequest: SupportRequest, message: Message) => any) {
+        console.log(`listeners ${chatId}.sendMessage`, this.eventEmitter.listeners(`${chatId}.sendMessage`))
+        this.eventEmitter.on(`${chatId}.sendMessage`, handler)
+
+        return () => {
+            this.eventEmitter.off(`${chatId}.sendMessage`, handler)
+        }
     };
 }

@@ -13,6 +13,9 @@ import { MongooseConfigService } from './config/mongoose-config/mongoose-config.
 import { AuthModule } from './auth/auth.module';
 import { SupportRequestController } from './support-chat/support-request.controller';
 import { FileModule } from './file-module/file-module.module';
+import { SocketService } from './socket/socket.service';
+import { AppGateway } from './app.gateway';
+import { SocketModule } from './socket/socket.module';
 
 
 @Module({
@@ -33,8 +36,12 @@ import { FileModule } from './file-module/file-module.module';
     ReservationModule,
     SupportChatModule,
     FileModule,
+    SocketModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    AppGateway
+  ],
 })
 export class AppModule {}

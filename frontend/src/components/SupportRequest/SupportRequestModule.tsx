@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
-import { onConnectSocket, onDisconnectSocket, onSubscribeToChatEvents } from "../../features/slices/socket.io.Slice";
-import { useAppDispatch, useTypedSelector } from "../../store/store";
-import { socket } from "../../socket/socket";
+import './SupportRequestModule.css'
+import { useState } from "react";
+import { useTypedSelector } from "../../store/store";
 import { Accordion, Image, Offcanvas } from "react-bootstrap";
 import { SupportRequestResponse, useGetSupportRequestsQuery } from "../../services/supportRequestAPI";
 import { User } from "../../interfaces/User.interface";
@@ -12,6 +11,8 @@ import { Pagination } from "../utilites-components/Pagination";
 import { SupportRequestItem } from "./SupportRequestitem";
 import { Button } from "@chatscope/chat-ui-kit-react";
 import { CreateSupportRequestModal } from "./CreateSupportRequestModal";
+import { DOWNLOAD_ASSETS_ICON_URL } from "../../config/config";
+import { socket } from '../../socket/SocketClient';
 
 interface GetSupportRequest {
     limit: number,
@@ -31,24 +32,28 @@ export const SupporRequestModule = () => {
 
     const { role } = useTypedSelector( selectUser ) || {} as User
     const [ formState, setForm ] = useState(initialState)
-    const { data , isLoading, isFetching } = useGetSupportRequestsQuery({...formState, role }, { refetchOnMountOrArgChange: true })
+    const { data: allSP } = useGetSupportRequestsQuery({ isActive: true, role })
+    const { data , isLoading, isFetching } = useGetSupportRequestsQuery({...formState, role })
     const { supportRequests, count } = data || {} as SupportRequestResponse
 
+    allSP && allSP.supportRequests.forEach( el => socket.emit('subscribeToChat', {chatId: el.id}))
+
     const handlers = {
-        onClose: () => setShow(false),
-        toggleShow: () => setShow((state) => !state),
+        onClose: () => {
+            setShow(false)
+        },
+        toggleShow: () => {
+            setShow((state) => !state)
+        },
         toggleShowModal: () => setShowModal(true),
         onPaginationClick: (i: number) => Handler.onPaginationClick<GetSupportRequest>(i, setForm)
     }
-
-    useEffect(() => {
-        console.log('supportRequests', supportRequests)
-        console.log('formState', formState)
-    }, [supportRequests, formState])
-  
+    
     return (
       <div className="position-fixed m-4 bottom-0" style={{right: '15vw'}}>
-        <Image src='https://picsum.photos/60' rounded onClick={ handlers.toggleShow }/>
+        <Image 
+            className='support-chat-icon'   
+            src={DOWNLOAD_ASSETS_ICON_URL + 'support_agent.svg'} rounded onClick={ handlers.toggleShow }/>
         <Offcanvas 
             show={show} 
             onHide={ handlers.onClose } 
@@ -63,7 +68,6 @@ export const SupporRequestModule = () => {
             </Offcanvas.Header>
                 <Accordion flush defaultActiveKey="0" className="loading-box-parent">
                 { supportRequests && supportRequests.map((sr, index) => {
-                    console.log(`${index}`)
                     return <SupportRequestItem eventKey={`${index}`} supportRequest={sr}/>})} 
                 { isLoading || isFetching ? <LoadingBox /> : null }
                 </Accordion>

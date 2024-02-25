@@ -9,20 +9,15 @@ export class HttpValidationPipe implements PipeTransform<any> {
             return value;
         }
         const object = plainToClass(metatype, value);
-        console.log('object', object)
         const errors = await validate(object);
-        console.log('errors', errors)
         if (errors.length > 0) {
             throw new BadRequestException('Validation failed');
         }
         return object;
-        //was value
     }
 
     private toValidate(metatype: Function): boolean {
-
         const types: Function[] = [String, Boolean, Number, Array, Object];
-        console.log('metatype', metatype)
         return !types.includes(metatype);
     }
 }

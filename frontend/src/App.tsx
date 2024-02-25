@@ -9,8 +9,6 @@ import { SupporRequestModule } from './components/SupportRequest/SupportRequestM
 import { useCheckRoles } from './hooks/useCheckRoles';
 import { Role } from './config/roles.enum';
 import { SocketClient } from './socket/SocketClient';
-import { socket } from './socket/socket';
-import { useEffect } from 'react';
 
 function App() {
   (() => {

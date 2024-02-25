@@ -7,6 +7,7 @@ import { SupportRequest, SupportRequestSchema } from './schemas/support-request.
 import { Message, MessageSchema } from './schemas/message.schema';
 import { SupportRequestController } from './support-request.controller';
 import { SupportChatGateway } from './support-chat.gateway';
+import { SocketService } from '../socket/socket.service';
 
 @Module({
     imports: [
@@ -20,7 +21,10 @@ import { SupportChatGateway } from './support-chat.gateway';
         SupportRequestService, 
         SupportRequestClientService, 
         SupportRequestEmployeeService, 
-        SupportChatGateway
+        SupportChatGateway,
     ],
+    exports: [
+        SupportChatGateway
+    ]
 })
 export class SupportChatModule {}

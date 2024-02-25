@@ -1,8 +1,7 @@
-import { Collapse, Fade, Toast as ReactToast } from "react-bootstrap";
+import { Toast as ReactToast } from "react-bootstrap";
 import { CommonToast, ErrorToast, Toast as IToast, MessageSupportToast, NotifyToast, deleteToast } from "../../../features/slices/toastSlice";
 import { useAppDispatch } from "../../../store/store";
 import { ToastClasses, ToastImage, ToastTypes } from "../../../config/toasts.enums";
-import { useState } from "react";
 
 interface ToastCard {
   header: string,
@@ -53,7 +52,7 @@ export const Toast = ({toast}: { toast: IToast }) => {
     const dispatch = useAppDispatch()
     const handlers = {
         onClose: () => {
-            dispatch( deleteToast(id))
+            dispatch( deleteToast(id!))
         },
     }
   
