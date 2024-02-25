@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAddHotelMutation } from "../../../services/hotelAPI";
 import { Handler, HandlersForm } from "../../../features/handlers/Handler";
-import { Loading } from "../../utilites-components/Loading";
-import { CarouselImagesAdd } from "../../utilites-components/CarouselImagesAdd";
+import { Loading } from "../../utilites-components/Loading/Loading";
+import { CarouselImagesAdd } from "../../utilites-components/CarouselImage/CarouselImagesAdd";
 
 export interface HotelAddInitial {
     title: string,
@@ -31,33 +31,19 @@ export function HotelCreate () {
         onSubmit: (event: React.FormEvent) => {
             event.preventDefault()
             addHotel(formState).then(({ data }: any) => {
-                navigate(`/hotel/${data?._id}`)
+                navigate(`..`)
             })
         },
 
         onChangeInput: (e: React.ChangeEvent) => Handler.onChangeInput<HotelAddInitial>( e, setForm ),
         onChangeFile: (e: React.ChangeEvent) => Handler.onChangeFile<HotelAddInitial>( e, setForm ),
         onDeletePreview: ( index: number ) => Handler.onDeletePreview<HotelAddInitial>( index, setForm )
-        // onChangeFile: ({target: { name, files }}) => {
-        //     console.log('{ name, files }', { name, files })
-        //     const filesPreview = files && [...files].map(file => URL.createObjectURL(file))
-        //     setForm(prev => ({...prev, [name]: files, imagesPreview: filesPreview!}))
-        // },
-
-        // onDeletePreview: (index) => {
-        //     setForm(prev => {
-        //         return {
-        //         ...prev,
-        //         imagesFiles: [...prev.images].filter((_, i) => index !== i),
-        //         imagesFilesPreview: prev.imagesPreview.filter((_, i) => index !== i)
-        //     }})
-        // }
     }
 
     if (isLoading) return <Loading />
 
     return (
-        <Card>
+        <Card className="mb-3">
             <Form onSubmit={handlers.onSubmit}>
                 <CarouselImagesAdd 
                     imagesPreview={formState.imagesPreview} 

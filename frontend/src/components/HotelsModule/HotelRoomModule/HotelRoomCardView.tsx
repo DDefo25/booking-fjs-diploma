@@ -1,6 +1,6 @@
 import { Button, Card, OverlayTrigger, Stack } from "react-bootstrap";
 import { HotelRoom } from "../interfaces/HotellRoom.interface.dto";
-import { CarouselImages } from "../../utilites-components/CarouselImages";
+import { CarouselImages } from "../../utilites-components/CarouselImage/CarouselImages";
 import { useCheckRoles } from "../../../hooks/useCheckRoles";
 import { Role } from "../../../config/roles.enum";
 import { Link } from "react-router-dom";

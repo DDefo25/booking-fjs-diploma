@@ -6,7 +6,7 @@ import { Accordion, Image, Offcanvas } from "react-bootstrap";
 import { SupportRequestResponse, useGetSupportRequestsQuery } from "../../services/supportRequestAPI";
 import { User } from "../../interfaces/User.interface";
 import { selectUser } from "../../features/slices/authSlice";
-import { LoadingBox } from "../utilites-components/LoadingBox";
+import { LoadingBox } from "../utilites-components/Loading/LoadingBox";
 import { Handler } from "../../features/handlers/Handler";
 import { Pagination } from "../utilites-components/Pagination";
 import { SupportRequestItem } from "./SupportRequestitem";

@@ -61,7 +61,7 @@ export class HotelController {
     */
     @Roles(Role.Admin)
     @UseGuards(JwtAuthGuard, RolesGuard)
-    @UseInterceptors(FilesInterceptor('imagesFiles[]'))
+    @UseInterceptors(FilesInterceptor('imagesFiles[]', 2))
     @Put(':id')
     async update( 
         @Param('id') id: ObjectId, 

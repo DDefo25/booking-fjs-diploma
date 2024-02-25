@@ -4,6 +4,7 @@ import { User } from "../interfaces/User.interface"
 import { axiosBaseQuery } from "../store/axiosBaseQuery"
 import { HotelRoom } from "../components/HotelsModule/interfaces/HotellRoom.interface.dto"
 import { Hotel } from "../components/HotelsModule/interfaces/Hotel.interface.dto"
+import { Role } from "../config/roles.enum"
 
 
 export interface HotelRoomRequest {
@@ -23,11 +24,19 @@ export interface GetHotelRoomsDto {
 
 export interface HotelRoomEditRequest {
   id: string,
+  title: string,
   hotel: Hotel | string,
   description?: string,
   images: string[]
   imagesFiles: File[]
   imagesPreview: string[],
+}
+
+export interface HotelRoomAddRequest {
+  hotel: string,
+  title: string,
+  description?: string,
+  images: File[]
 }
 
 
@@ -77,9 +86,19 @@ export const hotelAPI = createApi({
         providesTags: ['HotelRoom']
       }),
 
+      createHotelRoom: build.mutation<HotelRoom, HotelRoomAddRequest>({
+        query: (data) => ({
+            url: `/${Role.Admin}/hotel-rooms`,
+            method: 'post',
+            headers: {"Content-Type": "multipart/form-data"},
+            data
+        }),
+        invalidatesTags: ['HotelRoom']
+      }),
+
       editHotelRoom: build.mutation<HotelRoom, any>({
         query: ({id, data}) => ({
-            url: `/admin/hotel-rooms/${id}`,
+            url: `/${Role.Admin}/hotel-rooms/${id}`,
             method: 'put',
             headers: {"Content-Type": "multipart/form-data"},
             data
@@ -89,7 +108,7 @@ export const hotelAPI = createApi({
 
       addHotel: build.mutation<Hotel, HotelAddRequest>({
         query: (data) => ({
-            url: '/admin/hotels',
+            url: `/${Role.Admin}/hotels`,
             method: 'post',
             headers: {"Content-Type": "multipart/form-data"},
             data
@@ -99,7 +118,7 @@ export const hotelAPI = createApi({
 
       getHotels: build.query<Hotel[], HotelRequest>({
         query: (params) => ({
-          url: '/admin/hotels',
+          url: `/${Role.Admin}/hotels`,
           method: 'get',
           params
         }),
@@ -116,7 +135,7 @@ export const hotelAPI = createApi({
 
       editHotel: build.mutation<Hotel, HotelEditRequest>({
         query: ({id, ...data}) => ({
-            url: `/admin/hotels/${id}`,
+            url: `/${Role.Admin}/hotels/${id}`,
             method: 'put',
             headers: {"Content-Type": "multipart/form-data"},
             data
@@ -134,5 +153,6 @@ export const {
   useGetHotelRoomsQuery,
   useLazyGetHotelsQuery,
   useGetHotelQuery,
-  useEditHotelRoomMutation
+  useEditHotelRoomMutation,
+  useCreateHotelRoomMutation
 } = hotelAPI

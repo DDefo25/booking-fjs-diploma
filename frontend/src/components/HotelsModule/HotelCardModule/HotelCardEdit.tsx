@@ -1,11 +1,11 @@
 import { Button, Card, Form } from "react-bootstrap";
-import { CarouselImages } from "../../utilites-components/CarouselImages";
+import { CarouselImages } from "../../utilites-components/CarouselImage/CarouselImages";
 import { redirect, useNavigate, useParams } from "react-router-dom";
-import { HotelEditRequest, useEditHotelMutation, useGetHotelQuery } from "../../../services/hotelAPI";
-import { Loading } from "../../utilites-components/Loading";
+import { HotelEditRequest, hotelAPI, useEditHotelMutation, useGetHotelQuery } from "../../../services/hotelAPI";
+import { Loading } from "../../utilites-components/Loading/Loading";
 import React, { useEffect, useState } from "react";
 import { Handler, HandlersForm } from "../../../features/handlers/Handler";
-import { CarouselImagesEdit } from "../../utilites-components/CarouselImagesEdit";
+import { CarouselImagesEdit } from "../../utilites-components/CarouselImage/CarouselImagesEdit";
 import { Image } from "../../utilites-components/Image";
 import { DOWNLOAD_IMAGE_URL } from "../../../config/config";
 
@@ -22,10 +22,6 @@ export interface HotelEditInitial {
 export function HotelCardEdit () {
     const { id } = useParams()
     const navigate = useNavigate()
-
-    const { data: hotel, isLoading } = useGetHotelQuery(id!, { refetchOnMountOrArgChange: true})
-    const [ editHotel, { isLoading: isLoadingEdit } ] = useEditHotelMutation()
-
     const initialState: HotelEditInitial = {
         id: '',
         title: '',
@@ -37,16 +33,21 @@ export function HotelCardEdit () {
 
     const [ formState, setForm ] = useState( initialState )
 
+    const { data: hotel, isLoading, isFetching } = useGetHotelQuery(id!)
+    const [ editHotel, { isLoading: isEditing } ] = useEditHotelMutation()
+
     useEffect(() => {
-        const { _id, title, images, description } = hotel!
-        setForm({
-            id: _id!,
-            title,
-            images,
-            description,
-            imagesFiles: [],
-            imagesPreview: []
-        })
+        if (hotel) {
+            const { _id, title, images, description } = hotel!
+            setForm({
+                id: _id!,
+                title,
+                images,
+                description,
+                imagesFiles: [],
+                imagesPreview: []
+            })
+        }
     }, [hotel])
 
     const handlers = {
@@ -63,11 +64,9 @@ export function HotelCardEdit () {
         onDeletePreview: ( index: number ) => Handler.onDeletePreview<HotelEditInitial>( index, setForm )
     }
 
-    if (isLoading) return <Loading />
+    if (isLoading || isFetching) return <Loading />
 
     return (
-        <>
-        { hotel ? 
             <Card>
                 <Form onSubmit={ handlers.onSubmit }>
                     <CarouselImagesEdit 
@@ -87,8 +86,8 @@ export function HotelCardEdit () {
                                     name='title'
                                     value={formState.title} 
                                     onChange={ handlers.onChangeInput }
-                                    disabled={ isLoadingEdit }
-                                    readOnly={ isLoadingEdit }
+                                    disabled={ isEditing }
+                                    readOnly={ isEditing }
                                 />
                             </Form.Group>
                         </Card.Title>
@@ -101,23 +100,20 @@ export function HotelCardEdit () {
                                     name='description'
                                     value={formState.description} 
                                     onChange={ handlers.onChangeInput }
-                                    disabled={ isLoadingEdit }
-                                    readOnly={ isLoadingEdit }
+                                    disabled={ isEditing }
+                                    readOnly={ isEditing }
                                 />
                             </Form.Group>
                         </Card.Text>
                         <Button 
                             variant="primary" 
                             type="submit"
-                            disabled={ isLoadingEdit }
+                            disabled={ isEditing }
                         >
-                            { isLoadingEdit ? 'Загрузка...' : 'Сохранить'}
+                            { isEditing ? 'Загрузка...' : 'Сохранить'}
                         </Button>
                     </Card.Body>
                 </Form>            
             </Card>
-        : null}
-        </>
-
     )
 }

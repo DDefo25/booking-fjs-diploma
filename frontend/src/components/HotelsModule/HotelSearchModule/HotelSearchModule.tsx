@@ -3,13 +3,13 @@ import { HotelSearchForm } from "./HotelSearchForm";
 import { useEffect, useState } from "react";
 import { HotelSearch } from "../interfaces/Hotel.search.interface.dto";
 import { HotelSearchCard } from "./HotelSearchCard";
-import { Loading } from "../../utilites-components/Loading";
+import { Loading } from "../../utilites-components/Loading/Loading";
 
 import { useGetHotelRoomsQuery } from "../../../services/hotelAPI";
 import { Outlet } from "react-router-dom";
 import { Handler, HandlersForm } from "../../../features/handlers/Handler";
 import { format, add } from 'date-fns'
-import { LoadingBox } from "../../utilites-components/LoadingBox";
+import { LoadingBox } from "../../utilites-components/Loading/LoadingBox";
 import { useAppDispatch, useTypedSelector } from "../../../store/store";
 import { ReservationDateState, editReservationDate, selectReservationDates } from "../../../features/slices/reservationDateSlice";
 

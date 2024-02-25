@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { CreateUserRequest, useCreateUserMutation } from "../../services/userAPI";
 import { Role } from "../../config/roles.enum";
 import { Handler } from "../../features/handlers/Handler";
-import { Loading } from "../utilites-components/Loading";
+import { Loading } from "../utilites-components/Loading/Loading";
 import { useTypedSelector } from "../../store/store";
 import { selectUser } from "../../features/slices/authSlice";
 
@@ -71,7 +71,7 @@ export function UserCreate () {
                 } = formState
 
                 createUser(requestData).then(({ data }: any) => {
-                    navigate(`../${data?._id}`)
+                    navigate(`..`)
                 })
             }
             

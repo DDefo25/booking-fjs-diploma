@@ -1,5 +1,5 @@
 import { Button, Card, Container, Stack } from "react-bootstrap";
-import { CarouselImages } from "../../utilites-components/CarouselImages";
+import { CarouselImages } from "../../utilites-components/CarouselImage/CarouselImages";
 import { Hotel } from "../interfaces/Hotel.interface.dto";
 import { Link } from "react-router-dom";
 import { GetHotelRoomsDto } from "../../../services/hotelAPI";
@@ -16,7 +16,7 @@ export function HotelSearchCard ({hotelGrouped: { hotel }}: {hotelGrouped: { hot
                     className="p-4"
                     style={{ 
                         minWidth: '16vw', 
-                        minHeight: '30vh' 
+                        minHeight: '20vh' 
                     }}
                 />
                 <Card.Body>

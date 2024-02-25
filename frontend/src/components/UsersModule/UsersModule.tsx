@@ -4,7 +4,7 @@ import { GetUsersRequest, GetUsersResponse, useGetUsersQuery } from "../../servi
 import { useTypedSelector } from "../../store/store";
 import { selectUser } from "../../features/slices/authSlice";
 import { Handler } from "../../features/handlers/Handler";
-import { LoadingBox } from "../utilites-components/LoadingBox";
+import { LoadingBox } from "../utilites-components/Loading/LoadingBox";
 import { Link } from "react-router-dom";
 import { Pagination } from "../utilites-components/Pagination";
 import { UsersStack } from "./UsersStack";

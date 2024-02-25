@@ -1,7 +1,7 @@
 import GuestGreeting from "./GuestGreeting"
 import UserGreeting from "./UserGreeting"
 import { clearError, selectIsAuth } from "../../features/slices/authSlice"
-import { Loading } from "../utilites-components/Loading"
+import { Loading } from "../utilites-components/Loading/Loading"
 import { useLoginMutation, useRegisterMutation } from "../../services/authAPI"
 import { useAppDispatch, useTypedSelector } from "../../store/store"
 import { Container } from "react-bootstrap"

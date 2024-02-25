@@ -4,8 +4,12 @@ import { User } from "../../interfaces/User.interface";
 import { Button, Card, ListGroup, Stack } from "react-bootstrap";
 import { Image } from "../utilites-components/Image";
 import { Link } from "react-router-dom";
+import { useCheckRoles } from "../../hooks/useCheckRoles";
+import { Role } from "../../config/roles.enum";
 
 export default function UserCard ({user}: {user: User}) {
+    const isAllow = useCheckRoles()
+
     return (
         <Card>
             <Stack direction="horizontal" gap={2}>
@@ -27,17 +31,15 @@ export default function UserCard ({user}: {user: User}) {
                 </Card.Body>
                 
             </Stack>
-            <Card.Footer className="bg-body">                
-                <Stack gap={3} direction="horizontal">
-                    <Link to={`/reservation?userId=${user._id}`} className="ms-auto">   
-                        <Button
-                            variant="warning" 
-                        >
-                            Бронирования
-                        </Button>
-                    </Link>  
-                </Stack>
-            </Card.Footer>
+            { isAllow([Role.Client, Role.Manager]) 
+                && <Card.Footer className="bg-body">                
+                    <Stack gap={3} direction="horizontal">
+                        <Link to={`/reservation?userId=${user._id}`} className="ms-auto">   
+                            <Button variant="warning"> Бронирования </Button>
+                        </Link>  
+                    </Stack>
+                </Card.Footer>
+            }
         </Card>
     )
 }

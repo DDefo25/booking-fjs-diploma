@@ -1,6 +1,6 @@
 import { Button, Card, Stack } from "react-bootstrap";
 import { Hotel } from "../interfaces/Hotel.interface.dto";
-import { CarouselImages } from "../../utilites-components/CarouselImages";
+import { CarouselImages } from "../../utilites-components/CarouselImage/CarouselImages";
 import { useCheckRoles } from "../../../hooks/useCheckRoles";
 import { Role } from "../../../config/roles.enum";
 import { Link } from "react-router-dom";
@@ -19,7 +19,7 @@ export function HotelCard ({hotel}: {hotel: Hotel}) {
                     { isRole([Role.Admin] ) ? 
                         <Stack direction="horizontal" gap={3}>
                             <Link to={`/hotel/${hotel._id}/edit`}>
-                                <Button variant="primary">Редактировать</Button>
+                                <Button variant="warning">Редактировать</Button>
                             </Link>
                             <Link to={`/hotel/${hotel._id}/add`}>
                                 <Button variant="primary">Добавить комнату</Button>

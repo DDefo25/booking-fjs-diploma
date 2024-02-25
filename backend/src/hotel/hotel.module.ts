@@ -21,13 +21,11 @@ import { ReservationModule } from 'src/reservation/reservation.module';
     MulterModule.registerAsync({
       useClass: MulterConfigService,
     }),
-    // forwardRef(() => ReservationModule),
     ReservationModule
   ],
   providers: [
     HotelService, 
     HotelRoomService,
-    // ReservationService,
   ],
   controllers: [
     HotelController,

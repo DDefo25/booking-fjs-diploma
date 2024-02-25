@@ -2,8 +2,8 @@ import { Button, Card, Form, Stack } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { HotelRoomEditRequest, useEditHotelRoomMutation, useGetHotelRoomQuery } from "../../../services/hotelAPI";
 import { MutableRefObject, useEffect, useRef, useState } from "react";
-import { Loading } from "../../utilites-components/Loading";
-import { CarouselImagesEdit } from "../../utilites-components/CarouselImagesEdit";
+import { Loading } from "../../utilites-components/Loading/Loading";
+import { CarouselImagesEdit } from "../../utilites-components/CarouselImage/CarouselImagesEdit";
 import { Handler } from "../../../features/handlers/Handler";
 
 export function HotelRoomCardEdit () {
@@ -15,6 +15,7 @@ export function HotelRoomCardEdit () {
 
     const initialState: HotelRoomEditRequest = {
         id: '',
+        title: '',
         hotel: '',
         images: [],
         description: '',
@@ -27,10 +28,11 @@ export function HotelRoomCardEdit () {
 
     useEffect(() => {
         if (hotelRoom) {
-            const { _id, images, description, hotel } = hotelRoom
+            const { _id, images, description, hotel, title } = hotelRoom
             console.log('hotelRoom', hotelRoom)
             setForm({
                 id: _id!,
+                title,
                 hotel,
                 images,
                 description,
@@ -76,6 +78,17 @@ export function HotelRoomCardEdit () {
                     fade/>
                 <Card.Body>
                     <Card.Text>
+                        <Form.Group className="mb-3" controlId="formBasicHotelRoomTitle">
+                            <Form.Control 
+                                type='text'
+                                placeholder="Название комнаты" 
+                                name='title'
+                                value={ formState.title } 
+                                onChange={ handlers.onChangeInput }
+                                disabled={ isLoadingEdit }
+                                readOnly={ isLoadingEdit }
+                                />
+                        </Form.Group> 
                         <Form.Group className="mb-3" controlId="formBasicHotelRoomDesc">
                             <Form.Control 
                                 as="textarea" 

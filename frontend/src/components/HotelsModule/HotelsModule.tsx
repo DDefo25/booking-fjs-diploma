@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Handler } from "../../features/handlers/Handler";
 import { Button, Card, Container, Form } from "react-bootstrap";
 import { HotelCard } from "./HotelCardModule/HotelCard";
-import { LoadingBox } from "../utilites-components/LoadingBox";
+import { LoadingBox } from "../utilites-components/Loading/LoadingBox";
 
 
 export function HotelsModule () {

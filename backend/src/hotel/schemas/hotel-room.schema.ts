@@ -11,7 +11,7 @@ export class HotelRoom {
         type: MongooseSchema.Types.ObjectId,
         ref: 'Hotel'
     })
-    hotel: Hotel;
+    hotel: ObjectId;
 
     @Prop({required: true})
     title: string;

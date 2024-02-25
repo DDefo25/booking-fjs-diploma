@@ -1,11 +1,11 @@
 import { Card, Container, Stack } from "react-bootstrap";
-import { Loading } from "../utilites-components/Loading";
+import { Loading } from "../utilites-components/Loading/Loading";
 
 import { useSearchParams } from "react-router-dom";
 import { useDeleteReservationMutation, useGetReservationsByIdQuery, useGetReservationsQuery } from "../../services/reservationAPI";
 import { ReservationCard } from "./ReservationCard";
 import { useEffect } from "react";
-import { LoadingBox } from "../utilites-components/LoadingBox";
+import { LoadingBox } from "../utilites-components/Loading/LoadingBox";
 import { useTypedSelector } from "../../store/store";
 import { selectUser } from "../../features/slices/authSlice";
 import { Role } from "../../config/roles.enum";

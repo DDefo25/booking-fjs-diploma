@@ -12,6 +12,7 @@ import HotelModule from "./components/HotelsModule/HotelCreateModule/HotelModule
 import { HotelSearchModule } from "./components/HotelsModule/HotelSearchModule/HotelSearchModule";
 import { UserCreate } from "./components/UsersModule/UserCreate";
 import { ReservationModule } from "./components/Reservation/ReservationModule";
+import { HotelRoomCardAdd } from "./components/HotelsModule/HotelRoomModule/HotelRoomCardAdd";
 
 
 export default createBrowserRouter([
@@ -86,13 +87,20 @@ export default createBrowserRouter([
                     </ProtectedRoute>
                   )
                 }, {
+                  path: 'add',
+                  element: (
+                    <ProtectedRoute roles={[ Role.Admin ]}>
+                        <HotelRoomCardAdd />
+                    </ProtectedRoute>
+                  )
+                }, {
                   path: ':roomId/edit',
                   element: (
                     <ProtectedRoute roles={[ Role.Admin ]}>
                         <HotelRoomCardEdit />
                     </ProtectedRoute>
                   )
-                }
+                },
               ]
             },  
           ]

@@ -10,6 +10,7 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/http.roles.guard';
 import { UpdateHotelRoomDto } from '../interfaces/update-hotel-room.dto';
+import { CreateHotelRoomDto } from '../interfaces/create-hotel-room.dto';
 
 @Controller('api/:role/hotel-rooms')
 export class HotelRoomController {
@@ -40,9 +41,12 @@ export class HotelRoomController {
     */
     @Roles(Role.Admin)
     @UseGuards(JwtAuthGuard, RolesGuard)
+    @UseInterceptors(FilesInterceptor('images[]', 10))
     @Post()
-    @UseInterceptors(FilesInterceptor('images'))
-    async create( @Body( new HttpValidationPipe()) data: Partial<HotelRoom>, @UploadedFiles() images: Express.Multer.File[]) {
+    async create( 
+        @UploadedFiles() images: Express.Multer.File[],
+        @Body() data: CreateHotelRoomDto, 
+    ) {
         const newHotelRoom = {
             ...data,
             images: images.map(image => image.path)

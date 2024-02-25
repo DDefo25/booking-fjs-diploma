@@ -1,4 +1,4 @@
-import { Container, Navbar, Stack, Image } from "react-bootstrap";
+import { Container, Navbar, Stack, Image, ListGroup } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useTypedSelector } from "../../store/store";
 import { selectAuth } from "../../features/slices/authSlice";
@@ -31,9 +31,9 @@ export default function SideBar () {
     
     return (
         <Container>
-            <Stack gap={2}>
+            <ListGroup variant="flush">
                 { links.map((link, index) => <SideBarLink key={index} params={link}/>)}
-            </Stack>
+            </ListGroup>
         </Container>
     )
 }

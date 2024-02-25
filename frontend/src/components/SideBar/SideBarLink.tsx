@@ -1,4 +1,4 @@
-import { Navbar, Image } from "react-bootstrap"
+import { Navbar, Image, ListGroup } from "react-bootstrap"
 import { Role } from "../../config/roles.enum"
 import { Link } from "react-router-dom"
 import { useCheckRoles } from "../../hooks/useCheckRoles"
@@ -19,7 +19,7 @@ export const SideBarLink = ({params :{
     const isAllow = useCheckRoles()
 
     return (
-        <Navbar.Brand hidden={ allowedRoles && !isAllow(allowedRoles) }>
+        <ListGroup.Item hidden={ allowedRoles && !isAllow(allowedRoles) }>
             <Link to={path}>
                 <Image
                     alt=""
@@ -31,6 +31,6 @@ export const SideBarLink = ({params :{
                     />{' '}
                 {title}
             </Link>
-        </Navbar.Brand>
+        </ListGroup.Item>
     )
 }

@@ -1,5 +1,5 @@
 import { Button, Card, Stack } from "react-bootstrap";
-import { CarouselImages } from "../utilites-components/CarouselImages";
+import { CarouselImages } from "../utilites-components/CarouselImage/CarouselImages";
 import { Reservation } from "../../services/interfaces/Reservation.interface";
 import Moment from "react-moment";
 

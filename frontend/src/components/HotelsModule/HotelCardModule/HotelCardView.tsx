@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { useAppDispatch, useTypedSelector } from "../../../store/store";
 import { editReservationDate, selectReservationDates } from "../../../features/slices/reservationDateSlice";
 import { HotelRoomCardView } from "../HotelRoomModule/HotelRoomCardView";
-import { LoadingBox } from "../../utilites-components/LoadingBox";
+import { LoadingBox } from "../../utilites-components/Loading/LoadingBox";
 
 
 export function HotelCardView () {
@@ -85,7 +85,7 @@ export function HotelCardView () {
             { isLoading || isFetching 
                 ? <LoadingBox />
                 : hotelRoomsGroupedByHotel 
-                    && hotelRoomsGroupedByHotel[0].hotelRooms.map(hotelRoom => <HotelRoomCardView hotelRoom={hotelRoom}/>) }
+                    && hotelRoomsGroupedByHotel[0].hotelRooms.map((hotelRoom, index) => <HotelRoomCardView key={index} hotelRoom={hotelRoom}/>) }
         </div>
     </>
     )

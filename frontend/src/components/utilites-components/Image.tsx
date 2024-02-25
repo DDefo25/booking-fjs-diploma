@@ -1,6 +1,6 @@
 import { HTMLAttributes, useRef, useState } from "react";
 import { ImageProps, Image as ReactImage } from "react-bootstrap";
-import { Loading } from "./Loading";
+import { Loading } from "./Loading/Loading";
 
 export const Image = ( { 
         attributes, 
