@@ -1,11 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { RootState } from "../../store/store"
 import { socket } from "../../socket/SocketClient"
+import { Message } from "../../services/supportRequestAPI"
 
+export interface OnSubscribeToChatMessage {
+    supportReqID: string,
+    message: Message
+}
 
 export interface SocketIOState {
     isConnected: boolean,
-    subscribeToChatEvents: Function[],
+    subscribeToChatEvents: OnSubscribeToChatMessage[],
     errorEvents: Function[],
 }
 
@@ -14,6 +19,7 @@ const initialState: SocketIOState = {
     subscribeToChatEvents: [],
     errorEvents: []
 }
+
 
 export const slice = createSlice({
     name: 'socketIO',
@@ -27,7 +33,7 @@ export const slice = createSlice({
             console.log('socket disconnected')
             state.isConnected = false 
         },
-        onSubscribeToChatEvents: (state: SocketIOState, { payload }: PayloadAction<Function>): void => {
+        onSubscribeToChatEvents: (state: SocketIOState, { payload }: PayloadAction<OnSubscribeToChatMessage>): void => {
             console.log('subscribeToChatEvent', payload)
             state.subscribeToChatEvents = [...state.subscribeToChatEvents, payload]
         },

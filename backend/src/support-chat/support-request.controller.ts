@@ -46,9 +46,9 @@ export class SupportRequestController {
             case Role.Client: {
                 const { supportRequests, count: countClientSR } = await this.supportRequest.findSupportRequests({user: req.user._id, ...query});
                 for (let el of supportRequests) {
-                    const unreadCount = await this.supportRequestClient.getUnreadCount(el['_id'])
+                    const unreadCount = await this.supportRequestClient.getUnreadCount(el._id)
                     response.push( {
-                        id: el['_id'],
+                        id: el._id,
                         createdAt: el['createdAt'],
                         isActive: el.isActive,
                         hasNewMessages: unreadCount.length > 0
@@ -61,9 +61,9 @@ export class SupportRequestController {
             case Role.Manager: {
                 const { supportRequests, count: countManagerSR } = await this.supportRequest.findSupportRequests(query)
                 for (let el of supportRequests) {
-                    const unreadCount = await this.supportRequestEmployee.getUnreadCount(el['_id'])
+                    const unreadCount = await this.supportRequestEmployee.getUnreadCount(el._id) 
                     response.push( {
-                        id: el['_id'],
+                        id: el._id,
                         createdAt: el['createdAt'],
                         isActive: el.isActive,
                         hasNewMessages: unreadCount.length > 0,

@@ -13,6 +13,7 @@ import { Button } from "@chatscope/chat-ui-kit-react";
 import { CreateSupportRequestModal } from "./CreateSupportRequestModal";
 import { DOWNLOAD_ASSETS_ICON_URL } from "../../config/config";
 import { socket } from '../../socket/SocketClient';
+import { useSubcribeSupportChats } from '../../hooks/useSubcribeSupportChats';
 
 interface GetSupportRequest {
     limit: number,
@@ -32,11 +33,13 @@ export const SupporRequestModule = () => {
 
     const { role } = useTypedSelector( selectUser ) || {} as User
     const [ formState, setForm ] = useState(initialState)
-    const { data: allSP } = useGetSupportRequestsQuery({ isActive: true, role })
+
     const { data , isLoading, isFetching } = useGetSupportRequestsQuery({...formState, role })
     const { supportRequests, count } = data || {} as SupportRequestResponse
 
-    allSP && allSP.supportRequests.forEach( el => socket.emit('subscribeToChat', {chatId: el.id}))
+    const token = localStorage.getItem('token') || '' as string
+    useSubcribeSupportChats(token)
+
 
     const handlers = {
         onClose: () => {

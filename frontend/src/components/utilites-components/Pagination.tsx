@@ -15,7 +15,6 @@ export const Pagination = ({
 }) => {
     const numbers = Math.ceil(count / limit)
 
-    console.log('count, offset, limit, active, numbers', [count, offset, limit, numbers])
     const items = [];
     for (let i = 1; i <= numbers; i++) {
         items.push(

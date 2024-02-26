@@ -11,9 +11,7 @@ import { Role } from './config/roles.enum';
 import { SocketClient } from './socket/SocketClient';
 
 function App() {
-  (() => {
-    SocketClient()
-  })()
+  SocketClient()
 
   const isAllow = useCheckRoles()  
 

@@ -20,7 +20,7 @@ export interface DeleteReservationRequest {
 export const reservationAPI = createApi({
     reducerPath: "reservationAPI",
     baseQuery: axiosBaseQuery({
-      baseUrl: `${SERVER_URL}/api`
+      baseUrl: `api`
     }),
     tagTypes: ['Reservation', 'HotelRoom'],
     endpoints: (build) => ({

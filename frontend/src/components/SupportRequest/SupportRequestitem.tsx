@@ -1,13 +1,35 @@
 import { Accordion, Badge, Stack } from "react-bootstrap"
-import { SupportRequest } from "../../services/supportRequestAPI"
+import { SupportRequest, useGetSupportRequestMessagesQuery } from "../../services/supportRequestAPI"
 import { format } from "date-fns"
 import { SupportRequestChat } from "./Chat/SupportRequestChat"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { OnSubscribeToChatMessage } from "../../features/slices/socket.io.Slice"
+import { socket } from "../../socket/SocketClient"
 
 
 export const SupportRequestItem = ({eventKey, supportRequest}: { eventKey: string, supportRequest: SupportRequest }) => {
     const { id, createdAt, hasNewMessages } = supportRequest
     const [ stateHasNewMessages, setState ] = useState(hasNewMessages)
+    const { refetch, ...queryResult } = useGetSupportRequestMessagesQuery(id)
+
+    useEffect(() => {
+        console.log('hasNewMessages',stateHasNewMessages)
+    }, [stateHasNewMessages])
+    
+    
+    const listener = (value: OnSubscribeToChatMessage) => {
+        if ( value.supportReqID === id ) {
+            setState( true )
+            refetch()
+        }
+    }
+
+    useEffect(() => {
+        socket.on('subscribeToChat', listener);
+        return () => {
+            socket.off('subscribeToChat', listener);
+          };
+    })
     
     return (
         <Accordion.Item eventKey={eventKey}>
@@ -32,6 +54,7 @@ export const SupportRequestItem = ({eventKey, supportRequest}: { eventKey: strin
                 id={id} 
                 hasNewMessages={stateHasNewMessages}
                 dispatch={setState}
+                queryResult={queryResult}
             />
             </Accordion.Body>
         </Accordion.Item>

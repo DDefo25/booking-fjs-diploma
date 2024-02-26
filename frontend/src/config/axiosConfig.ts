@@ -1,9 +1,12 @@
 import axios from 'axios';
+import { SERVER_URL } from './config';
 
 const baseURL = process.env.NODE_ENV === "development"
-  ? "http://localhost:4000/"
-  : "http://example.com"
+  ? SERVER_URL
+  : ""
 
+  console.log('process.env.NODE_ENV', process.env.NODE_ENV)
+  // console.log('baseURL', baseURL)
 
 const instance = axios.create({
     baseURL,

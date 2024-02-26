@@ -49,7 +49,7 @@ export interface ReadSupportRequestMessagesResponse {
 export const supportRequestAPI = createApi({
     reducerPath: "supportRequestAPI",
     baseQuery: axiosBaseQuery({
-      baseUrl: `${SERVER_URL}/api`
+      baseUrl: `api`
     }),
     tagTypes: ['SupportRequest', 'SupportRequestMessage'],
     endpoints: (build) => ({
@@ -110,6 +110,7 @@ export const supportRequestAPI = createApi({
 export const { 
   useCreateSupportRequestMutation,
   useGetSupportRequestMessagesQuery,
+  useLazyGetSupportRequestMessagesQuery,
   useGetSupportRequestsQuery,
   useReadSupportRequestMessagesMutation,
   useSendSupportRequestMessageMutation,

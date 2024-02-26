@@ -28,7 +28,7 @@ export interface GetUsersResponse {
 export const userAPI = createApi({
     reducerPath: "userAPI",
     baseQuery: axiosBaseQuery({
-      baseUrl: `${SERVER_URL}/api`
+      baseUrl: `api`
     }),
     tagTypes: ['User'],
     endpoints: (build) => ({

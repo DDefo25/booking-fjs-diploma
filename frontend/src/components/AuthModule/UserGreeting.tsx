@@ -10,30 +10,40 @@ import { useEffect } from "react"
 import { useCheckRoles } from "../../hooks/useCheckRoles"
 import { Socket } from "socket.io-client"
 import { socket } from "../../socket/SocketClient"
+import { useGetSupportRequestsQuery } from "../../services/supportRequestAPI"
+import { User } from "../../interfaces/User.interface"
+import { useSocket } from "../../hooks/useSocket"
+import { useSubcribeSupportChats } from "../../hooks/useSubcribeSupportChats"
 
 // import { socket } from "../../socket/SocketClient"
 
 const placement = 'bottom'
 
 export default function UserGreeting () {
-    const user = useTypedSelector(selectUser)
+    const user = useTypedSelector(selectUser) || {} as User
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
-    const isAllow = useCheckRoles()  
+    
+    const token = localStorage.getItem('token') || '' as string
+    useSocket( token )
 
-    useEffect(() => {
+
+    // useEffect(() => {
         
-        if (isAllow([ Role.Client, Role.Manager ])) {
-            socket.io.opts.extraHeaders = {
-                Authorization: `${localStorage.getItem('token') }`
-            }
-            socket.connect()
-        }
+    //     if (isAllow([ Role.Client, Role.Manager ])) {
+    //         socket.io.opts.extraHeaders = {
+    //             Authorization: `${localStorage.getItem('token') }`
+    //         }
+    //         socket.connect()
+
+    //         const { data: allSP } = useGetSupportRequestsQuery({ isActive: true, role: user.role })
+    //         allSP && allSP.supportRequests.forEach( el => socket.emit('subscribeToChat', {chatId: el.id}))
+    //     }
       
-        return () => { 
-            socket.disconnect() 
-        }
-    }, []);
+    //     return () => { 
+    //         socket.disconnect() 
+    //     }
+    // }, []);
 
     const handlers = {
         logout: () => {

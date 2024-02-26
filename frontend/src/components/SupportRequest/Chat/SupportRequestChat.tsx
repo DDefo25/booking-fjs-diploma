@@ -1,6 +1,6 @@
 import './SupportRequestChat.css'
 import { useTypedSelector } from "../../../store/store"
-import { useCloseSupportRequestMutation, useGetSupportRequestMessagesQuery, useReadSupportRequestMessagesMutation, useSendSupportRequestMessageMutation } from "../../../services/supportRequestAPI"
+import { useCloseSupportRequestMutation, useGetSupportRequestMessagesQuery, useReadSupportRequestMessagesMutation, useSendSupportRequestMessageMutation, Message as MessageType } from "../../../services/supportRequestAPI"
 import { selectUser } from "../../../features/slices/authSlice"
 import { User } from "../../../interfaces/User.interface"
 import { ChatContainer, MessageList, Message, MessageInput, Button } from '@chatscope/chat-ui-kit-react';
@@ -10,6 +10,8 @@ import { useEffect, useState } from "react"
 import { useCheckRoles } from '../../../hooks/useCheckRoles'
 import { Role } from '../../../config/roles.enum'
 import { socket } from '../../../socket/SocketClient'
+import { OnSubscribeToChatMessage } from '../../../features/slices/socket.io.Slice'
+import { UseQueryHookResult } from '@reduxjs/toolkit/dist/query/react/buildHooks'
 
 interface ChatInput {
     text: string
@@ -31,28 +33,24 @@ interface IHandlers {
 export const SupportRequestChat = ({
     id, 
     hasNewMessages,
-    dispatch
+    dispatch,
+    queryResult
 } : {
     id: string, 
     hasNewMessages: boolean,
-    dispatch: React.Dispatch<React.SetStateAction<boolean>>
+    dispatch: React.Dispatch<React.SetStateAction<boolean>>,
+    queryResult: any
 }) => {
     const { _id: userId } = useTypedSelector( selectUser ) || {} as User
     const isAllow = useCheckRoles()
 
 
-    const { data: messages, isLoading, isFetching, refetch } = useGetSupportRequestMessagesQuery(id)
+    const { data: messages, isLoading, isFetching } = queryResult
     const [ sendMessage, { isLoading: isSending } ] = useSendSupportRequestMessageMutation()
     const [ closeSupportRequest, { isLoading: isClosing }] = useCloseSupportRequestMutation()
     const [ readMessages, { isLoading: isReading }] = useReadSupportRequestMessagesMutation()
     const [ formState, setForm ] = useState(initialState)
 
-    useEffect(() => {
-        socket.on('subscribeToChat', refetch);
-        return () => {
-            socket.off('subscribeToChat', refetch);
-          };
-    })
 
     const handlers: IHandlers = {
         onSubmit: ( e ) => {
@@ -87,7 +85,7 @@ export const SupportRequestChat = ({
         }
     }
 
-    const messagesComponent = messages && messages.map( message => {
+    const messagesComponent = messages && messages.map( (message: MessageType) => {
         const { author: { _id: authotId, name, role }, text, sentAt, readAt } = message
         const direction = userId === authotId ? 'outgoing' : 'incoming'
         
@@ -108,10 +106,10 @@ export const SupportRequestChat = ({
     <ChatContainer className="support-request-chat">       
         <MessageList
             loading={isLoading || isFetching || isSending || isReading}
-            autoScrollToBottomOnMount={true}
-            autoScrollToBottom={true}
-            disableOnYReachWhenNoScroll={true}
-            onYReachEnd={ handlers.onScrollDown }
+            // autoScrollToBottomOnMount={true}
+            // autoScrollToBottom={true}
+            // disableOnYReachWhenNoScroll={true}
+            // onYReachEnd={ handlers.onScrollDown }
         >
             { messagesComponent }
         </MessageList>

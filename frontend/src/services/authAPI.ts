@@ -33,7 +33,7 @@ export interface RegisterRequest {
 export const authAPI = createApi({
     reducerPath: "authAPI",
     baseQuery: axiosBaseQuery({
-      baseUrl: `${SERVER_URL}/api`
+      baseUrl: `api`
     }),
     tagTypes: ['User'],
     endpoints: (build) => ({

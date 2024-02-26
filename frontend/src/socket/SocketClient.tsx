@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { onConnectSocket, onDisconnectSocket, onSubscribeToChatEvents, onErrorEvents } from "../features/slices/socket.io.Slice";
+import { onConnectSocket, onDisconnectSocket, onSubscribeToChatEvents, onErrorEvents, OnSubscribeToChatMessage } from "../features/slices/socket.io.Slice";
 import { useAppDispatch } from "../store/store";
 import { io } from "socket.io-client";
 import { SERVER_URL } from "../config/config";
@@ -20,7 +20,7 @@ export const SocketClient = () => {
         dispatch( onDisconnectSocket());
       }
   
-      function onSubscribeToChatEvent(value: (...args: any[]) => void ) {
+      function onSubscribeToChatEvent(value: OnSubscribeToChatMessage ) {
         dispatch( onSubscribeToChatEvents(value));
       }
 

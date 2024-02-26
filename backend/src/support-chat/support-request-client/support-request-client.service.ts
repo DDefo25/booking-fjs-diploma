@@ -27,21 +27,17 @@ export class SupportRequestClientService {
     };
 
     async markMessagesAsRead(params: MarkMessageAsReadDto) {
-        const {user, supportRequest, createdBefore} = params
-        const supportReq = await this.supportRequestModel.findById(supportRequest)
-        for (let message of supportReq.messages) {
-            await this.messageModel.updateOne(
-                { $and: [
-                    { _id: message },
-                    { readAt: { $exists: false}}, 
-                    { author: { $ne: user }}
-                ]},
-                { $set: { 'readAt': createdBefore} },
-            )
+        const { user, supportRequest, createdBefore } = params
+        const { messages } = await this.supportRequestModel.findById(supportRequest)
+        const filter = {
+            _id: { $in: messages},
+            readAt: { $exists: false},
+            author: { $ne: user }
         }
+        await this.messageModel.updateMany(filter, { readAt: createdBefore })
     };
 
-    async getUnreadCount(supportRequest: ObjectId): Promise<Message[]> {
+    async getUnreadCount(supportRequest: ObjectId): Promise<MessageDocument[]> {
         const supportReq = await this.supportRequestModel.aggregate([
             { $match: { _id: supportRequest }},
             { $lookup: {
@@ -52,21 +48,19 @@ export class SupportRequestClientService {
                     user: '$user'
                 },
                 pipeline: [
-                { $match: {
-                    $expr:{ $and: [
-                        {$ne: [{ $toObjectId: '$$user'}, { $toObjectId: '$author'}]},
-                        {$cond: [
-                            {$ifNull: ['$readAt', true]},
-                                true,
-                                false
-                        ]}
-                    ]},
-                }},
+                { $match: 
+                    { $expr:
+                        { $and: [
+                            { $ne: [{ $toObjectId: '$$user'}, { $toObjectId: '$author'}]},
+                            { $cond: [{ $ifNull: ['$readAt', false] }, false, true ]}
+                        ]},
+                    }},
                 ],
                 as: "messages"
             }},
         ])
-    
+        
+        console.log(supportReq[0]._id, supportReq[0].messages)
         return supportReq[0].messages
     };
 }

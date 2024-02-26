@@ -64,7 +64,7 @@ export interface HotelEditRequest {
 export const hotelAPI = createApi({
     reducerPath: "hotelAPI",
     baseQuery: axiosBaseQuery({
-      baseUrl: `${SERVER_URL}/api`
+      baseUrl: `api`
     }),
     tagTypes: ['Hotel', 'HotelRoom'],
     endpoints: (build) => ({
