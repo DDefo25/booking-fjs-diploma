@@ -1,7 +1,7 @@
-import { IsDefined, IsMongoId, IsString} from "class-validator";
+import { IsDefined, IsString } from 'class-validator';
 
-export class SubscribeToSupportRequestDto  {
-    @IsString()
-    @IsDefined()
-    chatId: string
+export class SubscribeToSupportRequestDto {
+  @IsString()
+  @IsDefined()
+  chatId: string;
 }

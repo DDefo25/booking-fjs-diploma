@@ -1,18 +1,17 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { AuthService } from "./auth.service";
-import { Request as RequestType } from "express";
-import { Socket } from "socket.io";
-import { parse } from 'cookie'
+import { AuthService } from './auth.service';
+import { Request as RequestType } from 'express';
 
 @Injectable()
-export class JwtStrategyCookies extends PassportStrategy(Strategy, 'jwt-cookies') {
-  constructor(
-    private authService: AuthService
-  ) {
+export class JwtStrategyCookies extends PassportStrategy(
+  Strategy,
+  'jwt-cookies',
+) {
+  constructor(private authService: AuthService) {
     super({
-      jwtFromRequest:  ExtractJwt.fromExtractors([
+      jwtFromRequest: ExtractJwt.fromExtractors([
         JwtStrategyCookies.extractJWTFromCookies,
       ]),
       ignoreExpiration: false,
@@ -21,7 +20,7 @@ export class JwtStrategyCookies extends PassportStrategy(Strategy, 'jwt-cookies'
   }
 
   async validate({ email }: any) {
-    const user = await this.authService.validateUser( email )
+    const user = await this.authService.validateUser(email);
     if (!user) {
       throw new UnauthorizedException();
     }
@@ -29,9 +28,8 @@ export class JwtStrategyCookies extends PassportStrategy(Strategy, 'jwt-cookies'
   }
 
   private static extractJWTFromCookies(req: RequestType): string | null {
-    const { refreshToken } = req.cookies
-    if ( refreshToken && refreshToken.length > 0 ) return refreshToken
+    const { refreshToken } = req.cookies;
+    if (refreshToken && refreshToken.length > 0) return refreshToken;
     return null;
   }
-
 }

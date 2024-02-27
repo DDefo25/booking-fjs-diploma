@@ -1,34 +1,34 @@
-import { Button, Form, Spinner } from "react-bootstrap"
-import { useState } from "react"
-import { useNavigate } from "react-router-dom";
-import { RegisterRequest, useRegisterMutation } from "../../services/authAPI";
-import { HandlersForm } from "../../features/handlers/Handler";
+import { Button, Form } from 'react-bootstrap';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { RegisterRequest, useRegisterMutation } from '../../services/authAPI';
+import { HandlersForm } from '../../features/handlers/Handler';
 
 
 
-export default function PopoverRegister () {
-  const navigate = useNavigate()
+export default function PopoverRegister() {
+  const navigate = useNavigate();
   const [formState, setFormState] = useState<RegisterRequest>({
     email: '',
     password: '',
     name: '',
-    contactPhone: ''
-  })
+    contactPhone: '',
+  });
   
-  const [ register ] = useRegisterMutation({ fixedCacheKey: 'shared-register'});
+  const [ register ] = useRegisterMutation({ fixedCacheKey: 'shared-register' });
 
   const handlers: HandlersForm = {
-      onChange: ({target: {name, value}}: React.ChangeEvent<HTMLInputElement>) => {
-        setFormState((prev) => ({ ...prev, [name]: value}))
-      },
-      onSubmit: (e: React.FormEvent) => {
-        e.preventDefault();
-        register(formState)
-        navigate('/')
-      }
-    }
+    onChange: ({ target: { name, value } }: React.ChangeEvent<HTMLInputElement>) => {
+      setFormState((prev) => ({ ...prev, [name]: value }));
+    },
+    onSubmit: (e: React.FormEvent) => {
+      e.preventDefault();
+      register(formState);
+      navigate('/');
+    },
+  };
 
-    return (
+  return (
       <>
       <Form onSubmit={handlers.onSubmit}>
         <Form.Group className="mb-3" controlId="formBasicName">
@@ -74,5 +74,5 @@ export default function PopoverRegister () {
         <Button variant="primary" type="submit">Регистрация</Button>
     </Form>
     </>
-    )
+  );
 }

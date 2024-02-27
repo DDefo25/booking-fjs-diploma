@@ -1,58 +1,56 @@
-import { Button, Card, Form, Stack } from "react-bootstrap";
-import { useNavigate, useParams } from "react-router-dom";
-import { HotelRoomAddRequest, HotelRoomEditRequest, useCreateHotelRoomMutation, useEditHotelRoomMutation, useGetHotelRoomQuery } from "../../../services/hotelAPI";
-import { MutableRefObject, useEffect, useRef, useState } from "react";
-import { Loading } from "../../utilites-components/Loading/Loading";
-import { CarouselImagesEdit } from "../../utilites-components/CarouselImage/CarouselImagesEdit";
-import { Handler } from "../../../features/handlers/Handler";
-import { CarouselImagesAdd } from "../../utilites-components/CarouselImage/CarouselImagesAdd";
+import { Button, Card, Form, Stack } from 'react-bootstrap';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useCreateHotelRoomMutation } from '../../../services/hotelAPI';
+import { useState } from 'react';
+import { Handler } from '../../../features/handlers/Handler';
+import { CarouselImagesAdd } from '../../utilites-components/CarouselImage/CarouselImagesAdd';
 
 interface FormState {
-    title: string,
-    hotel: string,
-    description: string,
-    images: File[],
-    imagesPreview: string[]
+  title: string,
+  hotel: string,
+  description: string,
+  images: File[],
+  imagesPreview: string[]
 }
 
 
-export function HotelRoomCardAdd () {
-    const { id: hotel } = useParams()
-    const navigate = useNavigate()
-    const [ createHotelRoom, { isLoading: isCreating } ] = useCreateHotelRoomMutation()
+export function HotelRoomCardAdd() {
+  const { id: hotel } = useParams();
+  const navigate = useNavigate();
+  const [ createHotelRoom, { isLoading: isCreating } ] = useCreateHotelRoomMutation();
 
-    const initialState: FormState = {
-        title: '',
-        hotel: hotel!,
-        images: [],
-        description: '',
-        imagesPreview: [],
-    }
+  const initialState: FormState = {
+    title: '',
+    hotel: hotel!,
+    images: [],
+    description: '',
+    imagesPreview: [],
+  };
 
-    const [ formState, setForm ] = useState( initialState )
+  const [ formState, setForm ] = useState( initialState );
 
-    const handlers = {
-        onSubmit: (event: React.FormEvent) => {
-            event.preventDefault()
-            const { imagesPreview, ...request } = formState
-            createHotelRoom(request)
-            .then(() => navigate('..'))
-        },
+  const handlers = {
+    onSubmit: (event: React.FormEvent) => {
+      event.preventDefault();
+      const { imagesPreview, ...request } = formState;
+      createHotelRoom(request)
+        .then(() => navigate('..'));
+    },
 
-        onChangeInput: (e: React.ChangeEvent) => Handler.onChangeInput<FormState>( e, setForm ),
-        onChangeFile: (e: React.ChangeEvent) => Handler.onChangeFile<FormState>( e, setForm ),
-        onDeletePreview: ( index: number ) => Handler.onDeletePreview<FormState>( index, setForm )
-    }
+    onChangeInput: (e: React.ChangeEvent) => Handler.onChangeInput<FormState>( e, setForm ),
+    onChangeFile: (e: React.ChangeEvent) => Handler.onChangeFile<FormState>( e, setForm ),
+    onDeletePreview: ( index: number ) => Handler.onDeletePreview<FormState>( index, setForm ),
+  };
 
 
-    return (
+  return (
         <Card className="mb-3">
             <Form onSubmit={handlers.onSubmit}>
                 <CarouselImagesAdd 
                     imagesPreview={formState.imagesPreview} 
                     handlers={handlers} 
                     imagesInRow={3} 
-                    variant={"dark"} 
+                    variant={'dark'} 
                     className="p-4"
                     fade/>
                 <Card.Body>
@@ -93,5 +91,5 @@ export function HotelRoomCardAdd () {
                 </Card.Body>
             </Form>
         </Card>
-    )
+  );
 }

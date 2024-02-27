@@ -1,8 +1,7 @@
-import { ObjectId } from "mongoose";
-import { HotelRoom } from "../schemas/hotel-room.schema";
-import { SearchRoomsParams } from "./search-rooms.dto";
-import { UpdateHotelRoomDto } from "./update-hotel-room.dto";
-import { UpdateHotelRoomParams } from "./update-hotel-room.params";
+import { ObjectId } from 'mongoose';
+import { HotelRoom } from '../schemas/hotel-room.schema';
+import { SearchRoomsParams } from './search-rooms.dto';
+import { UpdateHotelRoomParams } from './update-hotel-room.params';
 
 export interface IHotelRoomService {
   create(data: Partial<HotelRoom>): Promise<HotelRoom>;

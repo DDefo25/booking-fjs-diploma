@@ -8,31 +8,35 @@ import { UpdateHotelParams } from './interfaces/update-hotel.dto';
 
 @Injectable()
 export class HotelService implements IHotelService {
-    constructor(
-        @InjectModel(Hotel.name) private readonly model: Model<HotelDocument>
-   ) {}
+  constructor(
+    @InjectModel(Hotel.name) private readonly model: Model<HotelDocument>,
+  ) {}
 
-   create(data: Partial<Hotel>): Promise<Hotel> {
-       return this.model.create(data)
-   };
+  create(data: Partial<Hotel>): Promise<Hotel> {
+    return this.model.create(data);
+  }
 
-   findById(id: ObjectId): Promise<Hotel> {
-       return this.model.findById(id)
-   };
+  findById(id: ObjectId): Promise<Hotel> {
+    return this.model.findById(id);
+  }
 
-   search(params: SearchHotelParams): Promise<Hotel[]> {
-        const {limit, offset, title} = params || {} as SearchHotelParams
+  search(params: SearchHotelParams): Promise<Hotel[]> {
+    const { limit, offset, title } = params || ({} as SearchHotelParams);
 
-        const filter = {
-            title: new RegExp(title, 'i')
-        }
+    const filter = {
+      title: new RegExp(title, 'i'),
+    };
 
-        console.log(filter)
+    
 
-       return this.model.find(filter).limit(limit).skip(offset)
-   };
+    return this.model.find(filter).limit(limit).skip(offset);
+  }
 
-   update(id: ObjectId, data: UpdateHotelParams): Promise<Hotel> {
-        return this.model.findByIdAndUpdate(id, {$set: data}, {returnDocument: 'after'})
-   }
+  update(id: ObjectId, data: UpdateHotelParams): Promise<Hotel> {
+    return this.model.findByIdAndUpdate(
+      id,
+      { $set: data },
+      { returnDocument: 'after' },
+    );
+  }
 }

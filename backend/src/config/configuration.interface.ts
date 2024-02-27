@@ -1,26 +1,26 @@
 export interface INestConfiguration {
-    port: number
+  port: number;
 }
 
 export interface IDBConfiguration {
-    host: string,    
-    port: number,
-    user: string,
-    pass: string,
-    dbName: string
+  host: string;
+  port: number;
+  user: string;
+  pass: string;
+  dbName: string;
 }
 
 export interface IUploadConfiguration {
-    destination: string
+  destination: string;
 }
 
 export interface IJwtConfiguration {
-    secret: string,
-    expiresIn: string | number,
-    secretRefreshToken: string
-    expiresInRefreshToken: string | number,
+  secret: string;
+  expiresIn: string | number;
+  secretRefreshToken: string;
+  expiresInRefreshToken: string | number;
 }
 
 export interface ICookiesConfiguration {
-    expires: number
+  expires: number;
 }

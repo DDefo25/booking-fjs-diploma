@@ -13,3 +13,6 @@ body:not(input) {
 }
 
 
+a {
+  text-decoration: none;
+}

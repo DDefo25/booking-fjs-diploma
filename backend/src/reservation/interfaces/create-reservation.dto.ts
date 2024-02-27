@@ -1,19 +1,19 @@
-import { IsDate, IsMongoId} from "class-validator";
-import { ObjectId } from "mongoose";
+import { IsDate, IsMongoId } from 'class-validator';
+import { ObjectId } from 'mongoose';
 
-export class ReservationCreateDto  {
-    @IsMongoId()
-    user: ObjectId;
+export class ReservationCreateDto {
+  @IsMongoId()
+  user: ObjectId;
 
-    @IsMongoId()
-    hotel?: ObjectId;
+  @IsMongoId()
+  hotel?: ObjectId;
 
-    @IsMongoId()
-    hotelRoom: ObjectId;
+  @IsMongoId()
+  hotelRoom: ObjectId;
 
-    @IsDate()
-    dateStart: Date;
+  @IsDate()
+  dateStart: Date;
 
-    @IsDate()
-    dateEnd: Date;
+  @IsDate()
+  dateEnd: Date;
 }

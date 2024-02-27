@@ -1,9 +1,9 @@
-export interface LoginUserResponseDto  {
-    user: {
-        email: string,
-        name: string,
-        contactPhone: string
-    },
-    token: string
-    refreshToken: string
+export interface LoginUserResponseDto {
+  user: {
+    email: string;
+    name: string;
+    contactPhone: string;
+  };
+  token: string;
+  refreshToken: string;
 }

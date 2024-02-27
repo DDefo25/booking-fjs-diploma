@@ -1,20 +1,26 @@
-import { IsBoolean, IsDefined, IsMongoId, IsNumber, IsOptional } from "class-validator";
-import { ObjectId } from "mongoose";
+import {
+  IsBoolean,
+  IsDefined,
+  IsMongoId,
+  IsNumber,
+  IsOptional,
+} from 'class-validator';
+import { ObjectId } from 'mongoose';
 
 export class GetChatListParams {
-    @IsMongoId()
-    @IsOptional()
-    user?: ObjectId;
+  @IsMongoId()
+  @IsOptional()
+  user?: ObjectId;
 
-    @IsBoolean()
-    @IsDefined()
-    isActive: boolean
+  @IsBoolean()
+  @IsDefined()
+  isActive: boolean;
 
-    @IsNumber()
-    @IsOptional()
-    limit?: number;
+  @IsNumber()
+  @IsOptional()
+  limit?: number;
 
-    @IsNumber()
-    @IsOptional()
-    offset?: number;
+  @IsNumber()
+  @IsOptional()
+  offset?: number;
 }

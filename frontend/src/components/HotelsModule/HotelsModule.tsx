@@ -1,32 +1,32 @@
-import { HotelRequest, useGetHotelsQuery } from "../../services/hotelAPI";
-import React, { useState } from "react";
-import { Handler } from "../../features/handlers/Handler";
-import { Button, Card, Container, Form } from "react-bootstrap";
-import { HotelCard } from "./HotelCardModule/HotelCard";
-import { LoadingBox } from "../utilites-components/Loading/LoadingBox";
+import { HotelRequest, useGetHotelsQuery } from '../../services/hotelAPI';
+import React, { useState } from 'react';
+import { Handler } from '../../features/handlers/Handler';
+import { Button, Card, Form } from 'react-bootstrap';
+import { HotelCard } from './HotelCardModule/HotelCard';
+import { LoadingBox } from '../utilites-components/Loading/LoadingBox';
 
 
-export function HotelsModule () {
-    const initialState: HotelRequest = {
-        limit: 10,
-        offset: 0,
-        title: ''
-    }
+export function HotelsModule() {
+  const initialState: HotelRequest = {
+    limit: 10,
+    offset: 0,
+    title: '',
+  };
 
-    const [ formState, setForm ] = useState( initialState );
-    const { data: hotels, isLoading, isFetching, refetch } = useGetHotelsQuery( formState, { refetchOnFocus: true })
+  const [ formState, setForm ] = useState( initialState );
+  const { data: hotels, isLoading, isFetching, refetch } = useGetHotelsQuery( formState, { refetchOnFocus: true });
 
-    const handlers = {
-        onSubmit: (e: React.FormEvent) => {
-            e.preventDefault()
-            refetch()
-        },
+  const handlers = {
+    onSubmit: (e: React.FormEvent) => {
+      e.preventDefault();
+      refetch();
+    },
 
-        onChangeInput: (e: React.ChangeEvent) => Handler.onChangeInput<HotelRequest>(e, setForm)
-    }
+    onChangeInput: (e: React.ChangeEvent) => Handler.onChangeInput<HotelRequest>(e, setForm),
+  };
 
     
-    return ( 
+  return ( 
         <> 
             <Card className="mb-3">
                 <Card.Body>
@@ -62,5 +62,5 @@ export function HotelsModule () {
 
 
         </>
-    )
+  );
 }

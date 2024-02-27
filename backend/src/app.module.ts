@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
-import configuration from './config/configuration' 
+import configuration from './config/configuration';
 import { UserModule } from './user/user.module';
 import { HotelModule } from './hotel/hotel.module';
 import { ReservationModule } from './reservation/reservation.module';
@@ -12,16 +12,15 @@ import { FileModule } from './file-module/file-module.module';
 import { AppGateway } from './app.gateway';
 import { SocketModule } from './socket/socket.module';
 
-
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [configuration]
+      load: [configuration],
     }),
 
     MongooseModule.forRootAsync({
-      useClass: MongooseConfigService
+      useClass: MongooseConfigService,
     }),
 
     EventEmitterModule.forRoot(),
@@ -34,8 +33,6 @@ import { SocketModule } from './socket/socket.module';
     SocketModule,
   ],
   controllers: [],
-  providers: [
-    AppGateway
-  ],
+  providers: [AppGateway],
 })
 export class AppModule {}

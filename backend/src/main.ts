@@ -7,14 +7,14 @@ async function bootstrap() {
   app.enableCors({
     credentials: true,
     origin: true,
-    exposedHeaders: ['Authorization']
+    exposedHeaders: ['Authorization'],
   });
   app.use(cookieParser());
 
   //dev. создает искусственную задержку
-  app.use((req, res, next) => {
-    setTimeout(() => next(), 2000);
-});
+  // app.use((req, res, next) => {
+  //   setTimeout(() => next(), 2000);
+  // });
   await app.listen(process.env.PORT);
 }
 bootstrap();

@@ -1,23 +1,21 @@
-import { ObjectType } from "typescript";
-import { IUserDto } from "./interfaces/User.interface.dto";
-import { User } from "../../interfaces/User.interface";
-import { Button, Card, ListGroup, Stack } from "react-bootstrap";
-import { Image } from "../utilites-components/Image";
-import { Link } from "react-router-dom";
-import { useCheckRoles } from "../../hooks/useCheckRoles";
-import { Role } from "../../config/roles.enum";
+import { User } from '../../interfaces/User.interface';
+import { Button, Card, ListGroup, Stack } from 'react-bootstrap';
+import { Image } from '../utilites-components/Image';
+import { Link } from 'react-router-dom';
+import { useCheckRoles } from '../../hooks/useCheckRoles';
+import { Role } from '../../config/roles.enum';
 
-export default function UserCard ({user}: {user: User}) {
-    const isAllow = useCheckRoles()
+export default function UserCard({ user }: { user: User }) {
+  const isAllow = useCheckRoles();
 
-    return (
+  return (
         <Card>
             <Stack direction="horizontal" gap={2}>
                 <Image attributes={{
-                    src: "https://picsum.photos/100/100", 
-                    fluid: true, 
-                    rounded: true,
-                    className: 'm-4'
+                  src: 'https://picsum.photos/100/100', 
+                  fluid: true, 
+                  rounded: true,
+                  className: 'm-4',
                 }}/>
                 <Card.Body>
                     <Card.Title>{ user.name }</Card.Title>
@@ -41,5 +39,5 @@ export default function UserCard ({user}: {user: User}) {
                 </Card.Footer>
             }
         </Card>
-    )
+  );
 }

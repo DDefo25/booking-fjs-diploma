@@ -1,24 +1,24 @@
-import { Navbar, Image, ListGroup } from "react-bootstrap"
-import { Role } from "../../config/roles.enum"
-import { Link } from "react-router-dom"
-import { useCheckRoles } from "../../hooks/useCheckRoles"
+import { Image, ListGroup } from 'react-bootstrap';
+import { Role } from '../../config/roles.enum';
+import { Link } from 'react-router-dom';
+import { useCheckRoles } from '../../hooks/useCheckRoles';
 
 export interface ISideBarLink {
-        path: string,
-        title: string,
-        img?: string,
-        allowedRoles?: Role[]
+  path: string,
+  title: string,
+  img?: string,
+  allowedRoles?: Role[]
 } 
 
-export const SideBarLink = ({params :{
-    path,
-    title,
-    img = 'https://picsum.photos/30/30',
-    allowedRoles
-}}: {params: ISideBarLink} ) => {
-    const isAllow = useCheckRoles()
+export const SideBarLink = ({ params :{
+  path,
+  title,
+  img = 'https://picsum.photos/30/30',
+  allowedRoles,
+} }: { params: ISideBarLink } ) => {
+  const isAllow = useCheckRoles();
 
-    return (
+  return (
         <ListGroup.Item hidden={ allowedRoles && !isAllow(allowedRoles) }>
             <Link to={path}>
                 <Image
@@ -32,5 +32,5 @@ export const SideBarLink = ({params :{
                 {title}
             </Link>
         </ListGroup.Item>
-    )
-}
+  );
+};

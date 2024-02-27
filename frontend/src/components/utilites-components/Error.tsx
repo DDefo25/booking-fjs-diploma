@@ -1,17 +1,17 @@
-import { useState } from "react";
-import { Button, Modal } from "react-bootstrap";
+import { useState } from 'react';
+import { Button, Modal } from 'react-bootstrap';
 
-export const ErrorModal = ({error, handlerOnClose = () => {}}: {error: string, handlerOnClose?: any}) => {
-    const [show, setShow] = useState(true);
+export const ErrorModal = ({ error, handlerOnClose = () => {} }: { error: string, handlerOnClose?: any }) => {
+  const [show, setShow] = useState(true);
 
-    const handlers = {
-        onClose: () => {
-            setShow(false)
-            handlerOnClose()
-        }
-    }
+  const handlers = {
+    onClose: () => {
+      setShow(false);
+      handlerOnClose();
+    },
+  };
   
-    return (
+  return (
       <>
         <Modal show={show} onHide={handlers.onClose}>
           <Modal.Header closeButton>
@@ -25,5 +25,5 @@ export const ErrorModal = ({error, handlerOnClose = () => {}}: {error: string, h
           </Modal.Footer>
         </Modal>
       </>
-    );
-}
+  );
+};

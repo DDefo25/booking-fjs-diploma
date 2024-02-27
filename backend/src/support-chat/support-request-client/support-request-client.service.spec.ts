@@ -9,7 +9,9 @@ describe('SupportRequestClientService', () => {
       providers: [SupportRequestClientService],
     }).compile();
 
-    service = module.get<SupportRequestClientService>(SupportRequestClientService);
+    service = module.get<SupportRequestClientService>(
+      SupportRequestClientService,
+    );
   });
 
   it('should be defined', () => {

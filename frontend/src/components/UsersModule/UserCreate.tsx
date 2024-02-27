@@ -1,90 +1,90 @@
-import { Button, Card, Form, Row } from "react-bootstrap";
-import Col from 'react-bootstrap/Col'
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { CreateUserRequest, useCreateUserMutation } from "../../services/userAPI";
-import { Role } from "../../config/roles.enum";
-import { Handler } from "../../features/handlers/Handler";
-import { Loading } from "../utilites-components/Loading/Loading";
-import { useTypedSelector } from "../../store/store";
-import { selectUser } from "../../features/slices/authSlice";
+import { Button, Card, Form, Row } from 'react-bootstrap';
+import Col from 'react-bootstrap/Col';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { CreateUserRequest, useCreateUserMutation } from '../../services/userAPI';
+import { Role } from '../../config/roles.enum';
+import { Handler } from '../../features/handlers/Handler';
+import { Loading } from '../utilites-components/Loading/Loading';
+import { useTypedSelector } from '../../store/store';
+import { selectUser } from '../../features/slices/authSlice';
 
-interface CreateUserRequestExtended extends CreateUserRequest{
-    passwordRepeat: string,
-    validated: boolean,
-    firstName: string,
-    lastName: string
-    middleName: string
+interface CreateUserRequestExtended extends CreateUserRequest {
+  passwordRepeat: string,
+  validated: boolean,
+  firstName: string,
+  lastName: string
+  middleName: string
 }
 
-export function UserCreate () {
+export function UserCreate() {
 
-    const user = useTypedSelector( selectUser )
+  const user = useTypedSelector( selectUser );
 
-    const initialState: CreateUserRequestExtended = {
-        name: '',
-        email: '',
-        password: '',
-        contactPhone: '',
-        role: Role.Client,
-        requestRole: user && user.role,
+  const initialState: CreateUserRequestExtended = {
+    name: '',
+    email: '',
+    password: '',
+    contactPhone: '',
+    role: Role.Client,
+    requestRole: user && user.role,
 
-        firstName: '',
-        lastName: '',
-        middleName: '',
-        passwordRepeat: '',
-        validated: false
-    }
+    firstName: '',
+    lastName: '',
+    middleName: '',
+    passwordRepeat: '',
+    validated: false,
+  };
 
-    const navigate = useNavigate()
-    const [ formState, setForm ] = useState( initialState )
-    const [ createUser, { isLoading }] = useCreateUserMutation()
+  const navigate = useNavigate();
+  const [ formState, setForm ] = useState( initialState );
+  const [ createUser, { isLoading }] = useCreateUserMutation();
 
-    const isEqualPasswords = () => formState.password === formState.passwordRepeat
+  const isEqualPasswords = () => formState.password === formState.passwordRepeat;
 
-    const handlers = {
-        onChangeInput: (e: React.ChangeEvent) => Handler.onChangeInput<CreateUserRequestExtended>(e, setForm),
+  const handlers = {
+    onChangeInput: (e: React.ChangeEvent) => Handler.onChangeInput<CreateUserRequestExtended>(e, setForm),
 
-        onChangeInputNames: ({target: {name, value}}: React.ChangeEvent<HTMLInputElement>) => {
-            setForm((prev) => ({
-                ...prev,
-                [name]: value,
-                name: `${prev.lastName} ${prev.firstName} ${prev.middleName}`
-            }))
+    onChangeInputNames: ({ target: { name, value } }: React.ChangeEvent<HTMLInputElement>) => {
+      setForm((prev) => ({
+        ...prev,
+        [name]: value,
+        name: `${prev.lastName} ${prev.firstName} ${prev.middleName}`,
+      }));
 
-        },
+    },
 
-        onSubmit: (e: React.FormEvent<HTMLFormElement>) => {
-            const form = e.currentTarget;
+    onSubmit: (e: React.FormEvent<HTMLFormElement>) => {
+      const form = e.currentTarget;
 
-            if (form.checkValidity() === false) {
-                e.preventDefault();
-                e.stopPropagation();
-            } else {
-                const {
-                    firstName,
-                    lastName,
-                    middleName,
-                    passwordRepeat,
-                    validated,
-                    ...requestData
-                } = formState
+      if (form.checkValidity() === false) {
+        e.preventDefault();
+        e.stopPropagation();
+      } else {
+        const {
+          firstName,
+          lastName,
+          middleName,
+          passwordRepeat,
+          validated,
+          ...requestData
+        } = formState;
 
-                createUser(requestData).then(({ data }: any) => {
-                    navigate(`..`)
-                })
-            }
+        createUser(requestData).then(({ data }: any) => {
+          navigate('..');
+        });
+      }
             
-            setForm((prev) => ({
-                ...prev, 
-                validated: true
-            }))
-        },
-    }
+      setForm((prev) => ({
+        ...prev, 
+        validated: true,
+      }));
+    },
+  };
 
-    if (isLoading) return <Loading />
+  if (isLoading) return <Loading />;
 
-    return (
+  return (
         <Card>
             <Form 
                 noValidate 
@@ -190,13 +190,13 @@ export function UserCreate () {
                                         onChange={ handlers.onChangeInput }
                                     >
                                     { Object.values(Role).map( (role, index) => {
-                                        if (role !== 'common') {
-                                            return (
+                                      if (role !== 'common') {
+                                        return (
                                                 <option key={index} value={role}> 
                                                     {role} 
                                                 </option>
-                                            )
-                                        }
+                                        );
+                                      }
                                     })}
                                 </Form.Select>
                             </Form.Group>
@@ -212,5 +212,5 @@ export function UserCreate () {
                 </Card.Body>      
             </Form>
         </Card>
-    )
+  );
 }

@@ -1,27 +1,33 @@
-import { IsBoolean, IsDefined, IsMongoId, IsNumber, IsOptional, IsString} from "class-validator";
-import { ObjectId, Schema } from "mongoose";
+import {
+  IsBoolean,
+  IsDefined,
+  IsMongoId,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { ObjectId } from 'mongoose';
 
 export class UpdateHotelRoomDto {
-    @IsString()
-    @IsDefined()
-    description: string;
+  @IsString()
+  @IsDefined()
+  description: string;
 
-    @IsString()
-    @IsDefined()
-    title: string;
+  @IsString()
+  @IsDefined()
+  title: string;
 
-    @IsMongoId()
-    @IsDefined()
-    hotel: ObjectId;
+  @IsMongoId()
+  @IsDefined()
+  hotel: ObjectId;
 
-    @IsBoolean()
-    @IsDefined()
-    isEnabled?: boolean;
+  @IsBoolean()
+  @IsDefined()
+  isEnabled?: boolean;
 
-    @IsOptional()
-    imagesFiles: Express.Multer.File[];
+  @IsOptional()
+  imagesFiles: Express.Multer.File[];
 
-    @IsString()
-    @IsDefined()
-    images: string[];
+  @IsString()
+  @IsDefined()
+  images: string[];
 }

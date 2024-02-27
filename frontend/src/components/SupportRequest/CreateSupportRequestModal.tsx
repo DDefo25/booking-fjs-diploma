@@ -1,33 +1,33 @@
-import { ChangeEvent, FormEvent, useState } from "react";
-import { Button, Form, Modal } from "react-bootstrap";
-import { Handler } from "../../features/handlers/Handler";
-import { CreateSupportRequest, useCreateSupportRequestMutation } from "../../services/supportRequestAPI";
+import { ChangeEvent, FormEvent, useState } from 'react';
+import { Button, Form, Modal } from 'react-bootstrap';
+import { Handler } from '../../features/handlers/Handler';
+import { CreateSupportRequest, useCreateSupportRequestMutation } from '../../services/supportRequestAPI';
 
 
 export const CreateSupportRequestModal = ({ state, dispatch }: { state: boolean, dispatch: React.Dispatch<boolean> }) => {  
-    const initialState: CreateSupportRequest = {
-      text: ''
-    }
-    const [ formState, setForm ] = useState(initialState)
+  const initialState: CreateSupportRequest = {
+    text: '',
+  };
+  const [ formState, setForm ] = useState(initialState);
 
-    const [ createSupportRequest, { isLoading } ] = useCreateSupportRequestMutation()
+  const [ createSupportRequest, { isLoading } ] = useCreateSupportRequestMutation();
 
-    const handlers = {
-        onSubmit: (e: FormEvent) => {
-          e.preventDefault()
-          createSupportRequest( formState )
-          if (!isLoading) handlers.onClose()
-        },
+  const handlers = {
+    onSubmit: (e: FormEvent) => {
+      e.preventDefault();
+      createSupportRequest( formState );
+      if (!isLoading) handlers.onClose();
+    },
 
-        onClose: () => {
-          setForm(() => initialState)
-          dispatch(false)
-        },
+    onClose: () => {
+      setForm(() => initialState);
+      dispatch(false);
+    },
 
-        onChange: (e: ChangeEvent) => Handler.onChangeInput<CreateSupportRequest>(e, setForm)
-    }
+    onChange: (e: ChangeEvent) => Handler.onChangeInput<CreateSupportRequest>(e, setForm),
+  };
   
-    return (
+  return (
       <>
         <Modal show={ state } onHide={handlers.onClose}>
           <Modal.Header closeButton>
@@ -65,5 +65,5 @@ export const CreateSupportRequestModal = ({ state, dispatch }: { state: boolean,
           </Modal.Footer>
         </Modal>
       </>
-    );
-}
+  );
+};

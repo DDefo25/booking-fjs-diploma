@@ -1,44 +1,44 @@
-import { Button, Container, Nav, OverlayTrigger, Popover } from "react-bootstrap"
-import LoginPopover from "./PopoverLogin"
-import { useState } from 'react'
-import RegisterPopover from "./PopoverRegister"
+import { Button, Container, Nav, OverlayTrigger, Popover } from 'react-bootstrap';
+import LoginPopover from './PopoverLogin';
+import { useState } from 'react';
+import RegisterPopover from './PopoverRegister';
 
-const placement = 'bottom'
+const placement = 'bottom';
 
-export default function GuestGreeting () {
-    const navs = {
-        login: 'Войти', 
-        register: 'Зарегистироваться'
-    }
+export default function GuestGreeting() {
+  const navs = {
+    login: 'Войти', 
+    register: 'Зарегистироваться',
+  };
 
-    const [navKey, setNavKey] = useState('login')
+  const [navKey, setNavKey] = useState('login');
 
-    const handleSelect = (selectedKey: any) => {
-        setNavKey(selectedKey)
-    }
+  const handleSelect = (selectedKey: any) => {
+    setNavKey(selectedKey);
+  };
 
-    const navsItems = Object.entries(navs).map((entry) => {
-        const [key, value] = entry
-        return (
-        <Nav.Item>
+  const navsItems = Object.entries(navs).map((entry, index) => {
+    const [key, value] = entry;
+    return (
+        <Nav.Item key={index}>
             <Nav.Link key={key} eventKey={key}>{value}</Nav.Link>
         </Nav.Item>
-        )
-    })
+    );
+  });
 
-    const Forms = ({navKey}: {navKey: string}) => {
-        switch (navKey) {
-            case 'login': 
-                return <LoginPopover />
-            case 'register': 
-                return <RegisterPopover />
-            default:
-                return <LoginPopover />
-        }
+  const Forms = ({ navKeyType }: { navKeyType: string }) => {
+    switch (navKeyType) {
+      case 'login': 
+        return <LoginPopover />;
+      case 'register': 
+        return <RegisterPopover />;
+      default:
+        return <LoginPopover />;
     }
+  };
     
     
-    return (
+  return (
         <Container >
             <OverlayTrigger
                 trigger="click"
@@ -57,12 +57,12 @@ export default function GuestGreeting () {
                         >
                         {navsItems}
                     </Nav>
-                    <Forms navKey={navKey} />
+                    <Forms navKeyType={navKey} />
                 </Popover>
                 }
             >
                 <Button variant="secondary">Вход</Button>
             </OverlayTrigger>
         </Container>
-    )
+  );
 }

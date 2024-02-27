@@ -1,53 +1,51 @@
-import { ComponentPropsWithoutRef, useRef } from "react";
-import { Carousel, Col, Container, Row, CarouselProps, Form, CloseButton, Overlay, Button } from "react-bootstrap";
-import { DOWNLOAD_IMAGE_URL, SERVER_URL } from "../../../config/config";
-import { HandlersForm } from "../../../features/handlers/Handler";
-import { Image } from "../Image";
+import { useRef } from 'react';
+import { Carousel, Col, Container, Row, CarouselProps, Form, CloseButton } from 'react-bootstrap';
+import { DOWNLOAD_ASSETS_ICON_URL } from '../../../config/config';
+import { HandlersForm } from '../../../features/handlers/Handler';
+import { Image } from '../Image';
 
 interface InputGroupProps extends CarouselProps {
-    imagesPreview: string[],
-    imagesInRow: number,
-    handlers: HandlersForm,
+  imagesPreview: string[],
+  imagesInRow: number,
+  handlers: HandlersForm,
 }
 
-const emptyImageSrc = `\\assets\\img\\add-image-icon.png`
-
 export function CarouselImagesAdd({ imagesPreview, imagesInRow, handlers, ...props }: InputGroupProps) {
-    const imagesPreviewComponents = imagesPreview.map((image, index) => {
-        return (
-            <Col key={index} style={{position: 'relative', display: 'flex', justifyContent: 'center'}}>
+  const imagesPreviewComponents = imagesPreview.map((image, index) => {
+    return (
+            <Col key={index} style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
                 <Image 
-                    attributes={{src: image, rounded: true}} 
+                    attributes={{ src: image, rounded: true }} 
                     styleAttr={{ 
-                        display: 'block',
-                        maxHeight: '30vh', 
-                        maxWidth: '10vw', 
-                        width: 'auto',
-                        height: 'auto',
-                        border: 'dashed 1px purple' 
+                      display: 'block',
+                      maxHeight: '30vh', 
+                      maxWidth: '10vw', 
+                      width: 'auto',
+                      height: 'auto',
+                      border: 'dashed 1px purple', 
                     }}
                 />
-                <CloseButton style={{position: 'absolute', top: 10, right: 10}} onClick={() => { if (handlers && handlers.onDeletePreview) handlers.onDeletePreview(index)}}/>
+                <CloseButton style={{ position: 'absolute', top: 10, right: 10 }} onClick={() => { if (handlers && handlers.onDeletePreview) handlers.onDeletePreview(index);}}/>
             </Col>
-        )
-    })
+    );
+  });
 
-    const filePickerRef = useRef<HTMLInputElement>(null)
+  const filePickerRef = useRef<HTMLInputElement>(null);
 
-    const addComponent = (
+  const addComponent = (
         <Col>
             <Image 
                 attributes={{
-                    src: `${DOWNLOAD_IMAGE_URL}?img_path=${emptyImageSrc}`, 
-                    rounded: true, 
-                    className: "ms-5 m-3",
-                    onClick: () => filePickerRef.current?.click()
+                  src: DOWNLOAD_ASSETS_ICON_URL + 'add-image-icon.svg', 
+                  rounded: true, 
+                  className: 'ms-5 m-3',
+                  onClick: () => filePickerRef.current?.click(),
                 }} 
                 styleAttr={{ 
-                    display: 'block',
-                    minHeight: '10vh', 
-                    border: 'solid 1px grey',
-                    cursor: "pointer" 
+                  display: 'block',
+                  minHeight: '10vh', 
+                  border: 'solid 1px grey',
+                  cursor: 'pointer', 
                 }}
             />
             <Form.Control 
@@ -59,11 +57,11 @@ export function CarouselImagesAdd({ imagesPreview, imagesInRow, handlers, ...pro
                 accept="image/png, image/jpg, image/jpeg, image/webp" 
                 hidden/>
         </Col>
-    )
+  );
 
-    const imagesSliced = []
-    for (let i = 0; i < Math.ceil((imagesPreviewComponents.length + 1) / imagesInRow); i++) {
-        imagesSliced[i] = (
+  const imagesSliced = [];
+  for (let i = 0; i < Math.ceil((imagesPreviewComponents.length + 1) / imagesInRow); i++) {
+    imagesSliced[i] = (
             <Carousel.Item  key={i} >
                 <Container>
                     <Row>
@@ -71,12 +69,12 @@ export function CarouselImagesAdd({ imagesPreview, imagesInRow, handlers, ...pro
                     </Row>
                 </Container>
             </Carousel.Item>
-            )
-    }
+    );
+  }
     
-    return (
+  return (
         <Carousel {...props}>
             {imagesSliced}
         </Carousel>
-    );
+  );
 }

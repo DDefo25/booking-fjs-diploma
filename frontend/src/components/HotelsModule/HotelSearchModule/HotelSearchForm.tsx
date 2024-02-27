@@ -1,14 +1,14 @@
-import { Button, Card, Form } from "react-bootstrap";
-import { useTypedSelector } from "../../../store/store";
-import { selectReservationDates } from "../../../features/slices/reservationDateSlice";
+import { Button, Card, Form } from 'react-bootstrap';
+import { useTypedSelector } from '../../../store/store';
+import { selectReservationDates } from '../../../features/slices/reservationDateSlice';
 
 
 
 
-export function HotelSearchForm ({handlers, formState}: {handlers: any, formState: any}) {
-    const { dateStart, dateEnd } = useTypedSelector( selectReservationDates )
+export function HotelSearchForm({ handlers, formState }: { handlers: any, formState: any }) {
+  const { dateStart, dateEnd } = useTypedSelector( selectReservationDates );
 
-    return (
+  return (
         <Card className="mb-3">
                 <Card.Body>
                     <Card.Title>Поиск гостиницы</Card.Title>
@@ -49,5 +49,5 @@ export function HotelSearchForm ({handlers, formState}: {handlers: any, formStat
                     </Form> 
                 </Card.Body>
         </Card>
-    )
+  );
 }

@@ -1,69 +1,69 @@
-import { Button, Card, Form, Stack } from "react-bootstrap";
-import { useNavigate, useParams } from "react-router-dom";
-import { HotelRoomEditRequest, useEditHotelRoomMutation, useGetHotelRoomQuery } from "../../../services/hotelAPI";
-import { MutableRefObject, useEffect, useRef, useState } from "react";
-import { Loading } from "../../utilites-components/Loading/Loading";
-import { CarouselImagesEdit } from "../../utilites-components/CarouselImage/CarouselImagesEdit";
-import { Handler } from "../../../features/handlers/Handler";
+import { Button, Card, Form, Stack } from 'react-bootstrap';
+import { useNavigate, useParams } from 'react-router-dom';
+import { HotelRoomEditRequest, useEditHotelRoomMutation, useGetHotelRoomQuery } from '../../../services/hotelAPI';
+import { MutableRefObject, useEffect, useRef, useState } from 'react';
+import { Loading } from '../../utilites-components/Loading/Loading';
+import { CarouselImagesEdit } from '../../utilites-components/CarouselImage/CarouselImagesEdit';
+import { Handler } from '../../../features/handlers/Handler';
 
-export function HotelRoomCardEdit () {
-    const { roomId } = useParams()
-    const navigate = useNavigate()
+export function HotelRoomCardEdit() {
+  const { roomId } = useParams();
+  const navigate = useNavigate();
 
-    const { data: hotelRoom, isLoading } = useGetHotelRoomQuery(roomId!, { refetchOnMountOrArgChange: true})
-    const [ editHotelRoom, { isLoading: isLoadingEdit } ] = useEditHotelRoomMutation()
+  const { data: hotelRoom, isLoading } = useGetHotelRoomQuery(roomId!, { refetchOnMountOrArgChange: true });
+  const [ editHotelRoom, { isLoading: isLoadingEdit } ] = useEditHotelRoomMutation();
 
-    const initialState: HotelRoomEditRequest = {
-        id: '',
-        title: '',
-        hotel: '',
-        images: [],
-        description: '',
+  const initialState: HotelRoomEditRequest = {
+    id: '',
+    title: '',
+    hotel: '',
+    images: [],
+    description: '',
+    imagesFiles: [],
+    imagesPreview: [],
+  };
+
+  const [ formState, setForm ] = useState( initialState );
+  const formRef = useRef() as MutableRefObject<HTMLFormElement>;
+
+  useEffect(() => {
+    if (hotelRoom) {
+      const { _id, images, description, hotel, title } = hotelRoom;
+      
+      setForm({
+        id: _id!,
+        title,
+        hotel,
+        images,
+        description,
         imagesFiles: [],
         imagesPreview: [],
+      });
     }
+  }, [hotelRoom]);
 
-    const [ formState, setForm ] = useState( initialState )
-    const formRef = useRef() as MutableRefObject<HTMLFormElement>
+  const handlers = {
+    onSubmit: (event: React.FormEvent) => {
+      event.preventDefault();
 
-    useEffect(() => {
-        if (hotelRoom) {
-            const { _id, images, description, hotel, title } = hotelRoom
-            console.log('hotelRoom', hotelRoom)
-            setForm({
-                id: _id!,
-                title,
-                hotel,
-                images,
-                description,
-                imagesFiles: [],
-                imagesPreview: []
-            })
-        }
-    }, [hotelRoom])
+      editHotelRoom({ id: roomId, data: formState })
+        .then(() => navigate('..'));
+    },
 
-    const handlers = {
-        onSubmit: (event: React.FormEvent) => {
-            event.preventDefault()
+    onChangeInput: (e: React.ChangeEvent) => Handler.onChangeInput<HotelRoomEditRequest>( e, setForm ),
+    onChangeFile: (e: React.ChangeEvent) => Handler.onChangeFile<HotelRoomEditRequest>( e, setForm ),
+    onDelete: ( index: number ) => Handler.onDelete<HotelRoomEditRequest>( index, setForm ),
+    onDeletePreview: ( index: number ) => Handler.onDeletePreview<HotelRoomEditRequest>( index, setForm ),
+  };
 
-            editHotelRoom({id: roomId, data: formState})
-            .then(() => navigate('..'))
-        },
+  useEffect(() => {
+    
 
-        onChangeInput: (e: React.ChangeEvent) => Handler.onChangeInput<HotelRoomEditRequest>( e, setForm ),
-        onChangeFile: (e: React.ChangeEvent) => Handler.onChangeFile<HotelRoomEditRequest>( e, setForm ),
-        onDelete: ( index: number ) => Handler.onDelete<HotelRoomEditRequest>( index, setForm ),
-        onDeletePreview: ( index: number ) => Handler.onDeletePreview<HotelRoomEditRequest>( index, setForm )
-    }
+  }, [formState]);
 
-    useEffect(() => {
-        console.log('formState', formState)
+  if (isLoading) return <Loading />;
 
-    }, [formState])
-
-    if (isLoading) return <Loading />
-
-    return (
+  return (
         <>
         { hotelRoom ? 
         <Card className="mb-3">
@@ -73,7 +73,7 @@ export function HotelRoomCardEdit () {
                     imagesPreview={formState.imagesPreview} 
                     handlers={handlers} 
                     imagesInRow={3} 
-                    variant={"dark"} 
+                    variant={'dark'} 
                     className="p-4"
                     fade/>
                 <Card.Body>
@@ -114,7 +114,7 @@ export function HotelRoomCardEdit () {
                 </Card.Body>
             </Form>
         </Card>
-        : null}
+          : null}
         </>
-    )
+  );
 }

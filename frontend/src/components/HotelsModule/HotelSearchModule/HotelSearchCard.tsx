@@ -1,22 +1,21 @@
-import { Button, Card, Container, Stack } from "react-bootstrap";
-import { CarouselImages } from "../../utilites-components/CarouselImage/CarouselImages";
-import { Hotel } from "../interfaces/Hotel.interface.dto";
-import { Link } from "react-router-dom";
-import { GetHotelRoomsDto } from "../../../services/hotelAPI";
+import { Button, Card, Container, Stack } from 'react-bootstrap';
+import { CarouselImages } from '../../utilites-components/CarouselImage/CarouselImages';
+import { Hotel } from '../interfaces/Hotel.interface.dto';
+import { Link } from 'react-router-dom';
 
-export function HotelSearchCard ({hotelGrouped: { hotel }}: {hotelGrouped: { hotel: Hotel}}) {
-    const { _id } = hotel
-    return (
+export function HotelSearchCard({ hotelGrouped: { hotel } }: { hotelGrouped: { hotel: Hotel } }) {
+  const { _id } = hotel;
+  return (
         <Card className="mb-3" style={{ minHeight: '30vh' }}>
             <Stack direction="horizontal" gap={1}>
                 <CarouselImages 
                     images={hotel.images} 
                     imagesInRow={1} 
-                    variant={"dark"} 
+                    variant={'dark'} 
                     className="p-4"
                     style={{ 
-                        minWidth: '16vw', 
-                        minHeight: '20vh' 
+                      minWidth: '16vw', 
+                      minHeight: '20vh', 
                     }}
                 />
                 <Card.Body>
@@ -28,5 +27,5 @@ export function HotelSearchCard ({hotelGrouped: { hotel }}: {hotelGrouped: { hot
                 </Card.Body>
             </Stack>
         </Card>
-    )
+  );
 }

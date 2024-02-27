@@ -1,16 +1,16 @@
-import { IsDate, IsDefined, IsMongoId} from "class-validator";
-import { ObjectId } from "mongoose";
+import { IsDate, IsDefined, IsMongoId } from 'class-validator';
+import { ObjectId } from 'mongoose';
 
-export class MarkMessageAsReadDto  {
-    @IsMongoId()
-    @IsDefined()
-    user: ObjectId;
+export class MarkMessageAsReadDto {
+  @IsMongoId()
+  @IsDefined()
+  user: ObjectId;
 
-    @IsMongoId()
-    @IsDefined()
-    supportRequest: ObjectId;
+  @IsMongoId()
+  @IsDefined()
+  supportRequest: ObjectId;
 
-    @IsDate()
-    @IsDefined()
-    createdBefore: Date
+  @IsDate()
+  @IsDefined()
+  createdBefore: Date;
 }

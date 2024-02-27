@@ -1,22 +1,22 @@
 import axios from 'axios';
 import { SERVER_URL } from './config';
 
-const baseURL = process.env.NODE_ENV === "development"
+const baseURL = process.env.NODE_ENV === 'development'
   ? SERVER_URL
-  : ""
+  : '';
 
-  console.log('process.env.NODE_ENV', process.env.NODE_ENV)
-  // console.log('baseURL', baseURL)
+
+// 
 
 const instance = axios.create({
-    baseURL,
-    withCredentials: true,
-})
+  baseURL,
+  withCredentials: true,
+});
 
 instance.interceptors.request.use( request => {
-  const token = localStorage.getItem("token")
-  request.headers.Authorization = token ? `Bearer ${token}` : null
-  return request
+  const token = localStorage.getItem('token');
+  request.headers.Authorization = token ? `Bearer ${token}` : null;
+  return request;
 }, function (error) {
   return Promise.reject(error);
 });
@@ -24,26 +24,26 @@ instance.interceptors.request.use( request => {
 
 instance.interceptors.response.use(
   response => {
-    return response
+    return response;
   }, 
   async (error) => {
-    const { config: originalRequest, response } = error
-     if ( 
-        response.status === 401 && 
+    const { config: originalRequest, response } = error;
+    if ( 
+      response.status === 401 && 
         !originalRequest._isRetry
-     ) {
-      originalRequest._isRetry = true
-       try {
-         const { data: { token }} = await instance.get("/api/auth/refresh");
-         localStorage.setItem("token", token)
-         return instance.request(originalRequest)
-       } catch (error) {
-         console.log("AUTH ERROR");
-       }
-     }
-     return Promise.reject(error);
-   }
-)
+    ) {
+      originalRequest._isRetry = true;
+      try {
+        const { data: { token } } = await instance.get('/api/auth/refresh');
+        localStorage.setItem('token', token);
+        return await instance.request(originalRequest);
+      } catch (error) {
+        
+      }
+    }
+    return Promise.reject(error);
+  },
+);
 
 
 

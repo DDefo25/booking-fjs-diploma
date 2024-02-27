@@ -1,15 +1,15 @@
-import { IsNumber, IsOptional, IsString, IsDefined } from "class-validator";
+import { IsNumber, IsString, IsDefined } from 'class-validator';
 
 export class SearchUserParams {
-    @IsNumber()
-    @IsDefined()
-    limit: number;
+  @IsNumber()
+  @IsDefined()
+  limit: number;
 
-    @IsNumber()
-    @IsDefined()
-    offset: number;
+  @IsNumber()
+  @IsDefined()
+  offset: number;
 
-    @IsString()
-    @IsDefined()
-    filter: string;
-  }
+  @IsString()
+  @IsDefined()
+  filter: string;
+}

@@ -21,7 +21,6 @@
     "date-fns": "^3.3.1",
     "dotenv": "^16.4.1",
     "dotenv-expand": "^10.0.0",
-    "http-proxy-middleware": "^2.0.6",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.0",
     "react-dom": "^18.2.0",
@@ -31,7 +30,6 @@
     "react-scripts": "5.0.1",
     "redux-persist": "^6.0.0",
     "socket.io-client": "^4.7.4",
-    "typescript": "^4.9.5",
     "uuid": "^9.0.1",
     "web-vitals": "^2.1.4"
   },
@@ -45,6 +43,16 @@
     "extends": [
       "react-app",
       "react-app/jest"
+    ],
+    "overrides": [
+      {
+        "files": ["**/*.ts?(x)"],
+        "rules": {
+          "@typescript-eslint/no-unused-vars": "off",
+          "react/react-in-jsx-scope": "off",
+          "unused-imports/no-unused-imports": "off"
+        }
+      }
     ]
   },
   "browserslist": {

@@ -7,13 +7,13 @@ export class WsExceptionFilter implements ExceptionFilter {
   catch(exception: WsException, host: ArgumentsHost) {
     const ctx = host.switchToWs();
     const client: Socket = ctx.getClient();
-    const requestData = ctx.getData()
+    const requestData = ctx.getData();
 
     client.emit('error', {
       name: exception.name,
       message: exception.message,
       requestData,
-      timestamp: new Date().toISOString()
-    })
+      timestamp: new Date().toISOString(),
+    });
   }
 }

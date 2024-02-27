@@ -1,8 +1,8 @@
-import { Spinner, SpinnerProps } from "react-bootstrap";
+import { Spinner, SpinnerProps } from 'react-bootstrap';
 import './LoadingBox.css';
 
 export function LoadingBox(props: React.HTMLAttributes<HTMLBodyElement> & SpinnerProps & React.DOMAttributes<HTMLBodyElement>) {
-    return (
+  return (
       <>
       <div className="loading-box">
         <Spinner className="loading-box-spinner" animation="border" role="status" {...props}>
@@ -10,5 +10,5 @@ export function LoadingBox(props: React.HTMLAttributes<HTMLBodyElement> & Spinne
         </Spinner> 
       </div>
       </> 
-    )
+  );
 }

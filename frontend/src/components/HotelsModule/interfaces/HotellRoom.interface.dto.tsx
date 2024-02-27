@@ -1,4 +1,4 @@
-import { Hotel } from "./Hotel.interface.dto";
+import { Hotel } from './Hotel.interface.dto';
 
 export interface HotelRoom {
   _id: string,

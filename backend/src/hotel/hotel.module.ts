@@ -1,4 +1,4 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { HotelService } from './hotel.service';
 import { HotelRoomService } from './hotel-room/hotel-room.service';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -8,28 +8,21 @@ import { HotelController } from './hotel.controller';
 import { HotelRoomController } from './hotel-room/hotel-room.controller';
 import { MulterModule } from '@nestjs/platform-express';
 import { MulterConfigService } from 'src/config/multer-config/multer-config.service';
-import { ReservationService } from 'src/reservation/reservation.service';
 import { ReservationModule } from 'src/reservation/reservation.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
-      {name: Hotel.name, schema: HotelSchema},
-      {name: HotelRoom.name, schema: HotelRoomSchema}
+      { name: Hotel.name, schema: HotelSchema },
+      { name: HotelRoom.name, schema: HotelRoomSchema },
     ]),
-  
+
     MulterModule.registerAsync({
       useClass: MulterConfigService,
     }),
-    ReservationModule
+    ReservationModule,
   ],
-  providers: [
-    HotelService, 
-    HotelRoomService,
-  ],
-  controllers: [
-    HotelController,
-    HotelRoomController
-  ]
+  providers: [HotelService, HotelRoomService],
+  controllers: [HotelController, HotelRoomController],
 })
 export class HotelModule {}

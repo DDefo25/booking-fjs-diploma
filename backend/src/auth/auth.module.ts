@@ -6,8 +6,6 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtConfigService } from 'src/config/jwt-config/jwt-config.service';
 import { JwtStrategy } from './jwt.strategy';
-import { RolesGuard } from './guards/http.roles.guard';
-import { APP_GUARD } from '@nestjs/core';
 import { JwtStrategyCookies } from './jwtCookies.strategy';
 import { JwtStrategyWs } from './ws.jwt.strategy';
 
@@ -16,17 +14,17 @@ import { JwtStrategyWs } from './ws.jwt.strategy';
     forwardRef(() => UserModule),
     PassportModule,
     JwtModule.registerAsync({
-      useClass: JwtConfigService
-    })
+      useClass: JwtConfigService,
+    }),
   ],
   providers: [
-    AuthService, 
+    AuthService,
     JwtStrategy,
     JwtStrategyCookies,
     JwtStrategyWs,
-    JwtConfigService
+    JwtConfigService,
   ],
   controllers: [AuthController],
-  exports: [AuthService]
+  exports: [AuthService],
 })
 export class AuthModule {}

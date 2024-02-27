@@ -11,9 +11,9 @@ import { Role } from './config/roles.enum';
 import { SocketClient } from './socket/SocketClient';
 
 function App() {
-  SocketClient()
+  SocketClient();
 
-  const isAllow = useCheckRoles()  
+  const isAllow = useCheckRoles();  
 
   return (<>
     <div className='position-relative'>
@@ -31,7 +31,7 @@ function App() {
           <Outlet />
         </Col>
       </Container>
-      <Col md={{ span: 2, offset: 1 }} className='fixed-top' style={{top: '12vh'}}>
+      <Col md={{ span: 2, offset: 1 }} className='fixed-top' style={{ top: '12vh' }}>
           <SideBar />
       </Col>
 
