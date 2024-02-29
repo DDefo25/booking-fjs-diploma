@@ -46,18 +46,18 @@ export function UserCreate() {
     onChangeInput: (e: React.ChangeEvent) => Handler.onChangeInput<CreateUserRequestExtended>(e, setForm),
 
     onChangeInputNames: ({ target: { name, value } }: React.ChangeEvent<HTMLInputElement>) => {
-      setForm((prev) => ({
-        ...prev,
+      setForm({
+        ...formState,
         [name]: value,
-        name: `${prev.lastName} ${prev.firstName} ${prev.middleName}`,
-      }));
+        name: `${formState.lastName} ${formState.firstName} ${formState.middleName}`,
+      });
 
     },
 
     onSubmit: (e: React.FormEvent<HTMLFormElement>) => {
       const form = e.currentTarget;
 
-      if (form.checkValidity() === false) {
+      if ( !form.checkValidity() ) {
         e.preventDefault();
         e.stopPropagation();
       } else {
@@ -75,10 +75,10 @@ export function UserCreate() {
         });
       }
             
-      setForm((prev) => ({
-        ...prev, 
+      setForm({
+        ...formState, 
         validated: true,
-      }));
+      });
     },
   };
 

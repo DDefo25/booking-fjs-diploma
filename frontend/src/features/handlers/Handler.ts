@@ -1,4 +1,13 @@
+import { ActionCreatorWithPayload, ThunkDispatch } from '@reduxjs/toolkit';
 import React, { ChangeEvent } from 'react';
+import { Toast, ToastState, addToast } from '../slices/toastSlice';
+import { ToastTypes } from '../../config/toasts.enums';
+import { filesValidate } from './files.validate';
+import { inputValidate } from './form.validate';
+
+export interface BaseFormState {
+  isValid: boolean[]
+}
 
 export interface HandlersForm {
   onSubmit?: (event: React.FormEvent<HTMLFormElement> ) => void,
@@ -21,7 +30,9 @@ export class Handler {
     { target: { name, value } }: React.ChangeEvent<any>, 
     dispatch: React.Dispatch<React.SetStateAction<T>>,
   ) => {
-    dispatch((prev) => ({ ...prev, [name]: value }));
+    dispatch((prev) => {
+      return { ...prev, [name]: value }
+    });
   };
 
   static onPaginationClick = <T extends { limit: number }> (
@@ -37,9 +48,11 @@ export class Handler {
   static onChangeFile = <T> (
     { target: { name, files } }: React.ChangeEvent<any>, 
     dispatch: React.Dispatch<React.SetStateAction<T>>,
+    errorHandler: any
   ) => {
-    const filesPreview = files && [...files].map(file => URL.createObjectURL(file));
-    dispatch(prev => ({ ...prev, [name]: files, imagesPreview: filesPreview! }));
+    const validatedFiles = filesValidate(files, errorHandler)
+    const filesPreview = validatedFiles && [...validatedFiles].map(file => URL.createObjectURL(file));
+    dispatch(prev => ({ ...prev, [name]: validatedFiles, imagesPreview: filesPreview! }));
   };
 
   static onDelete = <T extends { images: string[] }> ( 

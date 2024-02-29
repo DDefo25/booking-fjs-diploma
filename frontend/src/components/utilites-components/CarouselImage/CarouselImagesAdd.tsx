@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Carousel, Col, Container, Row, CarouselProps, Form, CloseButton } from 'react-bootstrap';
-import { DOWNLOAD_ASSETS_ICON_URL } from '../../../config/config';
+import { ACCEPTED_IMAGE_MIME_TYPES, DOWNLOAD_ASSETS_ICON_URL } from '../../../config/config';
 import { HandlersForm } from '../../../features/handlers/Handler';
 import { Image } from '../Image';
 
@@ -15,7 +15,10 @@ export function CarouselImagesAdd({ imagesPreview, imagesInRow, handlers, ...pro
     return (
             <Col key={index} style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
                 <Image 
-                    attributes={{ src: image, rounded: true }} 
+                    attributes={{ 
+                      src: image, 
+                      rounded: true 
+                    }} 
                     styleAttr={{ 
                       display: 'block',
                       maxHeight: '30vh', 
@@ -25,7 +28,9 @@ export function CarouselImagesAdd({ imagesPreview, imagesInRow, handlers, ...pro
                       border: 'dashed 1px purple', 
                     }}
                 />
-                <CloseButton style={{ position: 'absolute', top: 10, right: 10 }} onClick={() => { if (handlers && handlers.onDeletePreview) handlers.onDeletePreview(index);}}/>
+                <CloseButton 
+                  style={{ position: 'absolute', top: 10, right: 10 }} 
+                  onClick={() => { if (handlers && handlers.onDeletePreview) handlers.onDeletePreview(index);}}/>
             </Col>
     );
   });
@@ -54,7 +59,7 @@ export function CarouselImagesAdd({ imagesPreview, imagesInRow, handlers, ...pro
                 type="file" 
                 onChange={handlers.onChangeFile} 
                 multiple 
-                accept="image/png, image/jpg, image/jpeg, image/webp" 
+                accept={ ACCEPTED_IMAGE_MIME_TYPES }
                 hidden/>
         </Col>
   );
@@ -62,7 +67,7 @@ export function CarouselImagesAdd({ imagesPreview, imagesInRow, handlers, ...pro
   const imagesSliced = [];
   for (let i = 0; i < Math.ceil((imagesPreviewComponents.length + 1) / imagesInRow); i++) {
     imagesSliced[i] = (
-            <Carousel.Item  key={i} >
+            <Carousel.Item key={i} >
                 <Container>
                     <Row>
                         {[...imagesPreviewComponents, addComponent].slice( (i * imagesInRow), (i * imagesInRow) + imagesInRow )}

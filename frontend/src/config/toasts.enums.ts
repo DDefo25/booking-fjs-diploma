@@ -1,5 +1,5 @@
 export enum ToastTypes {
-  Error = 'error',
+  ErrorResponse = 'error-response',
   ErrorWs = 'error-ws',
   MessageSupport = 'message-support',
   Notify = 'notify',

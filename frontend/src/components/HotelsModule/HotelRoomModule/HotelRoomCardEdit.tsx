@@ -5,10 +5,13 @@ import { MutableRefObject, useEffect, useRef, useState } from 'react';
 import { Loading } from '../../utilites-components/Loading/Loading';
 import { CarouselImagesEdit } from '../../utilites-components/CarouselImage/CarouselImagesEdit';
 import { Handler } from '../../../features/handlers/Handler';
+import { useAppDispatch } from '../../../store/store';
+import { MAX_LENGTH_DESCRIPTION_HOTEL_ROOM, MAX_LENGTH_TITLE_HOTEL_ROOM } from '../../../config/config';
 
 export function HotelRoomCardEdit() {
   const { roomId } = useParams();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch()
 
   const { data: hotelRoom, isLoading } = useGetHotelRoomQuery(roomId!, { refetchOnMountOrArgChange: true });
   const [ editHotelRoom, { isLoading: isLoadingEdit } ] = useEditHotelRoomMutation();
@@ -46,12 +49,13 @@ export function HotelRoomCardEdit() {
     onSubmit: (event: React.FormEvent) => {
       event.preventDefault();
 
-      editHotelRoom({ id: roomId, data: formState })
-        .then(() => navigate('..'));
+      editHotelRoom({ id: roomId, data: formState }).then((response: any) => {
+        if (response.data) navigate('..')
+      });
     },
 
     onChangeInput: (e: React.ChangeEvent) => Handler.onChangeInput<HotelRoomEditRequest>( e, setForm ),
-    onChangeFile: (e: React.ChangeEvent) => Handler.onChangeFile<HotelRoomEditRequest>( e, setForm ),
+    onChangeFile: (e: React.ChangeEvent) => Handler.onChangeFile<HotelRoomEditRequest>( e, setForm, dispatch ),
     onDelete: ( index: number ) => Handler.onDelete<HotelRoomEditRequest>( index, setForm ),
     onDeletePreview: ( index: number ) => Handler.onDeletePreview<HotelRoomEditRequest>( index, setForm ),
   };
@@ -84,6 +88,7 @@ export function HotelRoomCardEdit() {
                                 placeholder="Название комнаты" 
                                 name='title'
                                 value={ formState.title } 
+                                maxLength={ MAX_LENGTH_TITLE_HOTEL_ROOM }
                                 onChange={ handlers.onChangeInput }
                                 disabled={ isLoadingEdit }
                                 readOnly={ isLoadingEdit }
@@ -96,6 +101,7 @@ export function HotelRoomCardEdit() {
                                 placeholder="Описание комнаты" 
                                 name='description'
                                 value={ formState.description } 
+                                maxLength={ MAX_LENGTH_DESCRIPTION_HOTEL_ROOM }
                                 onChange={ handlers.onChangeInput }
                                 disabled={ isLoadingEdit }
                                 readOnly={ isLoadingEdit }

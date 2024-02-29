@@ -23,7 +23,7 @@ export interface ErrorWs {
 }
 
 export interface ErrorToast extends BaseToast {
-  type: ToastTypes.Error,
+  type: ToastTypes.ErrorResponse,
   data: ErrorResponse,
 }
 

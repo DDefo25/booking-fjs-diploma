@@ -1,13 +1,8 @@
 import axios from 'axios';
 import { SERVER_URL } from './config';
 
-const baseURL = process.env.NODE_ENV === 'development'
-  ? SERVER_URL
-  : '';
-
-
-// 
-
+const baseURL = SERVER_URL
+  
 const instance = axios.create({
   baseURL,
   withCredentials: true,

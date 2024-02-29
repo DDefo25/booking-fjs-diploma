@@ -2,7 +2,7 @@ import { HotelRequest, useGetHotelsQuery } from '../../services/hotelAPI';
 import React, { useState } from 'react';
 import { Handler } from '../../features/handlers/Handler';
 import { Button, Card, Form } from 'react-bootstrap';
-import { HotelCard } from './HotelCardModule/HotelCard';
+import { HotelCard, HotelCardType } from './HotelCardModule/HotelCard';
 import { LoadingBox } from '../utilites-components/Loading/LoadingBox';
 
 
@@ -55,7 +55,7 @@ export function HotelsModule() {
         </Card>
             { hotels && hotels.map( hotel => (
                 <div className="loading-box-parent">
-                    <HotelCard key={hotel._id} hotel={hotel} />
+                    <HotelCard key={hotel._id} hotel={hotel} type={HotelCardType.General} />
                     { isLoading || isFetching ? <LoadingBox /> : null }
                 </div>
             ))}

@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  ParseFilePipe,
   Post,
   Put,
   Query,
@@ -23,6 +24,7 @@ import {
   AnyFilesInterceptor,
   FilesInterceptor,
 } from '@nestjs/platform-express';
+import { maxImageCount, validatorImageOption } from 'src/config/file.upload.config';
 
 @Controller('api/:role/hotels')
 export class HotelController {
@@ -41,10 +43,12 @@ export class HotelController {
     */
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @UseInterceptors(AnyFilesInterceptor())
+  @UseInterceptors(FilesInterceptor('images[]', maxImageCount))
   @Post()
   async create(
-    @UploadedFiles() images: Express.Multer.File[],
+    @UploadedFiles(
+      new ParseFilePipe({ validators: validatorImageOption })
+    ) images: Express.Multer.File[],
     @Body() data: Partial<Hotel>,
   ) {
     data.images = [...images.map((image) => image.path)];
@@ -66,11 +70,13 @@ export class HotelController {
     */
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @UseInterceptors(FilesInterceptor('imagesFiles[]', 2))
+  @UseInterceptors(FilesInterceptor('imagesFiles[]', maxImageCount))
   @Put(':id')
   async update(
     @Param('id') id: ObjectId,
-    @UploadedFiles() imagesFiles: Express.Multer.File[],
+    @UploadedFiles(
+      new ParseFilePipe({ validators: validatorImageOption, fileIsRequired: false })
+    ) imagesFiles: Express.Multer.File[],
     @Body() data: UpdateHotelParams,
   ) {
     const updateData = { ...data };

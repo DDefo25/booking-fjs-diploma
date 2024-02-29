@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Carousel, Col, Container, Row, Image as React, CarouselProps, Form, CloseButton } from 'react-bootstrap';
-import { DOWNLOAD_ASSETS_ICON_URL, DOWNLOAD_IMAGE_URL } from '../../../config/config';
+import { ACCEPTED_IMAGE_MIME_TYPES, DOWNLOAD_ASSETS_ICON_URL, DOWNLOAD_IMAGE_URL } from '../../../config/config';
 import { HandlersForm } from '../../../features/handlers/Handler';
 import { Image } from '../Image';
 
@@ -61,7 +61,12 @@ export function CarouselImagesEdit({ images = [], imagesPreview, imagesInRow, ha
                   rounded: true,
                   onClick: () => filePickerRef.current?.click(),
                 }} 
-                styleAttr={{ width: '12vw', cursor: 'pointer' }}
+                styleAttr={{ 
+                  display: 'block',
+                  minHeight: '10vh', 
+                  border: 'solid 1px grey',
+                  cursor: 'pointer', 
+                }}
             />
             <Form.Control 
                 ref={filePickerRef} 
@@ -69,7 +74,7 @@ export function CarouselImagesEdit({ images = [], imagesPreview, imagesInRow, ha
                 type="file" 
                 onChange={handlers.onChangeFile} 
                 multiple 
-                accept="image/png, image/jpg, image/jpeg, image/webp"  
+                accept={ ACCEPTED_IMAGE_MIME_TYPES }  
                 hidden/>
         </Col>
   );

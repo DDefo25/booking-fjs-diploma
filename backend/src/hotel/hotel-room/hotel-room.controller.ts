@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  ParseFilePipe,
   Post,
   Put,
   Query,
@@ -15,7 +16,6 @@ import { SearchRoomsParams } from '../interfaces/search-rooms.dto';
 import { ObjectId } from 'mongoose';
 import { HttpValidationPipe } from 'src/validation/http.validation.pipe';
 import {
-  AnyFilesInterceptor,
   FilesInterceptor,
 } from '@nestjs/platform-express';
 import { Role } from 'src/auth/roles.enum';
@@ -24,6 +24,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/http.roles.guard';
 import { UpdateHotelRoomDto } from '../interfaces/update-hotel-room.dto';
 import { CreateHotelRoomDto } from '../interfaces/create-hotel-room.dto';
+import { maxImageCount, validatorImageOption } from 'src/config/file.upload.config';
 
 @Controller('api/:role/hotel-rooms')
 export class HotelRoomController {
@@ -52,10 +53,12 @@ export class HotelRoomController {
     */
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @UseInterceptors(FilesInterceptor('images[]', 10))
+  @UseInterceptors(FilesInterceptor('images[]', maxImageCount))
   @Post()
   async create(
-    @UploadedFiles() images: Express.Multer.File[],
+    @UploadedFiles(
+      new ParseFilePipe({ validators: validatorImageOption })
+    ) images: Express.Multer.File[],
     @Body() data: CreateHotelRoomDto,
   ) {
     const newHotelRoom = {
@@ -71,10 +74,12 @@ export class HotelRoomController {
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Put(':id')
-  @UseInterceptors(AnyFilesInterceptor())
+  @UseInterceptors(FilesInterceptor('imagesFiles[]', maxImageCount))
   async update(
     @Param('id') id: ObjectId,
-    @UploadedFiles() imagesFiles: Express.Multer.File[],
+    @UploadedFiles(
+      new ParseFilePipe({ validators: validatorImageOption, fileIsRequired: false })
+    ) imagesFiles: Express.Multer.File[],
     @Body() data: UpdateHotelRoomDto,
   ) {
     const updateData = { ...data };

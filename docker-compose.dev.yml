@@ -22,8 +22,14 @@ services:
       - JWT_SECRET_KEY_REFRESH_TOKEN=secretrefresh
       - JWT_EXPIRATION_TIME_REFRESH_TOKEN=1d
       - COOKIES_EXPIRATION_TIME=8.64e+7
+    # expose: 
+    #   - 4000
     networks:
       - backend
+    # develop:
+    #   watch:
+    #     - action: sync
+
   frontend:
     build: 
       context: ./frontend
@@ -39,8 +45,11 @@ services:
       - backend
     networks:
       - backend
-    stdin_open: true
-    tty: true
+    # stdin_open: true
+    # tty: true
+    # develop:
+    #   watch:
+    #     - action: sync
 
 networks:
     backend:

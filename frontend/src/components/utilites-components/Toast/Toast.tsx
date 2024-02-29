@@ -15,7 +15,7 @@ export const Toast = ({ toast }: { toast: IToast }) => {
   const toastCard = {} as ToastCard;
 
   switch ( type ) {
-    case ToastTypes.Error: {
+    case ToastTypes.ErrorResponse: {
       const { data: { data, statusText } } = toast as ErrorToast;
       toastCard.header = statusText;
       toastCard.body = typeof data === 'string' ? data : data.message;

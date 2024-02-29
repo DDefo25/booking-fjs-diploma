@@ -5,8 +5,33 @@ import { useCheckRoles } from '../../../hooks/useCheckRoles';
 import { Role } from '../../../config/roles.enum';
 import { Link } from 'react-router-dom';
 
-export function HotelCard({ hotel }: { hotel: Hotel }) {
+export enum HotelCardType {
+    General = 'general',
+    Detail = 'detail'
+}
+
+export function HotelCard({ hotel, type }: { hotel: Hotel, type: HotelCardType }) {
   const isRole = useCheckRoles();
+
+    const Buttons = () => {
+        switch (type) {
+            case HotelCardType.General:
+            return (
+                <Link to={ `/hotel/${ hotel._id }` }>
+                    <Button variant="primary">Подробнее</Button>
+                </Link>
+            )
+            case HotelCardType.Detail:
+            return (<>
+                <Link to={`/hotel/${ hotel._id }/edit`}>
+                    <Button variant="warning">Редактировать</Button>
+                </Link>
+                <Link to={`/hotel/${ hotel._id }/add`}>
+                    <Button variant="primary">Добавить комнату</Button>
+                </Link>
+            </>)        
+        }
+    }
 
   return ( 
         <>
@@ -18,12 +43,7 @@ export function HotelCard({ hotel }: { hotel: Hotel }) {
                     <Card.Text>{hotel.description}</Card.Text>
                     { isRole([Role.Admin] ) ? 
                         <Stack direction="horizontal" gap={3}>
-                            <Link to={`/hotel/${hotel._id}/edit`}>
-                                <Button variant="warning">Редактировать</Button>
-                            </Link>
-                            <Link to={`/hotel/${hotel._id}/add`}>
-                                <Button variant="primary">Добавить комнату</Button>
-                            </Link>
+                            { Buttons() }
                         </Stack>
                       : null }
                 </Card.Body>

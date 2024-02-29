@@ -1,12 +1,15 @@
 import { Button, Card, Form } from 'react-bootstrap';
 import { useTypedSelector } from '../../../store/store';
 import { selectReservationDates } from '../../../features/slices/reservationDateSlice';
+import { useCheckRoles } from '../../../hooks/useCheckRoles';
+import { Role } from '../../../config/roles.enum';
 
 
 
 
 export function HotelSearchForm({ handlers, formState }: { handlers: any, formState: any }) {
-  const { dateStart, dateEnd } = useTypedSelector( selectReservationDates );
+    const isAllow = useCheckRoles()
+    const { dateStart, dateEnd } = useTypedSelector( selectReservationDates );
 
   return (
         <Card className="mb-3">
@@ -23,6 +26,8 @@ export function HotelSearchForm({ handlers, formState }: { handlers: any, formSt
                                     onChange={ handlers.onChange }/>
                             </Form.Group>
                         </Card.Text>
+                        { !isAllow([Role.Admin]) && 
+                        <>
                         <Card.Text>
                             <Form.Group className="mb-3" controlId="formSearchHotelStartDate">
                                 <Form.Label>Заезд</Form.Label>
@@ -45,6 +50,7 @@ export function HotelSearchForm({ handlers, formState }: { handlers: any, formSt
                                     onChange={ handlers.onChangeDate }/>
                             </Form.Group>
                         </Card.Text>
+                        </>}
                         <Button variant="primary" type="submit">Искать</Button>
                     </Form> 
                 </Card.Body>

@@ -12,14 +12,14 @@ export const rtkQueryErrorMiddleware: Middleware =
       console.warn('We got a rejected action!', action);
       const { payload: error } = action as PayloadAction<ErrorResponse>;
 
-
       if (error.status === 401) {
+        console.log('error 401', error)
         api.dispatch( logout());
       }
 
       api.dispatch( addToast({
         id: uuid(),
-        type: ToastTypes.Error,
+        type: ToastTypes.ErrorResponse,
         data: error, 
       }));
     }

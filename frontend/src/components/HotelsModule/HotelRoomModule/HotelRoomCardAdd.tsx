@@ -4,6 +4,8 @@ import { useCreateHotelRoomMutation } from '../../../services/hotelAPI';
 import { useState } from 'react';
 import { Handler } from '../../../features/handlers/Handler';
 import { CarouselImagesAdd } from '../../utilites-components/CarouselImage/CarouselImagesAdd';
+import { useAppDispatch } from '../../../store/store';
+import { MAX_LENGTH_DESCRIPTION_HOTEL_ROOM, MAX_LENGTH_TITLE_HOTEL_ROOM } from '../../../config/config';
 
 interface FormState {
   title: string,
@@ -17,6 +19,7 @@ interface FormState {
 export function HotelRoomCardAdd() {
   const { id: hotel } = useParams();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch()
   const [ createHotelRoom, { isLoading: isCreating } ] = useCreateHotelRoomMutation();
 
   const initialState: FormState = {
@@ -31,14 +34,15 @@ export function HotelRoomCardAdd() {
 
   const handlers = {
     onSubmit: (event: React.FormEvent) => {
-      event.preventDefault();
-      const { imagesPreview, ...request } = formState;
-      createHotelRoom(request)
-        .then(() => navigate('..'));
+        event.preventDefault();
+        const { imagesPreview, ...request } = formState;
+        createHotelRoom(request).then((response: any) => {
+            if (response.data) navigate('..')
+        });
     },
 
     onChangeInput: (e: React.ChangeEvent) => Handler.onChangeInput<FormState>( e, setForm ),
-    onChangeFile: (e: React.ChangeEvent) => Handler.onChangeFile<FormState>( e, setForm ),
+    onChangeFile: (e: React.ChangeEvent) => Handler.onChangeFile<FormState>( e, setForm, dispatch),
     onDeletePreview: ( index: number ) => Handler.onDeletePreview<FormState>( index, setForm ),
   };
 
@@ -61,6 +65,7 @@ export function HotelRoomCardAdd() {
                                 placeholder="Название комнаты" 
                                 name='title'
                                 value={ formState.title } 
+                                maxLength={ MAX_LENGTH_TITLE_HOTEL_ROOM }
                                 onChange={ handlers.onChangeInput }
                                 disabled={ isCreating }
                                 readOnly={ isCreating }
@@ -73,6 +78,7 @@ export function HotelRoomCardAdd() {
                                 placeholder="Описание комнаты" 
                                 name='description'
                                 value={ formState.description } 
+                                maxLength={ MAX_LENGTH_DESCRIPTION_HOTEL_ROOM }
                                 onChange={ handlers.onChangeInput }
                                 disabled={ isCreating }
                                 readOnly={ isCreating }

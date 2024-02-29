@@ -9,6 +9,6 @@ export class FileController {
     @Query('img_path') imgPath: string,
     @Res() res,
   ): Observable<object> {
-    return of(res.sendFile(path.join(`${process.cwd()}\\${imgPath}`)));
+    return of(res.sendFile(path.join(`${process.cwd()}/${imgPath}`)));
   }
 }
