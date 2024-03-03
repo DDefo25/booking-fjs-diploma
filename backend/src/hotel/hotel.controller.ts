@@ -25,6 +25,7 @@ import {
   FilesInterceptor,
 } from '@nestjs/platform-express';
 import { maxImageCount, validatorImageOption } from 'src/config/file.upload.config';
+import { HttpValidationPipe } from 'src/validation/http.validation.pipe';
 
 @Controller('api/:role/hotels')
 export class HotelController {
@@ -49,9 +50,9 @@ export class HotelController {
     @UploadedFiles(
       new ParseFilePipe({ validators: validatorImageOption })
     ) images: Express.Multer.File[],
-    @Body() data: Partial<Hotel>,
+    @Body( new HttpValidationPipe()) data: Partial<Hotel>,
   ) {
-    data.images = [...images.map((image) => image.path)];
+    data.images = [...images.map((image) => image.path.replace(/\\/g, '/'))];
     return await this.hotelService.create(data);
   }
 
@@ -61,7 +62,7 @@ export class HotelController {
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
-  async find(@Query() query: SearchHotelParams) {
+  async find(@Query( new HttpValidationPipe() ) query: SearchHotelParams) {
     return await this.hotelService.search(query);
   }
 
@@ -77,12 +78,12 @@ export class HotelController {
     @UploadedFiles(
       new ParseFilePipe({ validators: validatorImageOption, fileIsRequired: false })
     ) imagesFiles: Express.Multer.File[],
-    @Body() data: UpdateHotelParams,
+    @Body( new HttpValidationPipe()) data: UpdateHotelParams,
   ) {
     const updateData = { ...data };
     updateData.images = Array.isArray(data.images)
-      ? [...data.images, ...imagesFiles.map((image) => image.path)]
-      : [data.images, ...imagesFiles.map((image) => image.path)];
+      ? [...data.images, ...imagesFiles.map((image) => image.path.replace(/\\/g, '/'))]
+      : [data.images, ...imagesFiles.map((image) => image.path.replace(/\\/g, '/'))];
     return await this.hotelService.update(id, updateData);
   }
 }

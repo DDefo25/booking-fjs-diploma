@@ -59,11 +59,11 @@ export class HotelRoomController {
     @UploadedFiles(
       new ParseFilePipe({ validators: validatorImageOption })
     ) images: Express.Multer.File[],
-    @Body() data: CreateHotelRoomDto,
+    @Body( new HttpValidationPipe()) data: CreateHotelRoomDto,
   ) {
     const newHotelRoom = {
       ...data,
-      images: images.map((image) => image.path),
+      images: images.map((image) => image.path.replace(/\\/g, '/')),
     };
     return await this.hotelRoomService.create(newHotelRoom);
   }
@@ -80,12 +80,12 @@ export class HotelRoomController {
     @UploadedFiles(
       new ParseFilePipe({ validators: validatorImageOption, fileIsRequired: false })
     ) imagesFiles: Express.Multer.File[],
-    @Body() data: UpdateHotelRoomDto,
+    @Body(new HttpValidationPipe()) data: UpdateHotelRoomDto,
   ) {
     const updateData = { ...data };
     updateData.images = Array.isArray(data.images)
-      ? [...data.images, ...imagesFiles.map((image) => image.path)]
-      : [data.images, ...imagesFiles.map((image) => image.path)];
+      ? [...data.images, ...imagesFiles.map((image) => image.path.replace(/\\/g, '/'))]
+      : [data.images, ...imagesFiles.map((image) => image.path.replace(/\\/g, '/'))];
 
     return this.hotelRoomService.update(id, updateData);
   }

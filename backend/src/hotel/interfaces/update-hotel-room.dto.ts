@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import {
   IsBoolean,
   IsDefined,
@@ -5,7 +6,8 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { ObjectId } from 'mongoose';
+import { IsObjectId } from 'class-validator-mongo-object-id';
+import mongoose, { ObjectId } from 'mongoose';
 
 export class UpdateHotelRoomDto {
   @IsString()
@@ -16,18 +18,19 @@ export class UpdateHotelRoomDto {
   @IsDefined()
   title: string;
 
-  @IsMongoId()
+  @IsObjectId()
   @IsDefined()
+  @Transform(({ value }) => new mongoose.Types.ObjectId(value))
   hotel: ObjectId;
 
   @IsBoolean()
-  @IsDefined()
+  @IsOptional()
   isEnabled?: boolean;
 
   @IsOptional()
   imagesFiles: Express.Multer.File[];
 
-  @IsString()
+  @IsString({ each: true })
   @IsDefined()
   images: string[];
 }

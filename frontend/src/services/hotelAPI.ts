@@ -18,6 +18,12 @@ export interface GetHotelRoomsDto {
   _id: string,
   hotel: Hotel,
   hotelRooms: HotelRoom[],
+  countRooms: number
+}
+
+export interface GetHotelsResponse {
+  hotels: Hotel[],
+  count: number
 }
 
 export interface HotelRoomEditRequest {
@@ -114,7 +120,7 @@ export const hotelAPI = createApi({
       invalidatesTags: ['Hotel'],
     }),
 
-    getHotels: build.query<Hotel[], HotelRequest>({
+    getHotels: build.query<GetHotelsResponse, HotelRequest>({
       query: (params) => ({
         url: `/${Role.Admin}/hotels`,
         method: 'get',

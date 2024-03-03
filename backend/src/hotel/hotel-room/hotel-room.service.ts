@@ -67,11 +67,15 @@ export class HotelRoomService implements IHotelRoomService {
           _id: '$hotel._id',
           hotel: { $first: '$hotel' },
           hotelRooms: { $push: '$$ROOT' },
-        },
+        }
       },
-      { $skip: offset },
-      { $limit: limit },
-    ]);
+      {
+        $set: {
+          countRooms: { $size: '$hotelRooms' },
+          hotelRooms: { $slice: ['$hotelRooms', offset, limit ]},
+        }
+      }
+    ])
   }
 
   update(id: ObjectIdType, data: UpdateHotelRoomParams): Promise<HotelRoom> {

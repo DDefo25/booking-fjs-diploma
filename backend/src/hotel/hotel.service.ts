@@ -5,6 +5,7 @@ import { Model, ObjectId } from 'mongoose';
 import { SearchHotelParams } from './interfaces/search-hotel.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { UpdateHotelParams } from './interfaces/update-hotel.dto';
+import { match } from 'assert';
 
 @Injectable()
 export class HotelService implements IHotelService {
@@ -26,10 +27,22 @@ export class HotelService implements IHotelService {
     const filter = {
       title: new RegExp(title, 'i'),
     };
-
     
-
-    return this.model.find(filter).limit(limit).skip(offset);
+    return this.model.aggregate([
+      { $match: {
+        ...filter
+      }},
+      { $group: {
+          _id: null,
+          hotels: { $push: "$$ROOT" }
+        }
+      },
+      { $project: {
+        count: { $size: '$hotels' },
+        hotels: { $slice: ['$hotels', offset, limit ]},
+        _id: 0
+      }}
+    ]).then(result => result[0])
   }
 
   update(id: ObjectId, data: UpdateHotelParams): Promise<Hotel> {

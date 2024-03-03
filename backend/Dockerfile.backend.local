@@ -1,16 +1,4 @@
-# FROM node:18-alpine
-# RUN mkdir -p /svr/app
-# WORKDIR /svr/app
-# RUN npm i -g @nestjs/cli --silent
-# COPY package.json .
-# COPY package-lock.json .
-# RUN npm install --silent
-# COPY . .
-# # Value set in .env file.
-# EXPOSE $PORT
-# CMD ["npm", "run", "start:debug"]
-
-FROM node:18
+FROM node:18-alpine
 
 WORKDIR /app
 
@@ -19,7 +7,5 @@ COPY package.json ./
 RUN npm install
 
 COPY . .
-
-# EXPOSE 4000
 
 CMD [ "npm", "run", "start:dev" ]

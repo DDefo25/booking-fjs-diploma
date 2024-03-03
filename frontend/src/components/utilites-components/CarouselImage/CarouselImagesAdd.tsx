@@ -60,7 +60,8 @@ export function CarouselImagesAdd({ imagesPreview, imagesInRow, handlers, ...pro
                 onChange={handlers.onChangeFile} 
                 multiple 
                 accept={ ACCEPTED_IMAGE_MIME_TYPES }
-                hidden/>
+                hidden
+            />
         </Col>
   );
 

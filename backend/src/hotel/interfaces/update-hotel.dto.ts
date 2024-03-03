@@ -9,7 +9,7 @@ export class UpdateHotelParams {
   @IsDefined()
   description: string;
 
-  @IsString()
+  @IsString({ each: true })
   @IsDefined()
   images: string[];
 }

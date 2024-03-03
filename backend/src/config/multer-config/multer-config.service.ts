@@ -20,7 +20,10 @@ export class MulterConfigService implements MulterOptionsFactory {
       destination: function (req, file, cb) {
         const filePath = path.join(
           `${uploadConfig.destination}/hotel/${req.body.hotel}`,
-        );
+        ).replace(/\\/g, '/');
+        console.log('filePath', filePath);
+        // const filePathConverted = filePath.replace("\\", "/");
+        // console.log('filePathConverted', filePathConverted)
         fs.mkdirSync(filePath, { recursive: true });
         cb(null, filePath);
       },

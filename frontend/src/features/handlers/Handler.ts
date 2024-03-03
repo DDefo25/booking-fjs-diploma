@@ -11,6 +11,7 @@ export interface BaseFormState {
 
 export interface HandlersForm {
   onSubmit?: (event: React.FormEvent<HTMLFormElement> ) => void,
+  onSubmitData?: ( data: any ) => void,
   onChange?: (params: React.ChangeEvent<HTMLInputElement>) => void
   onChangeFile?: (params: React.ChangeEvent<HTMLInputElement>) => void
   onDelete?: (index: number) => void
@@ -26,9 +27,9 @@ export interface IHandlers {
 }
 
 export class Handler {
-  static onChangeInput = <T> (
+  static onChangeInput = <T extends {}> (
     { target: { name, value } }: React.ChangeEvent<any>, 
-    dispatch: React.Dispatch<React.SetStateAction<T>>,
+    dispatch: React.Dispatch<React.SetStateAction<T>>
   ) => {
     dispatch((prev) => {
       return { ...prev, [name]: value }

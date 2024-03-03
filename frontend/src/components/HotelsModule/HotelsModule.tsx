@@ -4,6 +4,7 @@ import { Handler } from '../../features/handlers/Handler';
 import { Button, Card, Form } from 'react-bootstrap';
 import { HotelCard, HotelCardType } from './HotelCardModule/HotelCard';
 import { LoadingBox } from '../utilites-components/Loading/LoadingBox';
+import { Pagination } from '../utilites-components/Pagination';
 
 
 export function HotelsModule() {
@@ -14,7 +15,7 @@ export function HotelsModule() {
   };
 
   const [ formState, setForm ] = useState( initialState );
-  const { data: hotels, isLoading, isFetching, refetch } = useGetHotelsQuery( formState, { refetchOnFocus: true });
+  const { data, isLoading, isFetching, refetch } = useGetHotelsQuery( formState);
 
   const handlers = {
     onSubmit: (e: React.FormEvent) => {
@@ -23,6 +24,7 @@ export function HotelsModule() {
     },
 
     onChangeInput: (e: React.ChangeEvent) => Handler.onChangeInput<HotelRequest>(e, setForm),
+    onPaginationClick: (i: number) => Handler.onPaginationClick<HotelRequest>(i, setForm),
   };
 
     
@@ -53,14 +55,27 @@ export function HotelsModule() {
                     </Form> 
                 </Card.Body>
         </Card>
-            { hotels && hotels.map( hotel => (
+            { data && data.hotels.map( hotel => (
                 <div className="loading-box-parent">
                     <HotelCard key={hotel._id} hotel={hotel} type={HotelCardType.General} />
                     { isLoading || isFetching ? <LoadingBox /> : null }
                 </div>
             ))}
-
-
+            {  isLoading || isFetching 
+              ? <LoadingBox />
+              : data
+                && (
+                    <Pagination 
+                    limit={ formState.limit }
+                    offset={ formState.offset }
+                    count={ data.count }
+                    onPaginationClick={ handlers.onPaginationClick }
+                    props={{
+                        className: 'mt-1',
+                    }}
+                    />
+                )
+            }
         </>
   );
 }

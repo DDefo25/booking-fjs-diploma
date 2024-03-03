@@ -17,7 +17,7 @@ export function CarouselImages({ images, imagesInRow, ...props }: InputGroupProp
               justifyContent: 'center',
             }}>
                 <Image 
-                    attributes={{ src: `${DOWNLOAD_IMAGE_URL}?img_path=${image}`, rounded: true }} 
+                    attributes={{ src: (`${DOWNLOAD_IMAGE_URL}?img_path=${image}`), rounded: true }} 
                     styleAttr={{ 
                       display: 'block',
                       maxHeight: '20vh', 

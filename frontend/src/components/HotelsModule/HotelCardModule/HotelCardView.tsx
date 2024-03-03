@@ -2,13 +2,15 @@ import { Button, Card, Col, Form, Row } from 'react-bootstrap';
 import { HotelCard, HotelCardType } from './HotelCard';
 import { useParams } from 'react-router-dom';
 import { HotelRoomRequest, useGetHotelQuery, useGetHotelRoomsQuery } from '../../../services/hotelAPI';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAppDispatch, useTypedSelector } from '../../../store/store';
 import { editReservationDate, selectReservationDates } from '../../../features/slices/reservationDateSlice';
 import { HotelRoomCardView } from '../HotelRoomModule/HotelRoomCardView';
 import { LoadingBox } from '../../utilites-components/Loading/LoadingBox';
 import { useCheckRoles } from '../../../hooks/useCheckRoles';
 import { Role } from '../../../config/roles.enum';
+import { Pagination } from '../../utilites-components/Pagination';
+import { Handler } from '../../../features/handlers/Handler';
 
 
 export function HotelCardView() {
@@ -26,8 +28,9 @@ export function HotelCardView() {
     queryParams.dateStart = dateStart;
     queryParams.dateEnd = dateEnd;
   }
-    
-  const { data: hotelRoomsGroupedByHotel, isLoading, isFetching, refetch } = useGetHotelRoomsQuery(queryParams );
+  
+  const [ formState, setForm ] = useState( queryParams )
+  const { data: hotelRoomsGroupedByHotel, isLoading, isFetching, refetch } = useGetHotelRoomsQuery(formState );
   const { data: hotel, isLoading: isLoadingHotel, isFetching: isFetchingHotel } = useGetHotelQuery(id! );
   const dispatch = useAppDispatch();
 
@@ -38,6 +41,7 @@ export function HotelCardView() {
     },
 
     onChangeDate: (e: React.ChangeEvent<HTMLInputElement>) => dispatch( editReservationDate(e)),
+    onPaginationClick: (i: number) => Handler.onPaginationClick<HotelRoomRequest>(i, setForm),
   };
 
   return ( 
@@ -82,6 +86,21 @@ export function HotelCardView() {
               ? <LoadingBox />
               : hotelRoomsGroupedByHotel 
                 && hotelRoomsGroupedByHotel[0]?.hotelRooms?.map((hotelRoom, index) => <HotelRoomCardView key={index} hotelRoom={hotelRoom}/>) }
+            { isLoading || isFetching 
+              ? <LoadingBox />
+              : hotelRoomsGroupedByHotel 
+              && (
+                <Pagination 
+                  limit={ formState.limit }
+                  offset={ formState.offset }
+                  count={ hotelRoomsGroupedByHotel[0]?.countRooms }
+                  onPaginationClick={ handlers.onPaginationClick }
+                  props={{
+                    className: 'mt-1',
+                  }}
+                />
+              )
+            }
         </div>
     </>
   );

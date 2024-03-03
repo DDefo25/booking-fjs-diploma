@@ -1,16 +1,26 @@
-import { Button, Card, Form, InputGroup } from 'react-bootstrap';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAddHotelMutation } from '../../../services/hotelAPI';
 import { Handler } from '../../../features/handlers/Handler';
-import { Loading } from '../../utilites-components/Loading/Loading';
-import { CarouselImagesAdd } from '../../utilites-components/CarouselImage/CarouselImagesAdd';
 import { useAppDispatch } from '../../../store/store';
-import { MAX_LENGTH_DESCRIPTION_HOTEL, MAX_LENGTH_TITLE_HOTEL } from '../../../config/config';
+import { useForm } from 'react-hook-form';
+import { Loading } from '../../utilites-components/Loading/Loading';
+import { Button, Card, Form, InputGroup } from 'react-bootstrap';
+import { CarouselImagesAdd } from '../../utilites-components/CarouselImage/CarouselImagesAdd';
+import { MAX_LENGTH_TITLE_HOTEL, MAX_LENGTH_DESCRIPTION_HOTEL } from '../../../config/config';
 
-export interface HotelAddInitial {
+export interface HotelAddRequest {
   title: string,
   description: string,
+  images: File[]
+}
+
+interface TextForm {
+  title: string,
+  description: string,
+}
+
+interface ImagesForm {
   images: File[],
   imagesPreview: string[]
 }
@@ -18,28 +28,39 @@ export interface HotelAddInitial {
 
 export function HotelCreate() {
 
-  const initialState: HotelAddInitial = {
-    title: '',
-    description: '',
-    images: [],
-    imagesPreview: []
+  const initialImagesForm: ImagesForm = {
+    imagesPreview: [],
+    images: []
   };
 
+  const initialTextForm: TextForm = {
+    title: '',
+    description: '',
+  };
+
+  const [ imagesState, setImages ] = useState( initialImagesForm );
+  const { 
+    formState: { errors, isValid, isDirty, submitCount }, 
+    register, 
+    handleSubmit: textFormSubmit,
+  } = useForm<TextForm>({
+    defaultValues: initialTextForm
+  })
+
   const navigate = useNavigate();
-  const [ formState, setForm ] = useState( initialState );
-  const [ addHotel, { isLoading }] = useAddHotelMutation();
+  const [ addHotel, { isLoading } ] = useAddHotelMutation();
   const dispatch = useAppDispatch()
 
   const handlers = {
-    onSubmit: (event: React.FormEvent<HTMLFormElement> ) => {
-        addHotel(formState).then((response: any) => {
-          if (response.data) navigate('..')
-        });
+    onSubmitData: (data: TextForm ) => { 
+      const  { images } = imagesState    
+      addHotel({ ...data, images }).then((response: any) => {
+          if (response.data) navigate('/hotels')
+      });
     },
 
-    onChangeInput: (e: React.ChangeEvent) => Handler.onChangeInput<HotelAddInitial>( e, setForm ),
-    onChangeFile: (e: React.ChangeEvent) => Handler.onChangeFile<HotelAddInitial>( e, setForm, dispatch ),
-    onDeletePreview: ( index: number ) => Handler.onDeletePreview<HotelAddInitial>( index, setForm ),
+    onChangeFile: (e: React.ChangeEvent) => Handler.onChangeFile<ImagesForm>( e, setImages, dispatch ),
+    onDeletePreview: ( index: number ) => Handler.onDeletePreview<ImagesForm>( index, setImages ),
   };
 
   if (isLoading) return <Loading />;
@@ -47,52 +68,63 @@ export function HotelCreate() {
   return (
         <Card className="mb-3">
             <Form 
-              onSubmit={handlers.onSubmit} 
+              validated={isValid && isDirty }
+              onSubmit={ textFormSubmit(handlers.onSubmitData) } 
             >
                 <CarouselImagesAdd 
-                    imagesPreview={formState.imagesPreview} 
+                    imagesPreview={imagesState.imagesPreview} 
                     handlers={handlers} 
                     imagesInRow={3} 
                     variant={'dark'} 
-                    fade/>
+                    fade
+                />
                 <Card.Body>
                     <Card.Title>
-                        <Form.Group className="mb-3" controlId="formBasicHotelTitle">
-                          <InputGroup hasValidation>
+                        <InputGroup className="mb-3" >
                             <Form.Control 
-                                required
-                                name='title' 
                                 placeholder="Название отеля" 
-                                type="text" 
-                                value={formState.title} 
-                                maxLength={ MAX_LENGTH_TITLE_HOTEL }
-                                onChange={ handlers.onChangeInput }/>
-                            <Form.Control.Feedback type="invalid">
-                                Максимально { MAX_LENGTH_TITLE_HOTEL } символов
-                            </Form.Control.Feedback>
-                          </InputGroup>
-                        </Form.Group>
+                                isInvalid={ !!errors.title }
+                                { ...register('title', {
+                                  required: 'Введите название отеля',
+                                  maxLength: {
+                                    value: MAX_LENGTH_TITLE_HOTEL,
+                                    message: `Максимально ${ MAX_LENGTH_TITLE_HOTEL } символов`
+                                  }
+                                })}
+                            />
+                            { errors.title &&
+                              <div className="invalid-tooltip" style={{display: 'block'}}>
+                                {errors.title.message}
+                              </div> 
+                            }
+                         </InputGroup>
                     </Card.Title>
                     <Card.Text>
-                        <Form.Group className="mb-3" controlId="formBasicHotelDesc">
-                          <InputGroup hasValidation>
+                          <InputGroup className="mb-3">
                             <Form.Control 
-                                name='description' 
                                 as="textarea" 
-                                rows={10} 
-                                placeholder="Описание отеля" 
-                                value={formState.description}
-                                maxLength={ MAX_LENGTH_DESCRIPTION_HOTEL }
-                                onChange={ handlers.onChangeInput }/>
-                            <Form.Control.Feedback type="invalid">
-                                Максимально { MAX_LENGTH_DESCRIPTION_HOTEL } символов
-                            </Form.Control.Feedback>
+                                rows={5} 
+                                placeholder="Описание отеля"
+                                isInvalid={ !!errors.description }
+                                { ...register('description', {
+                                  required: 'Введите описание отеля',
+                                  maxLength: {
+                                    value: MAX_LENGTH_DESCRIPTION_HOTEL,
+                                    message: `Максимально ${ MAX_LENGTH_DESCRIPTION_HOTEL } символов`
+                                  }
+                                })}
+                            />
+                            { errors.description &&
+                              <div className="invalid-tooltip" style={{display: 'block'}}>
+                                {errors.description.message}
+                              </div> 
+                            }
                           </InputGroup>
-                        </Form.Group>
                     </Card.Text>
                     <Button 
                       variant="primary" 
                       type="submit"
+                      disabled={ !isValid || !isDirty }
                     > Сохранить </Button>
                 </Card.Body>
             </Form>         

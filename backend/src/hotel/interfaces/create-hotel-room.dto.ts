@@ -25,6 +25,6 @@ export class CreateHotelRoomDto {
   imagesFiles: Express.Multer.File[];
 
   @IsString()
-  @IsDefined()
+  @IsOptional()
   images: string[];
 }

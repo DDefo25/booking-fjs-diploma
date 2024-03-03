@@ -1,15 +1,18 @@
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsDefined, IsNumber, IsString } from 'class-validator';
 
 export class SearchHotelParams {
-  @IsString()
-  @IsOptional()
+  @IsNumber()
+  @IsDefined()
+  @Transform(({ value }) => Number(value))
   limit: number;
 
   @IsNumber()
-  @IsOptional()
+  @IsDefined()
+  @Transform(({ value }) => Number(value))
   offset: number;
 
   @IsString()
-  @IsOptional()
+  @IsDefined()
   title: string;
 }

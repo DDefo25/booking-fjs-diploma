@@ -4,7 +4,7 @@ export const DOWNLOAD_ASSETS_ICON_URL: string = `${DOWNLOAD_IMAGE_URL}?img_path=
 
 export const MAX_IMAGE_FILES_COUNT: number = 10
 export const MAX_IMAGE_FILE_SIZE: number = 10e6
-export const ACCEPTED_IMAGE_MIME_TYPES: string = "image/png, image/jpg, image/jpeg, image/webp" 
+export const ACCEPTED_IMAGE_MIME_TYPES: string = "image/png, image/jpg, image/jpeg, image/webp"
 
 export const MAX_LENGTH_TITLE_HOTEL: number = 10
 export const MAX_LENGTH_DESCRIPTION_HOTEL: number = 100
